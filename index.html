@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>직장인 생존 유형 테스트 - 내 직장인 부캐 찾기</title>
+    <style>
+        /* 
+         * =========================================
+         * CSS STYLES (Pastel Theme & Mobile First)
+         * =========================================
+         */
+        :root {
+            --primary: #FFB7B2;
+            /* Pastel Red/Pink */
+            --secondary: #B5EAD7;
+            /* Pastel Green */
+            --accent: #C7CEEA;
+            /* Pastel Blue */
+            --text: #555;
+            --bg: #FFF9F0;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            /* Mobile width limit */
+            background-color: var(--white);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* SCREEN STYLES */
+        .screen {
+            display: none;
+            /* Hidden by default */
+            padding: 2rem;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* START SCREEN */
+        .start-img {
+            width: 80%;
+            max-width: 300px;
+            margin-bottom: 2rem;
+            border-radius: 50%;
+            background: var(--secondary);
+            padding: 20px;
+        }
+
+        h1 {
+            color: #FF9AA2;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .desc {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            color: #888;
+        }
+
+        /* BUTTONS */
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 3rem;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: bold;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 183, 178, 0.4);
+        }
+
+        /* QUESTION SCREEN */
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: #eee;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .q-number {
+            color: var(--accent);
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .question-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 3rem;
+            line-height: 1.4;
+            text-align: left;
+            /* Left align for readability */
+            width: 100%;
+            /* Ensure it takes full width */
+            word-break: keep-all;
+            /* Prevent breaking in middle of words (Korean) */
+        }
+
+        .choice-btn {
+            background-color: var(--white);
+            border: 2px solid var(--secondary);
+            color: #555;
+            padding: 1.5rem;
+            width: 100%;
+            margin-bottom: 1rem;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            /* Left align choices */
+            line-height: 1.4;
+        }
+
+        .choice-btn:hover {
+            background-color: var(--secondary);
+            color: white;
+            transform: scale(1.02);
+        }
+
+        /* LOADING SCREEN */
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid var(--primary);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 2rem;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* RESULT SCREEN */
+        .result-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .result-name {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #333;
+            margin-bottom: 1rem;
+            background: linear-gradient(to top, var(--secondary) 20%, transparent 40%);
+        }
+
+        .result-desc {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            background: #f9f9f9;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: left;
+            /* Left align result text */
+            white-space: pre-line;
+            /* Respect line breaks if needed, or stick to <br> */
+            word-break: keep-all;
+        }
+
+        .ad-placeholder {
+            width: 100%;
+            height: 100px;
+            background-color: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            margin: 2rem 0;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+
+        .share-btn {
+            background-color: #FEEAA5;
+            /* Pastel Yellow */
+            color: #555;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- 1. START SCREEN -->
+        <div id="start-screen" class="screen active">
+            <!-- Simple illustration placeholder (CSS Shapes) -->
+            <div class="start-img">🏢</div>
+            <h1>직장인<br>생존 유형 테스트</h1>
+            <p class="desc">나는 회사에서 어떤 캐릭터일까?<br>소름돋는 본성을 알아보자!</p>
+            <button class="btn" onclick="startTest()">테스트 시작하기</button>
+        </div>
+
+        <!-- 2. QUESTION SCREEN -->
+        <div id="question-screen" class="screen">
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+
+            <div class="q-number">Q<span id="q-num">1</span></div>
+            <div class="question-text" id="q-text">질문이 여기에 나옵니다.</div>
+
+            <button class="choice-btn" onclick="answer(0)" id="choice-a">선택지 A</button>
+            <button class="choice-btn" onclick="answer(1)" id="choice-b">선택지 B</button>
+        </div>
+
+        <!-- 3. LOADING SCREEN -->
+        <div id="loading-screen" class="screen">
+            <div class="loader"></div>
+            <h2>당신의 직장 내<br>생존 본능 분석 중...</h2>
+            <p>AI가 당신의 대처능력을 계산하고 있습니다.</p>
+
+            <!-- Result Loading Ad Area -->
+            <!-- <ins class="adsbygoogle" ... ></ins> -->
+            <div class="ad-placeholder">
+                광고 영역 (로딩 중 노출)
+            </div>
+        </div>
+
+        <!-- 4. RESULT SCREEN -->
+        <div id="result-screen" class="screen">
+            <div class="result-title">나의 직장인 부캐는?</div>
+            <div id="result-name" class="result-name">결과 이름</div>
+            <div id="result-desc" class="result-desc">
+                결과 설명이 여기에 나옵니다.
+            </div>
+
+            <button class="btn" onclick="location.reload()">테스트 다시하기</button>
+            <button class="btn share-btn" onclick="copyLink()">🔗 링크 복사하기</button>
+
+            <!-- Result Bottom Ad Area -->
+            <!-- <ins class="adsbygoogle" ... ></ins> -->
+            <div class="ad-placeholder">
+                구글 애드센스 영역 (결과 확인 후)
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 
+     * =========================================
+     * JAVASCRIPT LOGIC
+     * =========================================
+     -->
+    <script>
+        // --- DATA: Questions (12 items) ---
+        // A: Aggressive/Active/MyWay (Score +1)
+        // B: Passive/Social/Standard (Score 0)
+        const questions = [
+            {
+                q: "퇴근 10분 전, 상사가 일을 던져준다.",
+                a: "A. \"제 선약이 있어서요^^\" 정중하지만 단호하게 거절.",
+                b: "B. \"아.. 네 알겠습니다.\" (속으로 울며) 야근 확정."
+            },
+            {
+                q: "점심시간, 모든 팀원이 국밥을 먹으러 가자고 한다. 나는 파스타가 땡긴다.",
+                a: "A. \"저는 오늘 파스타 먹으러 갈게요!\" 혼밥을 선택한다.",
+                b: "B. \"좋아요! 국밥 시원하죠~\" 대세를 따르며 따라간다."
+            },
+            {
+                q: "회의 중 내 아이디어가 별로라는 피드백을 받았다.",
+                a: "A. \"어떤 점이 별로신가요?\" 논리적으로 반박하며 설득한다.",
+                b: "B. \"아, 그렇군요...\" 쿨하게(?) 인정하고 입을 다문다."
+            },
+            {
+                q: "옆자리 동료가 하루 종일 콧노래를 흥얼거린다.",
+                a: "A. \"죄송한데 조금만 조용히 해주실래요?\" 직설적으로 말한다.",
+                b: "B. 이어폰을 깊숙이 꽂고 볼륨을 최대로 높인다."
+            },
+            {
+                q: "월요일 아침, 엘리베이터에서 마주치기 싫은 상사를 발견했다.",
+                a: "A. 당당하게 타서 \"좋은 아침입니다!\" 큰 소리로 인사한다.",
+                b: "B. 급하게 핸드폰 보는 척하며 다음 엘베를 기다린다."
+            },
+            {
+                q: "업무 실수로 거래처에 잘못된 메일을 보냈다.",
+                a: "A. 빠르게 전화해서 수습하고 깔끔하게 잊는다.",
+                b: "B. '망했다'를 100번 되뇌이며 자책의 늪에 빠진다."
+            },
+            {
+                q: "회식 자리, 2차 노래방 가자고 분위기를 몬다.",
+                a: "A. \"저는 여기까지! 즐거운 시간 보내세요~\" 칼같이 집에 간다.",
+                b: "B. 분위기 깨기 싫어 억지로 끌려가서 탬버린을 흔든다."
+            },
+            {
+                q: "휴가 중 회사에서 전화가 왔다.",
+                a: "A. 안 받는다. 부재중 전화만 보고 무시한다.",
+                b: "B. 찝찝해서 받는다. \"네, 여보세요?\""
+            },
+            {
+                q: "동료가 내 뒷담화를 하는 걸 우연히 들었다.",
+                a: "A. 그 자리에서 문을 열고 들어가 \"재밌는 얘기 하시네요?\"라고 한다.",
+                b: "B. 모른 척 자리로 돌아와서 혼자 속상해한다."
+            },
+            {
+                q: "상사가 \"요즘 MZ들은 끈기가 없어\"라며 꼰대 발언을 한다.",
+                a: "A. \"시대가 변했으니까요.\" 웃으며 뼈 때리는 팩트를 날린다.",
+                b: "B. \"그러게요~ 하하...\" 영혼 없는 리액션으로 넘긴다."
+            },
+            {
+                q: "프로젝트 성과는 내가 냈는데, 팀장이 가로채려 한다.",
+                a: "A. 관련 자료를 싹 정리해서 임원에게 직접 보고한다.",
+                b: "B. 억울하지만 '언젠간 알아주겠지' 하고 참는다."
+            },
+            {
+                q: "복권 1등에 당첨되었다. 출근 할 것인가?",
+                a: "A. 바로 사직서를 품고 출근해서 책상에 던진다.",
+                b: "B. 일단 비밀로 하고 평소처럼 조용히 다닌다."
+            }
+        ];
+
+        // --- DATA: Results (4 Types) ---
+        const results = [
+            {
+                // Score 0-3
+                name: "영혼 가출 예스맨",
+                desc: "당신은 회사에 평화가 온다면 내 영혼쯤은 팔 수 있는 '평화주의자'.<br>갈등을 싫어하고 좋은 게 좋은 거라 생각하지만, 속으로는 이미 사직서를 100번 썼습니다.<br>참다가 화병 나기 전에 가끔은 'No'라고 말하는 연습이 필요해요!"
+            },
+            {
+                // Score 4-6
+                name: "조용한 맑눈광",
+                desc: "겉으로는 순종적이고 착해 보이지만, 눈에는 광기가 서려있습니다.<br>시키는 일은 다 하지만, 어느 순간 조용히 대형 사고(?)를 치거나<br>아무도 모르게 퇴사를 준비하고 있을 확률 99%!<br>건드리면 제일 무서운 타입."
+            },
+            {
+                // Score 7-9
+                name: "팩트 폭격기",
+                desc: "업무 능력 만렙, 논리 정연! 할 말은 해야 직성이 풀리는 스타일.<br>상사에게도 예외는 없습니다.<br>동료들에겐 사이다 같은 존재지만, 상사들에겐 기피 대상 1호.<br>능력이 뒷받침되니 아무도 뭐라 못합니다."
+            },
+            {
+                // Score 10-12
+                name: "사무실의 무법자",
+                desc: "회사는 나를 거쳐가는 정류장일 뿐.<br>마이웨이 그 자체! 눈치는 밥 말아 드셨습니다.<br>상사도 당신을 포기했지만, 오히려 그 덕분에<br>최고의 '워라밸'을 즐기고 있는 당신은 진정한 승리자?"
+            }
+        ];
+
+        // --- STATE & LOGIC ---
+        let currentQ = 0;
+        let score = 0; // Counts 'A' choices
+
+        function startTest() {
+            document.getElementById('start-screen').classList.remove('active');
+            document.getElementById('question-screen').classList.add('active');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            // Update Progress Bar
+            const percent = ((currentQ) / questions.length) * 100;
+            document.getElementById('progress-bar').style.width = percent + '%';
+
+            // Text Update
+            document.getElementById('q-num').innerText = currentQ + 1;
+            document.getElementById('q-text').innerText = questions[currentQ].q;
+            document.getElementById('choice-a').innerText = questions[currentQ].a;
+            document.getElementById('choice-b').innerText = questions[currentQ].b;
+        }
+
+        function answer(choice) {
+            // choice: 0 for A (Aggressive), 1 for B (Passive)
+            if (choice === 0) {
+                score++;
+            }
+
+            currentQ++;
+
+            if (currentQ < questions.length) {
+                renderQuestion();
+            } else {
+                showLoading();
+            }
+        }
+
+        function showLoading() {
+            document.getElementById('question-screen').classList.remove('active');
+            document.getElementById('loading-screen').classList.add('active');
+
+            // 3 seconds delay for suspense & ad impression
+            setTimeout(() => {
+                showResult();
+            }, 3000);
+        }
+
+        function showResult() {
+            document.getElementById('loading-screen').classList.remove('active');
+            document.getElementById('result-screen').classList.add('active');
+
+            let resultIdx = 0;
+            // Logic: 0-12 points divided into 4 buckets
+            if (score <= 3) resultIdx = 0;      // 0,1,2,3
+            else if (score <= 6) resultIdx = 1; // 4,5,6
+            else if (score <= 9) resultIdx = 2; // 7,8,9
+            else resultIdx = 3;                 // 10,11,12
+
+            const result = results[resultIdx];
+            document.getElementById('result-name').innerText = result.name;
+            document.getElementById('result-desc').innerHTML = result.desc;
+        }
+
+        function copyLink() {
+            const dummy = document.createElement('input');
+            const text = window.location.href;
+            document.body.appendChild(dummy);
+            dummy.value = text;
+            dummy.select();
+            document.execCommand('copy');
+            document.body.removeChild(dummy);
+            alert('링크가 복사되었습니다! 친구들에게 공유해보세요.');
+        }
+    </script>
+</body>
+
+</html>
