@@ -135,24 +135,32 @@
             transition: width 0.3s ease;
         }
 
+        .question-wrapper {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 3rem;
+            text-align: left;
+            width: 100%;
+        }
+
         .q-number {
             color: var(--accent);
             font-weight: bold;
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
+            font-size: 1.15rem;
+            margin-bottom: 0;
+            flex-shrink: 0;
+            line-height: 1.4;
         }
 
         .question-text {
-            font-size: 1.5rem;
+            font-size: 1.15rem;
             font-weight: bold;
-            margin-bottom: 3rem;
+            margin-bottom: 0;
             line-height: 1.4;
             text-align: left;
-            /* Left align for readability */
             width: 100%;
-            /* Ensure it takes full width */
             word-break: keep-all;
-            /* Prevent breaking in middle of words (Korean) */
         }
 
         .choice-btn {
@@ -269,8 +277,10 @@
                 <div class="progress-bar" id="progress-bar"></div>
             </div>
 
-            <div class="q-number">Q<span id="q-num">1</span></div>
-            <div class="question-text" id="q-text">질문이 여기에 나옵니다.</div>
+            <div class="question-wrapper">
+                <div class="q-number">Q<span id="q-num">1</span>.</div>
+                <div class="question-text" id="q-text">질문이 여기에 나옵니다.</div>
+            </div>
 
             <button class="choice-btn" onclick="answer(0)" id="choice-a">선택지 A</button>
             <button class="choice-btn" onclick="answer(1)" id="choice-b">선택지 B</button>
