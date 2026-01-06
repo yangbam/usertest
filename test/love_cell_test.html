@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>연애세포 생존 테스트</title>
+    <style>
+        :root {
+            --primary: #FF9AA2;
+            /* Soft Pink */
+            --primary-dark: #FF6F61;
+            --secondary: #FFDAC1;
+            /* Peach */
+            --bg: #FFF5F5;
+            /* Very Light Pink */
+            --white: #FFFFFF;
+            --text: #555;
+            --gray: #EEE;
+        }
+
+        /* RESET & BOX-SIZING */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* Mobile Container */
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background-color: var(--white);
+            box-shadow: 0 0 20px rgba(255, 154, 162, 0.2);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .screen {
+            display: none;
+            padding: 2rem;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header / Logo */
+        .logo-area {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-20px);
+            }
+
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+
+        h1 {
+            color: var(--primary-dark);
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .desc {
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            color: #888;
+            line-height: 1.6;
+        }
+
+        /* Buttons */
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            font-weight: bold;
+            width: 100%;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 10px rgba(255, 154, 162, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            background-color: var(--primary-dark);
+        }
+
+        .btn.outline {
+            background-color: white;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn.outline:hover {
+            background-color: var(--bg);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: var(--gray);
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary-dark);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 0 4px 4px 0;
+        }
+
+        /* Question Layout */
+        .q-wrapper {
+            width: 100%;
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+
+        .q-count {
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .q-text {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #333;
+            line-height: 1.4;
+            word-break: keep-all;
+        }
+
+        /* Answer Buttons */
+        .choice-btn {
+            background-color: white;
+            border: 2px solid var(--secondary);
+            color: #555;
+            padding: 1.2rem;
+            width: 100%;
+            margin-bottom: 1rem;
+            border-radius: 15px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            line-height: 1.4;
+            display: flex;
+            align-items: center;
+        }
+
+        .choice-btn:hover {
+            border-color: var(--primary);
+            background-color: var(--bg);
+            transform: scale(1.02);
+        }
+
+        .circle-check {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--secondary);
+            border-radius: 50%;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .choice-btn:hover .circle-check {
+            border-color: var(--primary);
+            background-color: var(--primary);
+        }
+
+        /* Loading */
+        .loader {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 2rem;
+            border: 5px solid var(--secondary);
+            border-top-color: var(--primary-dark);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Result */
+        .result-img-area {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+        }
+
+        .result-type {
+            font-size: 1.2rem;
+            color: var(--primary-dark);
+            font-weight: bold;
+            display: inline-block;
+            background: var(--bg);
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-title-text {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #333;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .result-desc {
+            background: #F8F9FA;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            text-align: left;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #444;
+            word-break: keep-all;
+        }
+
+        /* Ad Placeholder */
+        .ad-box {
+            width: 100%;
+            background-color: #EEE;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #AAA;
+            border-radius: 10px;
+            margin: 2rem 0;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- 1. START SCREEN -->
+        <div id="start-screen" class="screen active">
+            <div class="logo-area">💖</div>
+            <h1>연애세포<br>생존 테스트</h1>
+            <p class="desc">내 심장은 아직 뛰고 있을까?<br>말라버린 연애세포를 진단해드립니다.</p>
+            <button class="btn" onclick="app.start()">테스트 시작하기</button>
+        </div>
+
+        <!-- 2. QUESTION SCREEN -->
+        <div id="q-screen" class="screen">
+            <div class="progress-container">
+                <div class="progress-bar" id="bar"></div>
+            </div>
+
+            <div class="q-wrapper">
+                <div class="q-count">Q<span id="q-num">1</span></div>
+                <div class="q-text" id="q-text">질문 내용</div>
+            </div>
+
+            <button class="choice-btn" onclick="app.answer(0)">
+                <div class="circle-check"></div>
+                <span id="choice-a">선택지 A</span>
+            </button>
+            <button class="choice-btn" onclick="app.answer(1)">
+                <div class="circle-check"></div>
+                <span id="choice-b">선택지 B</span>
+            </button>
+        </div>
+
+        <!-- 3. LOADING SCREEN -->
+        <div id="loading-screen" class="screen">
+            <div class="loader"></div>
+            <h3>당신의 죽은 연애세포를<br>부검 중입니다...</h3>
+            <p>잠시만 기다려주세요.</p>
+
+            <!-- Ad Placeholder -->
+            <!-- <div class="ad-box">광고 영역 (300x250)</div> -->
+        </div>
+
+        <!-- 4. RESULT SCREEN -->
+        <div id="result-screen" class="screen">
+            <div class="result-img-area" id="res-img">💀</div>
+            <div class="result-type" id="res-type">TYPE</div>
+            <div class="result-title-text" id="res-title">결과 제목</div>
+
+            <div class="result-desc" id="res-desc">
+                결과 설명 부분입니다.
+            </div>
+
+            <button class="btn" onclick="location.reload()">테스트 다시하기</button>
+            <button class="btn outline" onclick="app.share()">친구에게 테스트 공유하기</button>
+
+            <!-- Ad Placeholder -->
+            <!-- <div class="ad-box">광고 영역 (하단 배너)</div> -->
+        </div>
+
+    </div>
+
+    <script>
+        const data = {
+            questions: [
+                { q: "주말에 아무 약속이 없다면?", a: "A. 와! 하루 종일 넷플릭스 봐야지. (집콕)", b: "B. 심심한데.. 누구 만날 사람 없나? (연락)" },
+                { q: "로맨스 영화나 드라마를 볼 때 나의 반응은?", a: "A. '저게 말이 돼?' 현실성 따지고 있다.", b: "B. '와... 나도 저런 연애 하고 싶다.' 설렌다." },
+                { q: "이성에게 '뭐해?' 카톡이 왔다. 나의 답장 속도는?", a: "A. 알림 확인하고 나중에(한참 뒤에) 보낸다.", b: "B. 5분 안에 바로 답장한다. (칼답)" },
+                { q: "친구가 소개팅을 제안했다.", a: "A. \"아 귀찮아... 사진 있어?\" 조건부터 따진다.", b: "B. \"오 진짜/ 언제? 누구야?\" 일단 OK한다." },
+                { q: "길거리에서 커플을 볼 때 드는 생각은?", a: "A. '더운데 잘 붙어있네...' (무감각)", b: "B. '부럽다... 나도 팔짱 끼고 싶다.' (동경)" },
+                { q: "꾸미고 나가는 날의 기준은?", a: "A. 경조사, 면접 등 중요한 날 아니면 안 꾸밈.", b: "B. 집 앞 카페 갈 때도 은근 신경 씀." },
+                { q: "연애를 안 한지 얼마나 되었나?", a: "A. 기억도 안 난다. (N년차 솔로)", b: "B. 헤어진 지 얼마 안 됐거나, 썸은 있었다." },
+                { q: "이성과 대화할 때 나의 상태는?", a: "A. 비즈니스 모드. 할 말만 한다.", b: "B. 리액션 폭발. 눈을 맞추며 웃는다." },
+                { q: "크리스마스, 발렌타인데이 같은 기념일이 다가오면?", a: "A. 그냥 빨간 날(공휴일)일 뿐이다.", b: "B. 뭔가 특별한 일이 생길 것 같아 기대된다." },
+                { q: "이상형에 가까운 사람이 나타났다!", a: "A. '저 사람은 애인 있겠지' 포기한다.", b: "B. 기회를 엿보다가 말을 걸어본다." }
+            ],
+            results: [
+                {
+                    min: 0, max: 2,
+                    img: "🗿",
+                    type: "연애세포 사망",
+                    title: "비자발적 화석",
+                    desc: "당신의 연애세포는 이미 화석이 되었습니다.<br><br>혼자 노는 게 너무 편하고, 남 만나는 건 피곤한 일이라고 생각하시나요? 심장이 뛰는 게 언제인지 기억도 안 나는 상태입니다.<br>하지만 괜찮아요. 솔로 천국 커플 지옥이니까요! (눈물 닦으세요)"
+                },
+                {
+                    min: 3, max: 5,
+                    img: "🐻",
+                    type: "겨울잠 모드",
+                    title: "동면 중인 곰",
+                    desc: "연애를 하고 싶긴 한데... 막상 하려니 귀찮습니다.<br><br>누가 멱살 잡고 캐리해서 연애 시켜주면 할 의향은 있습니다. 하지만 내가 노력하기엔 이불 밖은 너무 위험해!<br>봄이 오면 깨어나실 건가요? 영원히 잘 수도 있습니다."
+                },
+                {
+                    min: 6, max: 8,
+                    img: "🦊",
+                    type: "활동 주의보",
+                    title: "두리번거리는 미어캣",
+                    desc: "외롭다... 외로워!<br><br>연애세포가 아주 건강하게 살아있습니다. 괜찮은 사람 없나 항상 레이더를 켜고 다니는군요.<br>썸만 타면 바로 커플이 될 준비가 되셨습니다. 조금만 더 적극적으로 들이대보세요!"
+                },
+                {
+                    min: 9, max: 10,
+                    img: "🔥",
+                    type: "활화산 폭발",
+                    title: "금사빠 불꽃",
+                    desc: "지금 당장이라도 연애 가능! 사랑에 빠질 준비 완료!<br><br>작은 호의에도 '혹시 나 좋아하나?' 착각할 정도로 연애세포가 과다 활동 중입니다.<br>열정이 넘치는 건 좋지만, 속도위반(?) 하지 않게 조심하세요. 금방 식을 수도 있으니까요!"
+                }
+            ]
+        };
+
+        const app = {
+            current: 0,
+            score: 0, // B choices count
+
+            start: function () {
+                document.getElementById('start-screen').classList.remove('active');
+                document.getElementById('q-screen').classList.add('active');
+                this.render();
+            },
+
+            render: function () {
+                const q = data.questions[this.current];
+                const percent = (this.current / data.questions.length) * 100;
+
+                document.getElementById('bar').style.width = percent + '%';
+                document.getElementById('q-num').innerText = this.current + 1;
+                document.getElementById('q-text').innerText = q.q;
+                document.getElementById('choice-a').innerText = q.a;
+                document.getElementById('choice-b').innerText = q.b;
+            },
+
+            answer: function (choice) {
+                // choice 0 is A (No), 1 is B (Yes)
+                if (choice === 1) this.score++;
+
+                this.current++;
+                if (this.current < data.questions.length) {
+                    this.render();
+                } else {
+                    this.showLoading();
+                }
+            },
+
+            showLoading: function () {
+                document.getElementById('q-screen').classList.remove('active');
+                document.getElementById('loading-screen').classList.add('active');
+
+                setTimeout(() => {
+                    this.showResult();
+                }, 3000);
+            },
+
+            showResult: function () {
+                document.getElementById('loading-screen').classList.remove('active');
+                document.getElementById('result-screen').classList.add('active');
+
+                const finalScore = this.score;
+                let res = data.results.find(r => finalScore >= r.min && finalScore <= r.max);
+                // Fallback
+                if (!res) res = data.results[0];
+
+                document.getElementById('res-img').innerText = res.img;
+                document.getElementById('res-type').innerText = res.type;
+                document.getElementById('res-title').innerText = res.title;
+                document.getElementById('res-desc').innerHTML = res.desc;
+            },
+
+            share: function () {
+                // Dummy share
+                const text = "나랑 밥 먹어줄 사람 구함! 내 연애세포 결과는... " + document.getElementById('res-title').innerText;
+                if (navigator.share) {
+                    navigator.share({
+                        title: '연애세포 생존 테스트',
+                        text: text,
+                        url: window.location.href,
+                    });
+                } else {
+                    alert('결과가 클립보드에 복사되었습니다: ' + text);
+                }
+            }
+        };
+    </script>
+</body>
+
+</html>

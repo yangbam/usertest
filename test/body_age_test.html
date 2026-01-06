@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>신체 나이 자가 진단 테스트 - 내 몸은 몇 살일까?</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Healthcare Theme: White & Mint/Green */
+        :root {
+            --primary-green: #2ecc71;
+            --dark-green: #27ae60;
+            --bg-color: #f0f7f4;
+            --text-color: #2c3e50;
+            --card-white: #ffffff;
+            --alert-red: #e74c3c;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            color: var(--text-color);
+        }
+
+        #app {
+            width: 100%;
+            max-width: 500px;
+            background-color: var(--card-white);
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Utility */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .text-green {
+            color: var(--dark-green);
+        }
+
+        .text-red {
+            color: var(--alert-red);
+        }
+
+        /* Header */
+        .header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            background-color: white;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            margin: 0;
+            color: var(--dark-green);
+        }
+
+        /* Start Screen */
+        .container {
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .main-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            color: var(--primary-green);
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0% {
+                transform: scale(1);
+            }
+
+            5% {
+                transform: scale(1.1);
+            }
+
+            10% {
+                transform: scale(1);
+            }
+
+            15% {
+                transform: scale(1.1);
+            }
+
+            50% {
+                transform: scale(1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(46, 204, 113, 0.2);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-green);
+            color: white;
+        }
+
+        .btn-primary:active {
+            background-color: var(--dark-green);
+            transform: translateY(2px);
+        }
+
+        .btn-outline {
+            background-color: white;
+            border: 2px solid var(--primary-green);
+            color: var(--primary-green);
+        }
+
+        /* Quiz Screen */
+        .item-num {
+            color: var(--primary-green);
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .question-text {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            line-height: 1.4;
+        }
+
+        .choice-btn {
+            width: 100%;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            font-size: 16px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #555;
+        }
+
+        .choice-btn:hover {
+            background-color: #e8f8f5;
+            border-color: var(--primary-green);
+            color: var(--dark-green);
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background-color: #eee;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 20;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary-green);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        /* Loading Screen */
+        .loading-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.5;
+            }
+        }
+
+        /* Result Screen */
+        .result-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #e8f8f5;
+            color: var(--dark-green);
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .result-age {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--dark-green);
+            margin-bottom: 10px;
+        }
+
+        .result-box {
+            background-color: #f9f9f9;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            text-align: left;
+            border-left: 5px solid var(--primary-green);
+        }
+
+        .result-desc {
+            font-size: 16px;
+            line-height: 1.75;
+            color: #555;
+        }
+
+        .keyword {
+            background-color: rgba(46, 204, 113, 0.2);
+            font-weight: bold;
+            padding: 0 4px;
+            border-radius: 4px;
+        }
+
+        /* Ad Placeholder */
+        .ad-placeholder {
+            width: 100%;
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #999;
+            font-size: 12px;
+            margin: 20px 0;
+            text-align: center;
+            padding: 30px 10px;
+            border-radius: 8px;
+        }
+
+        .recommend-btn {
+            background-color: #34495e;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            display: block;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="progress-container" id="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <div id="app">
+        <!-- 1. START SCREEN -->
+        <div id="start-screen" class="container">
+            <!-- AD: Top (Small) -->
+            <!--
+        <div class="ad-placeholder" style="padding: 10px; height: 60px;">
+            병원/건강검진 상단 배너
+        </div>
+        -->
+
+            <div class="main-icon">🩺</div>
+            <h1 class="title">신체 나이<br>자가 진단 테스트</h1>
+            <p class="subtitle">
+                주민등록 나이는 숫자에 불과합니다.<br>
+                당신의 진짜 몸 나이는 몇 살일까요?<br>
+                <span style="font-size: 12px; color: #999;">(소요시간 2분 / 총 12문항)</span>
+            </p>
+
+            <button class="btn btn-primary" onclick="app.start()">내 건강 상태 확인하기</button>
+
+            <p style="font-size: 12px; color: #aaa; margin-top: 20px;">
+                본 테스트는 자가 진단 참고용이며,<br>정확한 진단은 전문의와 상담하세요.
+            </p>
+        </div>
+
+        <!-- 2. QUIZ SCREEN -->
+        <div id="quiz-screen" class="container hidden" style="align-items: stretch; text-align: left;">
+            <span class="item-num">문진표 <span id="q-num">1</span> / 12</span>
+            <div id="q-text" class="question-text">질문 텍스트</div>
+
+            <div id="choices-area">
+                <!-- Buttons -->
+            </div>
+
+            <!-- AD: Quiz Bottom -->
+            <!--
+        <div class="ad-placeholder" style="margin-top: auto;">
+            건강 정보 배너 광고
+        </div>
+        -->
+        </div>
+
+        <!-- 3. LOADING SCREEN -->
+        <div id="loading-screen" class="container hidden">
+            <div class="loading-icon">🔬</div>
+            <h2>세포 노화도 분석 중...</h2>
+            <p style="color: #7f8c8d; margin-bottom: 30px;">
+                장기 기능 및 근골격계 상태를<br>정밀 계산하고 있습니다.
+            </p>
+
+            <!-- AD: Interstitial (Big) -->
+            <!--
+        <div class="ad-placeholder" style="width: 300px; height: 250px; background-color: white; border: 2px solid var(--primary-green);">
+            <div style="font-weight: bold; color: var(--dark-green); margin-bottom: 10px;">[AI 정밀 분석]</div>
+            전면 광고 영역 (300x250)<br>
+            추천: 종합검진 할인, 암보험 견적, 맞춤 영양제
+        </div>
+        -->
+        </div>
+
+        <!-- 4. RESULT SCREEN -->
+        <div id="result-screen" class="container hidden">
+            <div class="header" style="width: 100%; position: relative; padding: 10px 0; border: none;">
+                <div class="result-badge">진단 결과</div>
+            </div>
+
+            <h1 id="res-title" style="font-size: 24px; margin-bottom: 5px;">당신의 신체 나이는?</h1>
+            <div id="res-age" class="result-age">00세</div>
+
+            <div class="result-box">
+                <h3 id="res-sub-title" style="margin-top: 0; color: #333;">상태 요약</h3>
+                <div id="res-desc" class="result-desc">
+                    결과 설명
+                </div>
+            </div>
+
+            <!-- AD: Result Middle -->
+            <!--
+        <div class="ad-placeholder" style="height: 100px; background-color: #fff8e1; border-color: #ffe082;">
+            <span style="font-weight: bold; color: #f57f17;">👍 당신에게 필요한 건강 아이템</span><br>
+            "피로회복엔 고함량 비타민B 추천"
+        </div>
+        -->
+
+            <!-- Dummy Recommendation Button (High CPC Link) -->
+            <!--
+        <a href="#" class="recommend-btn" onclick="alert('광고 페이지로 이동')">
+            💊 내 연령대에 꼭 필요한 필수 영양제 보기 >
+        </a>
+        -->
+
+            <div style="display: flex; gap: 10px; width: 100%; margin-top: 20px;">
+                <button class="btn btn-primary" style="flex: 1;" onclick="app.share()">진단서 공유하기</button>
+                <button class="btn btn-outline" style="flex: 1;" onclick="location.reload()">다시 검사하기</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA ---
+        // 점수: 높을수록 노화 진행 (나쁨)
+        const quizData = [
+            {
+                q: "아침에 일어날 때 몸이 무겁고 개운하지 않은가?",
+                choices: [
+                    { text: "매일 그렇다 (5점)", val: 5 },
+                    { text: "가끔 그렇다 (3점)", val: 3 },
+                    { text: "아니오, 개운하다 (0점)", val: 0 }
+                ]
+            },
+            {
+                q: "일주일에 운동(땀이 날 정도)을 얼마나 하는가?",
+                choices: [
+                    { text: "거의 안 한다 (5점)", val: 5 },
+                    { text: "1~2회 정도 (3점)", val: 3 },
+                    { text: "3회 이상 (0점)", val: 0 }
+                ]
+            },
+            {
+                q: "평소 식습관은 어떠한가? (인스턴트, 야식 등)",
+                choices: [
+                    { text: "자주 먹는다 (5점)", val: 5 },
+                    { text: "가끔 먹는다 (2점)", val: 2 },
+                    { text: "건강식 위주다 (0점)", val: 0 }
+                ]
+            },
+            {
+                q: "계단을 3층 정도 오를 때 숨이 많이 차는가?",
+                choices: [
+                    { text: "매우 힘들다 (5점)", val: 5 },
+                    { text: "약간 숨차다 (2점)", val: 2 },
+                    { text: "거뜬하다 (0점)", val: 0 }
+                ]
+            },
+            {
+                q: "최근 들어 건망증이 부쩍 심해졌는가?",
+                choices: [
+                    { text: "자주 깜빡한다 (4점)", val: 4 },
+                    { text: "가끔 그렇다 (2점)", val: 2 },
+                    { text: "비슷하다 (0점)", val: 0 }
+                ]
+            },
+            {
+                q: "하루 평균 수면 시간은?",
+                choices: [
+                    { text: "5시간 미만 (5점)", val: 5 },
+                    { text: "5~6시간 (3점)", val: 3 },
+                    { text: "7시간 이상 (0점)", val: 0 }
+                ]
+            },
+            {
+                q: "술을 얼마나 자주 마시는가?",
+                choices: [
+                    { text: "주 3회 이상 (5점)", val: 5 },
+                    { text: "주 1~2회 (3점)", val: 3 },
+                    { text: "거의 안 마신다 (0점)", val: 0 }
+                ]
+            },
+            {
+                q: "흡연을 하는가?",
+                choices: [
+                    { text: "한다 (5점)", val: 5 },
+                    { text: "끊었다 (2점)", val: 2 },
+                    { text: "안 한다 (0점)", val: 0 }
+                ]
+            },
+            {
+                q: "변비나 설사 등 소화기 문제가 자주 있는가?",
+                choices: [
+                    { text: "자주 그렇다 (4점)", val: 4 },
+                    { text: "가끔 그렇다 (2점)", val: 2 },
+                    { text: "없다 (0점)", val: 0 }
+                ]
+            },
+            {
+                q: "최근 1년 내에 건강검진을 받았는가?",
+                choices: [
+                    { text: "안 받았다 (3점)", val: 3 },
+                    { text: "받았다 (0점)", val: 0 }
+                ]
+            },
+            {
+                q: "평소 스트레스를 많이 받는 편인가?",
+                choices: [
+                    { text: "매우 많이 받는다 (5점)", val: 5 },
+                    { text: "보통이다 (2점)", val: 2 },
+                    { text: "적은 편이다 (0점)", val: 0 }
+                ]
+            },
+            {
+                q: "스마트폰이나 모니터를 볼 때 눈이 침침한가?",
+                choices: [
+                    { text: "자주 그렇다 (4점)", val: 4 },
+                    { text: "가끔 그렇다 (2점)", val: 2 },
+                    { text: "아니오 (0점)", val: 0 }
+                ]
+            }
+        ];
+
+        const results = [
+            {
+                // range: 0 ~ 10
+                summary: "신체 나이 10대\n(슈퍼맨)",
+                age: "18세",
+                desc: "놀랍습니다! 당신의 몸은 활력으로 가득 차 있습니다.\n꾸준한 운동과 좋은 식습관이 만든 결과네요.\n\n이 상태를 유지하는 것이 더 중요합니다.\n방심하지 말고 <span class='keyword'>종합 비타민</span> 정도만 챙겨주세요."
+            },
+            {
+                // range: 11 ~ 25
+                summary: "신체 나이 = 실제 나이\n(양호)",
+                age: "본인 나이",
+                desc: "나쁘지 않습니다. 딱 평균적인 건강 상태입니다.\n하지만 야근이나 스트레스가 조금만 쌓여도 급격히 노화될 수 있는 단계입니다.\n\n미리미리 관리하는 습관이 필요합니다.\n피로 회복을 위해 <span class='keyword'>오메가3</span>나 <span class='keyword'>간 영양제</span>를 고려해보세요."
+            },
+            {
+                // range: 26 ~ 40
+                summary: "신체 나이 +10살\n(노화 주의보)",
+                age: "본인 나이 + 10세",
+                desc: "경고! 몸 어딘가가 삐걱거리고 있습니다.\n만성 피로가 당신의 눈밑을 검게 만들고 있군요.\n\n지금 당장 운동을 시작하고 술/담배를 줄여야 합니다.\n혹시 모를 질병에 대비해 <span class='keyword'>실손 의료비 보험</span> 점검과 <span class='keyword'>정밀 건강 검진</span>이 시급합니다."
+            },
+            {
+                // range: 41 ~ 60 (Max 55)
+                summary: "신체 나이 60대\n(종합병원)",
+                age: "65세",
+                desc: "매우 심각합니다! 🚨\n당신의 몸은 이미 은퇴를 준비하고 있습니다.\n\n이대로 가다면 각종 성인병이 친구하자고 찾아올 겁니다.\n모든 생활 습관을 뜯어고치고, 휴식이 필요합니다.\n<span class='keyword'>안마 의자</span>에서 쉬거나 <span class='keyword'>클리닉</span> 방문을 강력 추천합니다."
+            }
+        ];
+
+        // --- APP LOGIC ---
+        const app = {
+            score: 0,
+            current: 0,
+
+            start: function () {
+                document.getElementById('start-screen').classList.add('hidden');
+                document.getElementById('quiz-screen').classList.remove('hidden');
+                document.getElementById('progress-container').style.display = 'block';
+                this.render();
+            },
+
+            render: function () {
+                const data = quizData[this.current];
+                const percent = ((this.current) / quizData.length) * 100;
+
+                document.getElementById('progress-bar').style.width = percent + '%';
+                document.getElementById('q-num').innerText = this.current + 1;
+                document.getElementById('q-text').innerText = data.q;
+
+                const choicesArea = document.getElementById('choices-area');
+                choicesArea.innerHTML = '';
+
+                data.choices.forEach(choice => {
+                    const btn = document.createElement('button');
+                    btn.className = 'choice-btn';
+                    btn.innerText = choice.text;
+                    btn.onclick = () => this.select(choice.val);
+                    choicesArea.appendChild(btn);
+                });
+            },
+
+            select: function (val) {
+                this.score += val;
+                this.current++;
+
+                if (this.current < quizData.length) {
+                    this.render();
+                } else {
+                    this.showLoading();
+                }
+            },
+
+            showLoading: function () {
+                document.getElementById('quiz-screen').classList.add('hidden');
+                document.getElementById('progress-container').style.display = 'none';
+                document.getElementById('loading-screen').classList.remove('hidden');
+
+                setTimeout(() => {
+                    this.showResult();
+                }, 4000); // 4s
+            },
+
+            showResult: function () {
+                document.getElementById('loading-screen').classList.add('hidden');
+                document.getElementById('result-screen').classList.remove('hidden');
+
+                let type = 0;
+                // Max score = 55 approx.
+                if (this.score <= 10) type = 0;
+                else if (this.score <= 25) type = 1;
+                else if (this.score <= 40) type = 2;
+                else type = 3;
+
+                const res = results[type];
+
+                document.getElementById('res-sub-title').innerText = res.summary;
+                document.getElementById('res-age').innerText = res.age;
+                document.getElementById('res-desc').innerHTML = res.desc;
+
+                // Conditional Coloring
+                const ageElem = document.getElementById('res-age');
+                if (type >= 2) ageElem.style.color = '#e74c3c';
+                else ageElem.style.color = '#2ecc71';
+            },
+
+            share: function () {
+                const age = document.getElementById('res-age').innerText;
+                const summary = document.getElementById('res-sub-title').innerText.replace('\n', ' ');
+                const text = `내 신체 나이 측정 결과: [${age}]\n상태: ${summary}\n\n너도 혹시 걸어 다니는 종합병원? 지금 바로 확인해봐! 🏥`;
+
+                if (navigator.share) {
+                    navigator.share({
+                        title: '신체 나이 자가 진단 테스트',
+                        text: text,
+                        url: window.location.href,
+                    });
+                } else {
+                    alert('진단서가 복사되었습니다. 지인들에게 공유하세요!\n\n' + text);
+                }
+            }
+        };
+    </script>
+
+</body>
+
+</html>

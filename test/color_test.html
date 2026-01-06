@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>초간단 퍼스널 컬러 자가 진단</title>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Montserrat:wght@400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Beauty Theme: White & Soft Pink */
+        :root {
+            --primary-pink: #ff80ab;
+            --soft-pink: #ffebee;
+            --deep-pink: #c51162;
+            --bg-white: #ffffff;
+            --text-dark: #333333;
+            --text-gray: #777777;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Gowun Dodum', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #fafafa;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        #app {
+            width: 100%;
+            max-width: 500px;
+            background-color: var(--bg-white);
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Utility */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-pink {
+            color: var(--primary-pink);
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .center-flex {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Header */
+        .header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            margin: 0;
+            color: var(--text-dark);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Start Screen */
+        .container {
+            padding: 40px 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .main-img {
+            width: 150px;
+            height: 150px;
+            background-color: var(--soft-pink);
+            border-radius: 50%;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+        }
+
+        .title {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            line-height: 1.4;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: var(--text-gray);
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 18px;
+            background-color: var(--primary-pink);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-bottom: 15px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(255, 128, 171, 0.3);
+        }
+
+        .btn:hover {
+            background-color: var(--deep-pink);
+        }
+
+        .btn-outline {
+            background-color: white;
+            border: 1px solid var(--primary-pink);
+            color: var(--primary-pink);
+            box-shadow: none;
+        }
+
+        /* Quiz Screen */
+        .progress-bar-bg {
+            width: 100%;
+            height: 4px;
+            background-color: #f0f0f0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary-pink);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .question-num {
+            color: var(--primary-pink);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .q-text {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            line-height: 1.4;
+        }
+
+        .choice-btn {
+            width: 100%;
+            padding: 22px;
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            font-size: 16px;
+            color: #555;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .choice-btn:hover {
+            border-color: var(--primary-pink);
+            background-color: var(--soft-pink);
+            color: var(--deep-pink);
+        }
+
+        .check-icon {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #ccc;
+            border-radius: 50%;
+        }
+
+        .choice-btn:hover .check-icon {
+            background-color: var(--primary-pink);
+            border-color: var(--primary-pink);
+        }
+
+        /* Loading Screen */
+        .loading-circle {
+            width: 60px;
+            height: 60px;
+            border: 3px solid var(--soft-pink);
+            border-top-color: var(--primary-pink);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 30px;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Result Screen */
+        .result-season {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            color: var(--primary-pink);
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .result-title {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .palette-box {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+
+        .color-chip {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .desc-box {
+            background-color: #f9f9f9;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: left;
+            line-height: 1.7;
+            font-size: 15px;
+            color: #555;
+        }
+
+        .keyword {
+            background-color: var(--soft-pink);
+            color: var(--deep-pink);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        /* Ad Placeholder */
+        .ad-placeholder {
+            width: 100%;
+            background-color: #fcfcfc;
+            border: 1px solid #eee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #aaa;
+            font-size: 12px;
+            margin: 20px 0;
+            text-align: center;
+            padding: 30px 10px;
+        }
+
+        .shop-btn {
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            display: block;
+            margin-top: 10px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="app">
+        <div class="header">
+            <h1>PERSONAL COLOR TEST</h1>
+        </div>
+
+        <!-- 1. START SCREEN -->
+        <div id="start-screen" class="container">
+            <!-- AD: Top -->
+            <!--
+        <div class="ad-placeholder" style="height: 60px;">
+            올리브영/화장품 브랜드 상단 배너
+        </div>
+        -->
+
+            <div class="main-img">🎨</div>
+            <h2 class="title">초간단 1분<br>퍼스널 컬러 자가 진단</h2>
+            <p class="subtitle">
+                립스틱 살 때마다 실패하시나요?<br>
+                복잡한 도구 없이 1분 만에<br>
+                나의 <strong>착붙 톤</strong>을 찾아보세요.
+            </p>
+
+            <button class="btn" onclick="app.start()">내 피부톤 진단하기</button>
+
+            <p style="font-size: 12px; color: #aaa;">
+                * 자연광 상태에서 거울을 보고 진행해주세요.
+            </p>
+        </div>
+
+        <!-- 2. QUIZ SCREEN -->
+        <div id="quiz-screen" class="container hidden" style="justify-content: flex-start; padding: 0;">
+            <div class="progress-bar-bg">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+
+            <div style="padding: 40px 25px; width: 100%;">
+                <span class="question-num">Q. <span id="q-num">1</span></span>
+                <div id="q-text" class="q-text">질문 텍스트</div>
+
+                <div id="choices-area">
+                    <!-- Buttons -->
+                </div>
+            </div>
+
+            <!-- AD: Quiz Bottom -->
+            <!--
+        <div class="ad-placeholder" style="margin-top: auto;">
+            퍼스널 컬러 진단 앱 광고
+        </div>
+        -->
+        </div>
+
+        <!-- 3. LOADING SCREEN -->
+        <div id="loading-screen" class="container hidden">
+            <div class="loading-circle"></div>
+            <h2 style="font-size: 20px;">피부 톤 분석 중...</h2>
+            <p style="color: #999; margin-bottom: 40px;">
+                혈색, 눈동자, 머리카락 색상을 종합하여<br>최적의 계절 톤을 매칭하고 있습니다.
+            </p>
+
+            <!-- AD: Interstitial (Big) -->
+            <!--
+        <div class="ad-placeholder" style="width: 300px; height: 250px; border: 1px solid #eee;">
+            <div style="color: var(--primary-pink); margin-bottom: 10px;">★ 당신을 위한 뷰티 추천 ★</div>
+            전면 광고 영역 (300x250)<br>
+            추천: 올리브영 세일, 립스틱 특가
+        </div>
+        -->
+        </div>
+
+        <!-- 4. RESULT SCREEN -->
+        <div id="result-screen" class="container hidden" style="padding-top: 40px;">
+            <div class="result-season" id="res-eng">SPRING WARM</div>
+            <h1 class="result-title" id="res-title">봄 웜톤</h1>
+
+            <!-- Color Palette -->
+            <div class="palette-box" id="res-palette">
+                <!-- Chips generated by JS -->
+            </div>
+
+            <div class="desc-box">
+                <h4 style="margin: 0 0 10px 0;">✨ 당신의 이미지</h4>
+                <div id="res-desc" style="margin-bottom: 20px;">설명...</div>
+
+                <h4 style="margin: 0 0 10px 0;">💄 추천 아이템</h4>
+                <div id="res-item">추천템...</div>
+            </div>
+
+            <!-- AD: Result Middle -->
+            <!--
+        <div class="ad-placeholder" style="height: 100px; background-color: #fff0f5;">
+            <span style="color: #d81b60;">[광고] 웜톤/쿨톤 맞춤 파운데이션 보기</span>
+        </div>
+        -->
+
+            <!-- Shopping Button -->
+            <!--
+        <a href="#" class="shop-btn" onclick="alert('쇼핑몰 페이지로 이동')">
+            🛍️ 내 톤에 맞는 찰떡 립스틱 보러 가기
+        </a>
+        -->
+
+            <div style="display: flex; gap: 10px; width: 100%; margin-top: 20px;">
+                <button class="btn" style="flex: 1;" onclick="app.share()">진단 결과 공유</button>
+                <button class="btn btn-outline" style="flex: 1;" onclick="location.reload()">다시 테스트</button>
+            </div>
+            <div style="height: 50px;"></div>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA ---
+        const quizData = [
+            {
+                q: "손목 안쪽의 혈관 색깔은?",
+                choices: [
+                    { text: "초록색 쪽에 가깝다", type: "warm" },
+                    { text: "푸른색/보라색 쪽에 가깝다", type: "cool" }
+                ]
+            },
+            {
+                q: "평소 더 잘 어울리는 액세서리는?",
+                choices: [
+                    { text: "골드 (금)", type: "warm" },
+                    { text: "실버 (은)", type: "cool" }
+                ]
+            },
+            {
+                q: "햇볕에 장시간 노출되었을 때 피부는?",
+                choices: [
+                    { text: "검게 탄다", type: "warm" },
+                    { text: "빨갛게 익는다", type: "cool" }
+                ]
+            },
+            {
+                q: "내 피부에 더 잘 맞는 립스틱 컬러는?",
+                choices: [
+                    { text: "오렌지, 코랄, 피치 계열", type: "warm" },
+                    { text: "핑크, 마젠타, 푸시아 계열", type: "cool" }
+                ]
+            },
+            {
+                q: "염색을 한다면 어떤 색이 더 어울릴까?",
+                choices: [
+                    { text: "브라운, 카키 계열", type: "warm" },
+                    { text: "블랙, 와인, 애쉬 계열", type: "cool" }
+                ]
+            },
+            {
+                q: "지인들에게 자주 듣는 이미지 평가는?",
+                choices: [
+                    { text: "따뜻하다, 생기 있다, 차분하다", type: "warm" },
+                    { text: "시크하다, 깨끗하다, 세련됐다", type: "cool" }
+                ]
+            },
+            {
+                q: "흰색 티셔츠를 고른다면?",
+                choices: [
+                    { text: "아이보리 (크림색)", type: "warm" },
+                    { text: "새하얀 퓨어 화이트", type: "cool" }
+                ]
+            },
+            {
+                q: "눈동자 색깔은?",
+                choices: [
+                    { text: "밝은 갈색 또는 진한 갈색", type: "warm" },
+                    { text: "검정색 또는 회갈색", type: "cool" }
+                ]
+            },
+            {
+                q: "잘 어울리는 블러셔(볼터치) 색상은?",
+                choices: [
+                    { text: "살구색, 코랄색", type: "warm" },
+                    { text: "연분홍, 라벤더색", type: "cool" }
+                ]
+            },
+            {
+                // Season Determination Question
+                q: "더 선호하는 분위기나 옷 스타일은?",
+                choices: [
+                    { text: "밝고 화사하거나, 부드러운 파스텔 톤", val: "light" }, // Spring/Summer
+                    { text: "깊이 있고 성숙하거나, 선명하고 강렬한 톤", val: "deep" } // Autumn/Winter
+                ]
+            }
+        ];
+
+        const results = {
+            spring: {
+                eng: "SPRING WARM",
+                title: "봄 웜톤",
+                palette: ["#ffb7b2", "#ffdac1", "#e2f0cb", "#ffcd3c"],
+                desc: "당신은 따뜻한 봄햇살처럼 **생기 있고 발랄한 이미지**를 가졌습니다.\n복숭아처럼 화사한 피부 톤이 특징이며, 칙칙한 색보다는 밝고 선명한 색이 얼굴을 환하게 밝혀줍니다.",
+                item: "<span class='keyword'>코랄 립스틱</span> <span class='keyword'>골드 쥬얼리</span> <span class='keyword'>플라워 패턴 원피스</span> <span class='keyword'>브라운 염색</span>"
+            },
+            summer: {
+                eng: "SUMMER COOL",
+                title: "여름 쿨톤",
+                palette: ["#dcd0ff", "#b5e6eb", "#ffc0cb", "#f8f9fa"],
+                desc: "당신은 여름 비 온 뒤처럼 **청량하고 깨끗한 이미지**입니다.\n투명한 피부를 가졌으며, 강렬한 원색보다는 부드러운 파스텔 톤이나 그레이 섞인 뮤트한 컬러가 우아함을 더해줍니다.",
+                item: "<span class='keyword'>딸기우유 블러셔</span> <span class='keyword'>실버링</span> <span class='keyword'>라벤더 니트</span> <span class='keyword'>내추럴 메이크업</span>"
+            },
+            autumn: {
+                eng: "AUTUMN WARM",
+                title: "가을 웜톤",
+                palette: ["#d2691e", "#8b4513", "#556b2f", "#daa520"],
+                desc: "당신은 가을의 깊이감을 닮은 **고급스럽고 분위기 있는 이미지**입니다.\n성숙하고 지적인 느낌을 주며, 카키, 브라운, 버건디 등 깊고 진한 색상이 당신의 매력을 극대화합니다.",
+                item: "<span class='keyword'>말린 장미 립</span> <span class='keyword'>음영 섀도우</span> <span class='keyword'>트렌치 코트</span> <span class='keyword'>골드/브라스 액세서리</span>"
+            },
+            winter: {
+                eng: "WINTER COOL",
+                title: "겨울 쿨톤",
+                palette: ["#000000", "#ffffff", "#c51162", "#1a237e"],
+                desc: "당신은 도시적이고 **카리스마 넘치는 세련된 이미지**입니다.\n이목구비가 뚜렷하며, 애매한 색보다는 쨍한 블랙&화이트나 비비드한 컬러가 형광등 켠 듯 잘 어울립니다.",
+                item: "<span class='keyword'>레드 립</span> <span class='keyword'>블랙 자켓</span> <span class='keyword'>화이트 셔츠</span> <span class='keyword'>실버/다이아몬드</span>"
+            }
+        };
+
+        // --- APP LOGIC ---
+        const app = {
+            counts: { warm: 0, cool: 0 },
+            vibe: "light", // light or deep
+            current: 0,
+
+            start: function () {
+                document.getElementById('start-screen').classList.add('hidden');
+                document.getElementById('quiz-screen').classList.remove('hidden');
+                this.render();
+            },
+
+            render: function () {
+                const data = quizData[this.current];
+                const percent = ((this.current) / quizData.length) * 100;
+
+                document.getElementById('progress-bar').style.width = percent + '%';
+                document.getElementById('q-num').innerText = this.current + 1;
+                document.getElementById('q-text').innerText = data.q;
+
+                const choicesArea = document.getElementById('choices-area');
+                choicesArea.innerHTML = '';
+
+                data.choices.forEach(choice => {
+                    const btn = document.createElement('div');
+                    btn.className = 'choice-btn';
+                    btn.innerHTML = `<span>${choice.text}</span> <div class='check-icon'></div>`;
+                    btn.onclick = () => {
+                        // Check logic based on property existence
+                        if (choice.type) this.selectType(choice.type);
+                        else if (choice.val) this.selectVibe(choice.val);
+                    };
+                    choicesArea.appendChild(btn);
+                });
+            },
+
+            selectType: function (type) {
+                this.counts[type]++;
+                this.next();
+            },
+
+            selectVibe: function (val) {
+                this.vibe = val;
+                this.next();
+            },
+
+            next: function () {
+                this.current++;
+                if (this.current < quizData.length) {
+                    this.render();
+                } else {
+                    this.showLoading();
+                }
+            },
+
+            showLoading: function () {
+                document.getElementById('quiz-screen').classList.add('hidden');
+                document.getElementById('loading-screen').classList.remove('hidden');
+
+                setTimeout(() => {
+                    this.showResult();
+                }, 3000); // 3s
+            },
+
+            showResult: function () {
+                document.getElementById('loading-screen').classList.add('hidden');
+                document.getElementById('result-screen').classList.remove('hidden');
+
+                // Logic
+                let season = "";
+                const isWarm = this.counts.warm >= this.counts.cool;
+
+                if (isWarm) {
+                    // Warm
+                    if (this.vibe === 'light') season = 'spring';
+                    else season = 'autumn';
+                } else {
+                    // Cool
+                    if (this.vibe === 'light') season = 'summer';
+                    else season = 'winter';
+                }
+
+                const data = results[season];
+
+                document.getElementById('res-eng').innerText = data.eng;
+                document.getElementById('res-title').innerText = data.title;
+                // Set Color Palette
+                const paletteBox = document.getElementById('res-palette');
+                paletteBox.innerHTML = '';
+                data.palette.forEach(color => {
+                    const chip = document.createElement('div');
+                    chip.className = 'color-chip';
+                    chip.style.backgroundColor = color;
+                    paletteBox.appendChild(chip);
+                });
+
+                document.getElementById('res-desc').innerHTML = data.desc;
+                document.getElementById('res-item').innerHTML = data.item;
+            },
+
+            share: function () {
+                const title = document.getElementById('res-title').innerText;
+                const text = `내 퍼스널 컬러는: [${title}]\n\n나한테 어울리는 찰떡 컬러는 뭘까? 1분 만에 진단해보세요! 🎨`;
+
+                if (navigator.share) {
+                    navigator.share({
+                        title: '퍼스널 컬러 자가 진단',
+                        text: text,
+                        url: window.location.href,
+                    });
+                } else {
+                    alert('결과가 복사되었습니다. 저장해두고 쇼핑할 때 참고하세요!\n\n' + text);
+                }
+            }
+        };
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>내 소비 패턴 분석 테스트 (거지 DNA 테스트)</title>
+    <style>
+        /* Receipt Design Theme */
+        :root {
+            --paper-white: #fdfdfd;
+            --ink-black: #2d2d2d;
+            --highlight-green: #27ae60;
+            --highlight-red: #c0392b;
+            --gray-line: #ddd;
+        }
+
+        @font-face {
+            font-family: 'ReceiptFont';
+            src: local('Courier New'), local('Courier'), monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'ReceiptFont', 'Courier New', monospace;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            color: var(--ink-black);
+        }
+
+        #app {
+            width: 100%;
+            max-width: 480px;
+            background-color: var(--paper-white);
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+
+            /* Receipt Zig-Zag Effect */
+            background-image:
+                linear-gradient(135deg, #e0e0e0 5px, transparent 5px),
+                linear-gradient(225deg, #e0e0e0 5px, transparent 5px);
+            background-position: bottom left;
+            background-size: 20px 20px;
+            background-repeat: repeat-x;
+            padding-bottom: 20px;
+        }
+
+        /* Utility */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .divider {
+            border-bottom: 1px dashed var(--ink-black);
+            margin: 20px 0;
+            width: 100%;
+        }
+
+        .double-divider {
+            border-bottom: 3px double var(--ink-black);
+            margin: 20px 0;
+            width: 100%;
+        }
+
+        /* Start Screen */
+        .container {
+            padding: 40px 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+        }
+
+        .logo-area {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .receipt-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+        }
+
+        .timestamp {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--ink-black);
+            color: white;
+            border: none;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn-outline {
+            background-color: white;
+            color: var(--ink-black);
+            border: 2px solid var(--ink-black);
+        }
+
+        /* Quiz Screen */
+        .question-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .q-number {
+            font-size: 16px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .q-text {
+            font-size: 20px;
+            font-weight: bold;
+            line-height: 1.5;
+            margin-bottom: 40px;
+            text-align: center;
+            word-break: keep-all;
+        }
+
+        .choice-btn {
+            width: 100%;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid var(--ink-black);
+            margin-bottom: 15px;
+            font-size: 16px;
+            text-align: left;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .choice-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .price-tag {
+            float: right;
+            font-weight: bold;
+        }
+
+        /* Loading Screen */
+        .loading-text {
+            font-size: 18px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        /* Result Screen */
+        .result-title {
+            font-size: 28px;
+            font-weight: 900;
+            text-align: center;
+            margin: 20px 0;
+            text-decoration: underline;
+        }
+
+        .result-box {
+            width: 100%;
+            border: 1px solid var(--ink-black);
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #fff;
+        }
+
+        .result-desc {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            white-space: pre-line;
+        }
+
+        .keyword {
+            background-color: yellow;
+            font-weight: bold;
+            padding: 0 4px;
+        }
+
+        /* Ad Placeholder */
+        .ad-placeholder {
+            width: 100%;
+            background-color: #f1f1f1;
+            border: 2px dashed #bbb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #888;
+            font-size: 12px;
+            margin: 15px 0;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Animation */
+        @keyframes print {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-print {
+            animation: print 1s ease-out forwards;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="app">
+        <!-- 1. START SCREEN -->
+        <div id="start-screen" class="container">
+            <!-- AD: Top Banner -->
+            <!--
+        <div class="ad-placeholder" style="height: 60px;">
+            상단 배너 광고
+        </div>
+        -->
+
+            <div class="receipt-header">
+                <div style="font-size: 40px; margin-bottom: 10px;">🧾</div>
+                <div class="title">소비 패턴 분석<br>거지 DNA 테스트</div>
+                <div class="divider"></div>
+                <div class="timestamp" id="current-time">DATE: 2026-01-06</div>
+                <div class="timestamp">ORDER: #0001</div>
+                <div class="divider"></div>
+            </div>
+
+            <p class="text-center" style="margin-bottom: 40px; line-height: 1.6;">
+                "이번 달도 통장이 텅장이라면?"<br>
+                당신의 지갑에 구멍이 난 원인을<br>
+                영수증으로 분석해드립니다.
+            </p>
+
+            <button class="btn" onclick="app.start()">분석 시작하기 (FREE)</button>
+
+            <p style="font-size: 12px; color: #888;">
+                * 주의: 팩트 폭격에 뼈가 부러질 수 있음.
+            </p>
+        </div>
+
+        <!-- 2. QUIZ SCREEN -->
+        <div id="quiz-screen" class="container hidden">
+            <div class="divider"></div>
+            <div class="q-number">ITEM <span id="q-num">1</span> / 10</div>
+            <div class="double-divider"></div>
+
+            <div class="question-area">
+                <div id="q-text" class="q-text">질문 내용이 들어갑니다.</div>
+
+                <div id="choices-area">
+                    <!-- Buttons injected by JS -->
+                </div>
+            </div>
+
+            <!-- AD: Quiz Bottom -->
+            <!--
+        <div class="ad-placeholder" style="height: 50px; margin-top: auto;">
+            하단 배너 광고
+        </div>
+        -->
+        </div>
+
+        <!-- 3. LOADING SCREEN (Interstitial) -->
+        <div id="loading-screen" class="container hidden justify-center">
+            <div style="font-size: 50px; animation: spin 2s infinite linear;">💸</div>
+            <h2 class="loading-text">영수증 출력 중...</h2>
+            <p style="color: #666; font-size: 14px;">당신의 5년 뒤 자산 규모 계산 중</p>
+
+            <!-- AD: Interstitial (Big) -->
+            <!--
+        <div class="ad-placeholder" style="width: 300px; height: 250px; margin-top: 30px;">
+            전면 광고 영역 (300x250)<br>
+            추천: 적금 특판, 투자 강의, 가계부 앱
+        </div>
+        -->
+        </div>
+
+        <!-- 4. RESULT SCREEN -->
+        <div id="result-screen" class="container hidden animate-print">
+            <div class="receipt-header">
+                <div class="title">FINAL RECEIPT</div>
+                <div class="divider"></div>
+                <div class="timestamp">TOTAL AMOUNT: ₩0</div>
+            </div>
+
+            <div class="result-title" id="res-title">결과 타이틀</div>
+
+            <div class="result-box">
+                <div class="text-center" style="margin-bottom: 15px; font-weight: bold;">[상세 분석 내역]</div>
+                <div class="divider"></div>
+                <div id="res-desc" class="result-desc">
+                    결과 설명 부분
+                </div>
+                <div class="divider"></div>
+                <div style="display: flex; justify-content: space-between; font-weight: bold;">
+                    <span>자산 건강도</span>
+                    <span id="res-score">0%</span>
+                </div>
+            </div>
+
+            <!-- AD: Result Middle -->
+            <!--
+        <div class="ad-placeholder" style="height: 100px;">
+            금융 상품 추천 광고 영역<br>
+            "연 5% 파킹통장 알아보기"
+        </div>
+        -->
+
+            <button class="btn" style="margin-top: 20px;" onclick="location.reload()">새 영수증 뽑기 (재시작)</button>
+            <button class="btn btn-outline" onclick="app.share()">친구 영수증도 확인하기</button>
+
+            <!-- Fake CTA -->
+            <!--
+        <button class="btn" style="background-color: #27ae60; margin-top: 10px;" onclick="alert('광고 링크로 이동')">
+            내 소비 습관 고쳐주는 앱 보기 >
+        </button>
+        -->
+        </div>
+    </div>
+
+    <script>
+        // --- DATA ---
+        const quizData = [
+            {
+                q: "월급날 통장에 찍힌 숫자를 본 나의 반응은?",
+                choices: [
+                    { text: "일단 카드값부터 빠져나가겠군...", val: 0 }, // 현실 직시/걱정
+                    { text: "오늘 저녁은 무조건 맛있는 거!", val: 1 }   // 소비 지향
+                ]
+            },
+            {
+                q: "새벽 2시, 배달 앱을 켰는데 배달비가 5천 원이라면?",
+                choices: [
+                    { text: "미쳤네, 그냥 라면 끓여 먹자.", val: 0 }, // 절약
+                    { text: "아깝지만 먹고 싶은 건 먹어야지.", val: 1 } // 소비
+                ]
+            },
+            {
+                q: "친구가 코인/주식으로 돈 벌었다고 자랑할 때?",
+                choices: [
+                    { text: "부럽지만 나는 내 갈 길 간다. (적금)", val: 0 },
+                    { text: "어떤 종목인데? 당장 산다.", val: 1 }
+                ]
+            },
+            {
+                q: "편의점에서 1+1 행사를 하고 있다. 살 생각 없던 물건이라면?",
+                choices: [
+                    { text: "필요 없으면 안 산다.", val: 0 },
+                    { text: "이건 돈 버는 거야! 무조건 산다.", val: 1 }
+                ]
+            },
+            {
+                q: "스트레스를 받았을 때 해소하는 방법은?",
+                choices: [
+                    { text: "잠을 자거나 산책을 한다.", val: 0 },
+                    { text: "쇼핑하거나 비싼 술을 마신다.", val: 1 }
+                ]
+            },
+            {
+                q: "구독 서비스(넷플릭스, 멜론 등) 결제 문자가 날아왔다.",
+                choices: [
+                    { text: "내가 쓰고 있는 게 맞는지 확인한다.", val: 0 },
+                    { text: "빠져나갔나 보다 하고 넘긴다.", val: 1 }
+                ]
+            },
+            {
+                q: "택시를 타는 기준은?",
+                choices: [
+                    { text: "몸이 정말 아프거나 짐이 많을 때만.", val: 0 },
+                    { text: "걷기 귀찮거나 늦잠 잤을 때.", val: 1 }
+                ]
+            },
+            {
+                q: "이번 달 카드 명세서를 확인하는 자세는?",
+                choices: [
+                    { text: "하나하나 꼼꼼히 체크한다.", val: 0 },
+                    { text: "총액만 보고 흐린 눈 한다.", val: 1 }
+                ]
+            },
+            {
+                q: "친구들과 여행 가서 'N빵' 할 때,",
+                choices: [
+                    { text: "10원 단위까지 정확하게 계산한다.", val: 0 },
+                    { text: "대충 퉁쳐서 계산한다.", val: 1 }
+                ]
+            },
+            {
+                q: "로또 1등에 당첨된다면?",
+                choices: [
+                    { text: "저축하고 건물 사서 월세 받는다.", val: 0 },
+                    { text: "일단 퇴사하고 명품부터 지른다.", val: 1 }
+                ]
+            }
+        ];
+
+        const results = [
+            {
+                // 0 ~ 2개 (Saver)
+                title: "워렌 버핏의 후예\n(THE RICH)",
+                score: "95%",
+                desc: "완벽합니다! 당신의 지갑은 철옹성입니다.\n불필요한 지출을 극도로 싫어하고, 돈의 가치를 아는 분이시군요.\n\n이미 시드머니는 충분히 모으셨을 것 같네요.\n이제는 단순히 아끼는 것을 넘어, 투자를 통해 자산을 불릴 차례입니다.\n\n추천: <span class='keyword'>투자 강의 수강</span>, <span class='keyword'>부동산 공부</span>."
+            },
+            {
+                // 3 ~ 5개 (Normal)
+                title: "무지출 챌린저\n(SAVER)",
+                score: "70%",
+                desc: "돈은 안 쓰는데, 딱히 불릴 줄도 모르는 타입.\n'짠테크'는 잘하지만 큰 그림을 보는 눈이 부족할 수 있습니다.\n\n티끌 모아 티끌이 될 수도 있어요.\n통장에 돈을 썩히지 말고 굴리는 방법을 찾아보세요.\n\n추천: <span class='keyword'>CMA 통장 개설</span>, <span class='keyword'>저위험 중수익 펀드</span>."
+            },
+            {
+                // 6 ~ 8개 (Spender)
+                title: "기부 천사\n(DONATOR)",
+                score: "40%",
+                desc: "귀가 얇고 감정적인 소비가 잦은 타입.\n\"이거 좋대!\" 하면 사고, 기분 안 좋으면 술 사 먹느라 돈을 씁니다.\n\n남 좋은 일만 시키고 정작 본인 통장은 텅 비어있네요.\n지금 당장 고정 지출부터 줄여야 합니다.\n\n추천: <span class='keyword'>보험 리모델링</span>, <span class='keyword'>신용카드 자르기</span>."
+            },
+            {
+                // 9 ~ 10개 (Beggar)
+                title: "숨만 쉬어도 적자\n(BEGGAR DNA)",
+                score: "5%",
+                desc: "축하합니다! 당신은 자본주의가 낳은 최고의 소비자입니다.\n버는 족족 다 쓰는 것도 능력이라면 능력이죠.\n\n이대로 살다간 5년 뒤에 길거리에 나앉을 수 있습니다.\n지금 당장 소비를 멈추고 강제 저축 시스템을 만드세요.\n\n추천: <span class='keyword'>강제 저축 적금</span>, <span class='keyword'>가계부 앱 설치</span>."
+            }
+        ];
+
+        // --- APP LOGIC ---
+        const app = {
+            score: 0,
+            current: 0,
+
+            init: function () {
+                // Set Date
+                const today = new Date();
+                document.getElementById('current-time').innerText = `DATE: ${today.toISOString().split('T')[0]}`;
+            },
+
+            start: function () {
+                document.getElementById('start-screen').classList.add('hidden');
+                document.getElementById('quiz-screen').classList.remove('hidden');
+                this.render();
+            },
+
+            render: function () {
+                const data = quizData[this.current];
+                const qNum = this.current + 1;
+
+                document.getElementById('q-num').innerText = qNum;
+                document.getElementById('q-text').innerText = data.q;
+
+                const choicesArea = document.getElementById('choices-area');
+                choicesArea.innerHTML = '';
+
+                data.choices.forEach(choice => {
+                    const btn = document.createElement('button');
+                    btn.className = 'choice-btn';
+                    btn.innerHTML = `
+                    <span>${choice.text}</span>
+                    <span class="price-tag">₩${(this.current + 1) * 1000}</span>
+                `;
+                    btn.onclick = () => this.select(choice.val);
+                    choicesArea.appendChild(btn);
+                });
+            },
+
+            select: function (val) {
+                this.score += val; // 1이면 소비 성향 증가
+                this.current++;
+
+                if (this.current < quizData.length) {
+                    this.render();
+                } else {
+                    this.showLoading();
+                }
+            },
+
+            showLoading: function () {
+                document.getElementById('quiz-screen').classList.add('hidden');
+                document.getElementById('loading-screen').classList.remove('hidden');
+
+                setTimeout(() => {
+                    this.showResult();
+                }, 3000); // 3s
+            },
+
+            showResult: function () {
+                document.getElementById('loading-screen').classList.add('hidden');
+                document.getElementById('result-screen').classList.remove('hidden');
+
+                let type = 0;
+                // Total score max 10.
+                // 0-2: Rich
+                // 3-5: Saver
+                // 6-8: Donator
+                // 9-10: Beggar
+                if (this.score <= 2) type = 0;
+                else if (this.score <= 5) type = 1;
+                else if (this.score <= 8) type = 2;
+                else type = 3;
+
+                const res = results[type];
+
+                document.getElementById('res-title').innerText = res.title;
+                document.getElementById('res-desc').innerHTML = res.desc;
+                document.getElementById('res-score').innerText = res.score;
+            },
+
+            share: function () {
+                const resTitle = document.getElementById('res-title').innerText.replace('\n', ' ');
+                const text = `내 지갑 상태 진단 결과: [${resTitle}]\n당신의 소비 습관도 분석해보세요! (뼈 맞음 주의)`;
+
+                if (navigator.share) {
+                    navigator.share({
+                        title: '거지 DNA 테스트',
+                        text: text,
+                        url: window.location.href,
+                    });
+                } else {
+                    alert('결과가 복사되었습니다: ' + text);
+                }
+            }
+        };
+
+        app.init();
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도파민 중독 레벨 테스트 - 내 뇌가 녹고 있다고?</title>
+    <style>
+        /* Cyberpunk & Neon Theme */
+        :root {
+            --neon-green: #39FF14;
+            --neon-purple: #BC13FE;
+            --neon-pink: #FF00FF;
+            --bg-black: #050505;
+            --matrix-dark: #0D0D0D;
+            --text-white: #E0E0E0;
+        }
+
+        @font-face {
+            font-family: 'Hack';
+            src: url('https://cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/fonts/hack-regular.woff2') format('woff2');
+            font-display: swap;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Hack', 'Courier New', monospace;
+            /* Monospace for tech vibe */
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-black);
+            color: var(--text-white);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        #app {
+            width: 100%;
+            max-width: 500px;
+            background-color: var(--matrix-dark);
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.2);
+            border-left: 1px solid #222;
+            border-right: 1px solid #222;
+        }
+
+        /* Utility */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-neon-green {
+            color: var(--neon-green);
+            text-shadow: 0 0 5px var(--neon-green);
+        }
+
+        .text-neon-purple {
+            color: var(--neon-purple);
+            text-shadow: 0 0 5px var(--neon-purple);
+        }
+
+        .text-neon-pink {
+            color: var(--neon-pink);
+            text-shadow: 0 0 5px var(--neon-pink);
+        }
+
+        .glitch {
+            animation: glitch 1s linear infinite;
+        }
+
+        @keyframes glitch {
+
+            2%,
+            64% {
+                transform: translate(2px, 0) skew(0deg);
+            }
+
+            4%,
+            60% {
+                transform: translate(-2px, 0) skew(0deg);
+            }
+
+            62% {
+                transform: translate(0, 0) skew(5deg);
+            }
+        }
+
+        /* Start Screen */
+        .start-container {
+            padding: 40px 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .main-logo {
+            font-size: 80px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 10px var(--neon-green));
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--neon-green);
+            text-shadow: 0 0 10px var(--neon-green);
+            margin-bottom: 10px;
+            line-height: 1.3;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #aaa;
+            margin-bottom: 40px;
+            border: 1px solid var(--neon-purple);
+            padding: 10px;
+            box-shadow: 0 0 5px var(--neon-purple);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border: 2px solid var(--neon-green);
+            background-color: transparent;
+            color: var(--neon-green);
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 5px var(--neon-green);
+        }
+
+        .btn:hover {
+            background-color: var(--neon-green);
+            color: black;
+            box-shadow: 0 0 20px var(--neon-green);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Quiz Screen */
+        .quiz-container {
+            padding: 30px 20px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .progress-bar-frame {
+            width: 100%;
+            height: 15px;
+            border: 1px solid var(--neon-purple);
+            padding: 2px;
+            margin-bottom: 40px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--neon-purple);
+            width: 0%;
+            box-shadow: 0 0 10px var(--neon-purple);
+            transition: width 0.3s ease;
+        }
+
+        .question-box {
+            margin-bottom: 50px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .q-badge {
+            color: var(--neon-green);
+            margin-bottom: 15px;
+            font-size: 14px;
+            border-bottom: 1px solid var(--neon-green);
+            display: inline-block;
+            width: fit-content;
+        }
+
+        .question-text {
+            font-size: 22px;
+            font-weight: bold;
+            line-height: 1.5;
+            color: white;
+            text-shadow: 1px 1px 0 #333;
+        }
+
+        .choice-btn {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid #444;
+            color: #ddd;
+            padding: 20px;
+            margin-bottom: 15px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .choice-btn:hover {
+            border-color: var(--neon-pink);
+            color: var(--neon-pink);
+            background-color: rgba(188, 19, 254, 0.1);
+        }
+
+        .choice-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: 0.5s;
+        }
+
+        .choice-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Loading Screen */
+        .loading-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background-color: black;
+            color: var(--neon-green);
+        }
+
+        .brain-loader {
+            font-size: 60px;
+            margin-bottom: 30px;
+            animation: tremor 0.1s infinite;
+        }
+
+        @keyframes tremor {
+            0% {
+                transform: translate(1px, 1px) rotate(0deg);
+            }
+
+            25% {
+                transform: translate(-1px, -2px) rotate(-1deg);
+            }
+
+            50% {
+                transform: translate(-3px, 0px) rotate(1deg);
+            }
+
+            75% {
+                transform: translate(3px, 2px) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(1px, -1px) rotate(-1deg);
+            }
+        }
+
+        .loading-text {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: var(--neon-green);
+            text-shadow: 0 0 5px var(--neon-green);
+        }
+
+        /* Result Screen */
+        .result-container {
+            padding: 40px 20px;
+            text-align: center;
+            min-height: 100vh;
+            background-color: #080808;
+            border-top: 5px solid var(--neon-green);
+        }
+
+        .res-level {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .res-title {
+            font-size: 36px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 0 var(--neon-purple);
+        }
+
+        .res-icon {
+            font-size: 80px;
+            margin: 20px 0;
+            filter: grayscale(0.5) contrast(1.2);
+        }
+
+        .res-box {
+            background-color: #111;
+            border: 1px solid #333;
+            padding: 25px;
+            margin-bottom: 30px;
+            text-align: left;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+        }
+
+        .res-desc {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #ccc;
+            white-space: pre-line;
+        }
+
+        .highlight {
+            color: var(--neon-green);
+            font-weight: bold;
+            border-bottom: 1px dashed var(--neon-green);
+        }
+
+        .danger {
+            color: var(--neon-pink);
+            font-weight: bold;
+        }
+
+        /* Ad Placeholder Styles */
+        .ad-placeholder {
+            width: 100%;
+            background-color: #1a1a1a;
+            border: 1px solid var(--neon-purple);
+            /* Visibility for dev */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            font-size: 12px;
+            margin: 20px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .ad-placeholder::after {
+            content: 'AD SPACE';
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            font-size: 8px;
+            color: #333;
+        }
+
+        .btn-retry {
+            border-color: var(--text-white);
+            color: var(--text-white);
+        }
+
+        .btn-share {
+            background-color: var(--neon-purple);
+            color: white;
+            border: none;
+            box-shadow: 0 0 10px var(--neon-purple);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="app">
+        <!-- 1. START SCREEN -->
+        <div id="start-screen" class="start-container">
+            <!-- AD: Top Banner -->
+            <!--
+        <div class="ad-placeholder" style="height: 50px; width: 320px; margin-bottom: 20px;">
+            상단 배너 광고 (320x50)
+        </div>
+        -->
+
+            <div class="main-logo">🧠⚡</div>
+            <h1 class="title text-neon-green">DOPAMINE<br>ADDICTION<br>TEST</h1>
+            <p class="subtitle">도파민 중독 자가진단</p>
+
+            <p style="margin-bottom: 30px; color: #ccc; font-size: 14px;">
+                "당신의 뇌는 지금 <span class="text-neon-pink">팝콘</span>처럼 튀고 있습니까?"<br>
+                24시간 숏폼에 절여진 당신을 위한 긴급 진단.
+            </p>
+
+            <button class="btn" onclick="app.start()">SYSTEM START_</button>
+
+            <p style="margin-top: 20px; font-size: 10px; color: #555;">
+                Warning: Truth may hurt.
+            </p>
+        </div>
+
+        <!-- 2. QUIZ SCREEN -->
+        <div id="quiz-screen" class="quiz-container hidden">
+            <div class="progress-bar-frame">
+                <div id="progress-fill" class="progress-fill"></div>
+            </div>
+
+            <div class="question-box">
+                <span class="q-badge">DATA_INPUT_0<span id="q-num">1</span></span>
+                <div id="q-text" class="question-text">질문 데이터 로딩 중...</div>
+            </div>
+
+            <div id="choices-area">
+                <!-- Buttons injected by JS -->
+            </div>
+
+            <!-- AD: Quiz Bottom -->
+            <!--
+        <div class="ad-placeholder" style="height: 50px; margin-top: auto;">
+            하단 배너 광고
+        </div>
+        -->
+        </div>
+
+        <!-- 3. LOADING SCREEN (Interstitial) -->
+        <div id="loading-screen" class="loading-container hidden">
+            <div class="brain-loader">🧠</div>
+            <h2 class="loading-text text-neon-green">ANALYZING BRAINWAVES...</h2>
+            <p style="color: #666; font-size: 12px;">도파민 수용체 반응 검사 중</p>
+
+            <!-- AD: Interstitial (Big) -->
+            <!--
+        <div class="ad-placeholder" style="width: 300px; height: 250px; margin-top: 30px; background-color: #111; border-color: var(--neon-green);">
+            <span class="text-neon-green">SYSTEM ALERT</span><br><br>
+            전면 광고 영역 (300x250)<br>
+            추천: 명상앱, 서점, 심리상담
+        </div>
+        -->
+        </div>
+
+        <!-- 4. RESULT SCREEN -->
+        <div id="result-screen" class="result-container hidden">
+            <div class="res-level">DIAGNOSIS COMPLETE</div>
+            <h1 id="res-title" class="res-title glitch">결과 타이틀</h1>
+
+            <div class="res-icon" id="res-icon">🧟</div>
+
+            <div class="res-box">
+                <div id="res-desc" class="res-desc">
+                    결과 설명 부분
+                </div>
+            </div>
+
+            <!-- AD: Result Middle -->
+            <!--
+        <div class="ad-placeholder" style="height: 100px; margin-bottom: 20px; border-color: var(--neon-pink);">
+            네이티브 인피드 광고 영역<br>
+            "도파민 디톡스, 3일 챌린지"
+        </div>
+        -->
+
+            <button class="btn btn-share" onclick="app.share()">SHARE RESULT_</button>
+            <button class="btn btn-retry" onclick="location.reload()">REBOOT SYSTEM_</button>
+
+            <div style="height: 50px;"></div>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA ---
+        const questions = [
+            { q: "화장실 갈 때 스마트폰을 안 가져가면 불안한가요?" },
+            { q: "자기 전, 딱 5분만 봐야지 했다가 1시간 넘게 본 적이 있나요?" },
+            { q: "영상을 볼 때 1.5배속이나 2배속이 아니면 답답한가요?" },
+            { q: "밥을 먹을 때 영상(유튜브, 넷플릭스 등)이 없으면 허전한가요?" },
+            { q: "엘리베이터나 신호등을 기다리는 짧은 틈에도 폰을 꺼내나요?" },
+            { q: "긴 글(책, 뉴스 기사)을 읽을 때 문장이 눈에 잘 안 들어오나요?" },
+            { q: "아침에 눈 뜨자마자 스마트폰 알림부터 확인하나요?" },
+            { q: "시청 중인 영상이 재미없으면 5초도 못 참고 바로 넘기나요?" },
+            { q: "방금 폰을 닫았는데, 무의식적으로 다시 폰을 켠 적이 있나요?" },
+            { q: "스마트폰 배터리가 20% 미만이면 심장이 두근거리나요?" }
+        ];
+
+        // Score: Yes = 1 point.
+        // 0-2: Level 1 (Zen)
+        // 3-5: Level 2 (Warning)
+        // 6-8: Level 3 (Popcorn)
+        // 9-10: Level 4 (Zombie)
+
+        const results = [
+            {
+                // Level 1: 0~2
+                title: "청정 뇌\n(Zen Master)",
+                icon: "🧘‍♂️",
+                desc: "축하합니다! 당신은 이 시대의 천연기념물입니다.\n도파민 중독으로부터 매우 안전한 상태입니다.\n\n강력한 집중력과 절제력을 가지고 계시네요.\n주변 좀비들에게 당신의 <span class='highlight' style='color: white;'>독서 습관</span>과 <span class='highlight' style='color: white;'>명상 노하우</span>를 전수해주세요."
+            },
+            {
+                // Level 2: 3~5
+                title: "주의 요망\n(Warning)",
+                icon: "⚠️",
+                desc: "아직은 인간의 뇌를 유지하고 있지만, 위험합니다.\n알고리즘이 호시탐탐 당신의 시간을 노리고 있군요.\n\n심심할 때 폰 대신 멍 때리기를 시도해보세요.\n지금 멈추지 않으면 당신도 곧 팝콘 브레인이 될 수 있습니다.\n\n추천 처방: <span class='highlight'>가벼운 산책</span>, <span class='highlight'>종이책 읽기</span>."
+            },
+            {
+                // Level 3: 6~8
+                title: "팝콘 브레인\n(Popcorn Brain)",
+                icon: "🍿",
+                desc: "<span class='danger'>경고! 뇌가 팝콘처럼 튀어 오르고 있습니다.</span>\n강한 자극에만 반응하고, 일상의 소소한 행복에는 무감각해진 상태입니다.\n\n긴 글을 읽기 힘들고 집중력이 현저히 떨어지셨죠?\n지금 당장 디지털 디톡스가 필요합니다.\n\n추천 처방: <span class='highlight'>스마트폰 알림 끄기</span>, <span class='highlight'>새로운 취미(운동, 요리)</span> 시작하기."
+            },
+            {
+                // Level 4: 9~10
+                title: "도파민 좀비\n(DOPAMINE ZOMBIE)",
+                icon: "🧟",
+                desc: "<span class='danger' style='font-size: 1.2em;'>SYSTEM ERROR... 뇌 기능 저하.</span>\n스마트폰 없이는 일상 생활이 불가능한 수준입니다.\n\n당신의 뇌는 지금 도파민에 완전히 절여져 녹고 있습니다.\n이대로 가다면 기억력 감퇴와 우울증이 올 수 있습니다.\n\n긴급 처방: <span class='highlight'>전문적인 심리 상담</span>, <span class='highlight'>강제 폰 압수</span>, <span class='highlight'>자연 속으로 도피</span>."
+            }
+        ];
+
+        // --- APP LOGIC ---
+        const app = {
+            score: 0,
+            current: 0,
+
+            start: function () {
+                document.getElementById('start-screen').classList.add('hidden');
+                document.getElementById('quiz-screen').classList.remove('hidden');
+                this.render();
+            },
+
+            render: function () {
+                const q = questions[this.current];
+                const percent = (this.current / questions.length) * 100;
+
+                document.getElementById('q-num').innerText = this.current + 1;
+                document.getElementById('q-text').innerText = q.q;
+                document.getElementById('progress-fill').style.width = percent + '%';
+
+                const choicesArea = document.getElementById('choices-area');
+                choicesArea.innerHTML = '';
+
+                // Choices: YES / NO
+                const btnYes = this.createButton("YES (그렇다)", 1);
+                const btnNo = this.createButton("NO (아니다)", 0);
+
+                choicesArea.appendChild(btnYes);
+                choicesArea.appendChild(btnNo);
+            },
+
+            createButton: function (text, value) {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn';
+                btn.innerText = text;
+                btn.style.width = '100%';
+                btn.onclick = () => this.select(value);
+                return btn;
+            },
+
+            select: function (value) {
+                this.score += value;
+                this.current++;
+
+                if (this.current < questions.length) {
+                    this.render();
+                } else {
+                    this.showLoading();
+                }
+            },
+
+            showLoading: function () {
+                document.getElementById('quiz-screen').classList.add('hidden');
+                document.getElementById('loading-screen').classList.remove('hidden');
+
+                setTimeout(() => {
+                    this.showResult();
+                }, 3500); // 3.5 seconds loading
+            },
+
+            showResult: function () {
+                document.getElementById('loading-screen').classList.add('hidden');
+                document.getElementById('result-screen').classList.remove('hidden');
+
+                let level = 0;
+                if (this.score <= 2) level = 0;
+                else if (this.score <= 5) level = 1;
+                else if (this.score <= 8) level = 2;
+                else level = 3;
+
+                const res = results[level];
+
+                document.getElementById('res-title').innerText = res.title;
+                document.getElementById('res-icon').innerText = res.icon;
+                document.getElementById('res-desc').innerHTML = res.desc;
+
+                // Extra Glitch Effect if dangerous level
+                if (level >= 3) {
+                    document.body.style.animation = "glitch 0.2s 5";
+                }
+            },
+
+            share: function () {
+                const resTitle = document.getElementById('res-title').innerText.replace('\n', ' ');
+                const text = `내 뇌가 녹고 있다? 🧠\n[도파민 중독 테스트] 결과: ${resTitle}\n\n너도 숏폼 중독인지 확인해봐! 👇`;
+
+                if (navigator.share) {
+                    navigator.share({
+                        title: '도파민 중독 레벨 테스트',
+                        text: text,
+                        url: window.location.href,
+                    });
+                } else {
+                    alert('결과가 복사되었습니다. 좀비 친구들에게 공유하세요!\n\n' + text);
+                }
+            }
+        };
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>실전 육아 성향 테스트</title>
+    <style>
+        :root {
+            --primary: #FFD54F;
+            /* Pastel Yellow */
+            --primary-dark: #FFC107;
+            --secondary: #90CAF9;
+            /* Soft Blue */
+            --bg: #FFFDE7;
+            /* Very Light Yellow */
+            --white: #FFFFFF;
+            --text: #424242;
+            --gray: #BDBDBD;
+        }
+
+        /* RESET & BOX-SIZING */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* Mobile Container */
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background-color: var(--white);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .screen {
+            display: none;
+            padding: 2rem;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Elements */
+        .logo-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            color: var(--text);
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .highlight {
+            color: var(--secondary);
+            display: inline-block;
+            position: relative;
+        }
+
+        .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: var(--primary);
+            opacity: 0.4;
+            z-index: -1;
+        }
+
+        .desc {
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            color: #757575;
+            line-height: 1.6;
+        }
+
+        /* Buttons */
+        .btn {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 1.2rem 2rem;
+            font-size: 1.2rem;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            font-weight: bold;
+            width: 100%;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 0 #64B5F6;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            background-color: #42A5F5;
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        .btn.yellow {
+            background-color: var(--primary);
+            box-shadow: 0 4px 0 var(--primary-dark);
+            color: #333;
+        }
+
+        .btn.yellow:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* Progress Bar */
+        .progress-area {
+            width: 100%;
+            height: 40px;
+            position: absolute;
+            top: 20px;
+            left: 0;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .progress-track {
+            flex: 1;
+            height: 10px;
+            background-color: #F5F5F5;
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-icon {
+            font-size: 1.5rem;
+            margin-left: 10px;
+            animation: wobble 2s infinite;
+        }
+
+        @keyframes wobble {
+
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+
+            25% {
+                transform: rotate(-10deg);
+            }
+
+            75% {
+                transform: rotate(10deg);
+            }
+        }
+
+        /* Question */
+        .q-wrapper {
+            margin: 2rem 0;
+            width: 100%;
+        }
+
+        .q-badge {
+            background: var(--primary);
+            color: #333;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .q-text {
+            font-size: 1.3rem;
+            font-weight: bold;
+            line-height: 1.5;
+            word-break: keep-all;
+            text-align: left;
+        }
+
+        /* Choices */
+        .choice-btn {
+            background: white;
+            border: 2px solid #EEE;
+            padding: 1.5rem;
+            border-radius: 15px;
+            width: 100%;
+            margin-bottom: 1rem;
+            text-align: left;
+            font-size: 1.1rem;
+            color: #555;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            line-height: 1.4;
+        }
+
+        .choice-btn:hover {
+            border-color: var(--secondary);
+            background-color: #E3F2FD;
+            color: #1565C0;
+        }
+
+        .choice-tag {
+            font-size: 0.8rem;
+            color: #999;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        /* Loading */
+        .loading-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from {
+                transform: scale(1);
+            }
+
+            to {
+                transform: scale(1.1);
+            }
+        }
+
+        /* Result */
+        .result-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            margin-bottom: 2rem;
+            border: 2px solid var(--primary);
+        }
+
+        .res-img {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+        }
+
+        .res-subtitle {
+            color: var(--secondary);
+            font-weight: bold;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .res-title {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #333;
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+
+        .res-desc {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #555;
+            text-align: left;
+            white-space: pre-line;
+            word-break: keep-all;
+        }
+
+        /* AD Placeholder Style */
+        .ad-placeholder {
+            width: 100%;
+            background-color: #F5F5F5;
+            border: 1px dashed #CCC;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #AAA;
+            font-size: 0.8rem;
+            margin: 1.5rem 0;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- AD: Top -->
+        <!-- <div class="ad-placeholder" style="height: 50px;">상단 배너 광고</div> -->
+
+        <!-- 1. START -->
+        <div id="start-screen" class="screen active">
+            <div class="logo-icon">🧸</div>
+            <h1>나는 혹시..<br><span class="highlight">로봇 부모?</span> 아니면 <span class="highlight">캥거루?</span></h1>
+            <p class="desc">오은영 박사님도 궁금해할<br>당신의 리얼 육아 성향 테스트</p>
+            <button class="btn" onclick="app.start()">테스트 시작하기</button>
+        </div>
+
+        <!-- 2. QUESTION -->
+        <div id="q-screen" class="screen">
+            <div class="progress-area">
+                <div class="progress-track">
+                    <div class="progress-fill" id="bar"></div>
+                </div>
+                <div class="progress-icon">🍼</div>
+            </div>
+
+            <div class="q-wrapper">
+                <span class="q-badge">Q<span id="q-num">1</span></span>
+                <div class="q-text" id="q-text">질문 텍스트</div>
+            </div>
+
+            <button class="choice-btn" onclick="app.answer(0)">
+                <span class="choice-tag">Option A</span>
+                <span id="choice-a">선택지 A</span>
+            </button>
+            <button class="choice-btn" onclick="app.answer(1)">
+                <span class="choice-tag">Option B</span>
+                <span id="choice-b">선택지 B</span>
+            </button>
+        </div>
+
+        <!-- 3. LOADING (Interstitial Ad Area) -->
+        <div id="loading-screen" class="screen">
+            <div class="loading-icon">🔍</div>
+            <h2>부모 성향 및<br>육아 매칭률 분석 중...</h2>
+            <p>잠시만 기다려주세요.</p>
+
+            <!-- AD: Loading (Interstitial) -->
+            <!--
+            <div class="ad-placeholder" style="height: 250px;">
+                부검 중... 광고 영역 (300x250)<br>
+                추천: 육아용품, 교육앱
+            </div>
+            -->
+        </div>
+
+        <!-- 4. RESULT -->
+        <div id="result-screen" class="screen">
+
+            <div class="result-card">
+                <div class="res-img" id="res-img">🤖</div>
+                <div class="res-subtitle" id="res-sub">TYPE 01</div>
+                <div class="res-title" id="res-title">AI 로봇 양육자</div>
+                <div class="res-desc" id="res-desc">설명 텍스트</div>
+            </div>
+
+            <!-- AD: Result Middle -->
+            <!--
+            <div class="ad-placeholder">
+                맞춤형 육아 템 추천 광고 영역
+            </div>
+            -->
+
+            <button class="btn yellow" onclick="location.reload()">테스트 다시하기</button>
+            <button class="btn" onclick="app.share()">다른 부모들에게 공유하기</button>
+
+            <!-- AD: Result Bottom -->
+            <!-- <div class="ad-placeholder">하단 배너 광고</div> -->
+        </div>
+
+    </div>
+
+    <script>
+        // Data Structure
+        const quizData = {
+            questions: [
+                // 1~6: Rational (A) vs Emotional (B) - 'Head vs Heart'
+                { q: "아이가 밥그릇을 엎었다! 나의 0.1초 반응은?", a: "기계적으로 치울 것들을 스캔한다. (물티슈.. 걸레..)", b: "\"아이고!\" 소리부터 지르거나 아이 표정을 살핀다." },
+                { q: "육아용품(유모차 등)을 살 때 나는?", a: "가성비, 스펙, 중고가 방어율까지 엑셀로 비교 분석.", b: "디자인이 예쁘거나, '국민템'이라고 하면 일단 산다." },
+                { q: "아이가 넘어져서 운다.", a: "\"어디 봐, 피 안 나네. 괜찮아 일어와.\"", b: "\"어떡해ㅠㅠ 많이 아프지? 호~ 해줄게.\"" },
+                { q: "새로운 교육 프로그램(전집 등) 광고를 봤다.", a: "커리큘럼과 효과를 논리적으로 따져본다.", b: "\"우리 애만 뒤쳐지면 어쩌지?\" 불안해서 상담 신청한다." },
+                { q: "아이가 \"하늘은 왜 파래?\"라고 묻는다면?", a: "과학적인 원리(빛의 산란 등)를 쉽게 설명하려고 노력한다.", b: "\"바랑님이 파란 물감을 칠했나봐~\" 동심 가득하게 대답한다." },
+                { q: "육아 퇴근 후 나의 휴식 시간은?", a: "밀린 집안일을 정리하거나 내일 계획을 세운다.", b: "맥주 한 캔 따서 드라마나 예능 보며 감정 이입한다." },
+
+                // 7~12: Principle (A) vs Permissive (B) - 'Control vs Free'
+                { q: "아이가 밤 10시에 안 자고 놀자고 한다.", a: "\"잘 시간이야. 불 끄자.\" 루틴을 칼같이 지킨다.", b: "\"그래 조금만 더 놀자~\" 아이가 원하면 맞춰준다." },
+                { q: "식당에서 아이가 돌아다니려고 한다.", a: "절대 허용 안 함. 영상(미디어)을 보여줘서라도 앉힌다.", b: "다른 사람에게 피해 안 가는 선에서 조금은 놔둔다." },
+                { q: "아이가 흙장난을 해서 옷이 더러워졌다.", a: "\"옷 버리잖아! 그만해.\" 위생과 청결이 중요하다.", b: "\"재밌어? 실컷 놀아!\" 세탁기는 내가 돌리면 된다." },
+                { q: "숙제나 학습지 푸는 시간.", a: "정해진 분량은 무슨 일이 있어도 끝내게 한다.", b: "아이가 하기 싫어하면 \"오늘은 여기까지 하자\"고 봐준다." },
+                { q: "간식(사탕, 젤리) 줄 때 나의 원칙은?", a: "정해진 요일이나 칭찬 스티커 모았을 때만 준다.", b: "아이가 예쁜 짓 하거나 떼쓰면 기분이다 하고 준다." },
+                { q: "나의 육아 목표는?", a: "바른 습관과 규칙을 잘 지키는 아이.", b: "창의적이고 자유롭게 자기 표현을 하는 아이." }
+            ],
+            results: [
+                {
+                    // Type 1: Rational(A) & Principle(A) -> High Rational, High Control
+                    id: 'AI',
+                    icon: "🤖",
+                    sub: "감정 기복 NO, 완벽한 설계자",
+                    title: "AI 로봇 양육자",
+                    desc: "당신은 육아도 '과학'이라고 생각하는 타입입니다.<br><br>✔️ 아이의 루틴이 깨지는 걸 참을 수 없습니다.<br>✔️ 육아템은 엑셀로 비교해서 최저가로 삽니다.<br>✔️ 훈육할 때도 논리적입니다. \"그건 위험해서 안 돼.\".<br><br>💡 <strong>Tip:</strong> 가끔은 논리를 내려놓고 아이와 뒹굴며 엉망진창으로 놀아주세요. 아이의 정서 발달과 창의력 성장에는 '빈틈'도 필요하답니다."
+                },
+                {
+                    // Type 2: Emotional(B) & Permissive(B) -> High Emotional, Low Control
+                    id: 'Kangaroo',
+                    icon: "🦘",
+                    sub: "내 새끼 우는 건 못 봐! 사랑 과다형",
+                    title: "감성 충만 캥거루",
+                    desc: "당신은 아이와 한 몸인 '사랑꾼' 부모입니다.<br><br>✔️ 아이가 울면 내 마음이 찢어집니다.<br>✔️ 규칙보다는 아이의 기분이 우선입니다.<br>✔️ \"안 돼\"라고 말했다가도 아이 애교에 금방 녹아버립니다.<br><br>💡 <strong>Tip:</strong> 아이에게도 '거절'을 가르쳐야 합니다. 단단한 훈육이 아이의 자존감을 더 높여줄 수 있어요. 육아는 장기전입니다!"
+                },
+                {
+                    // Type 3: Rational(A) & Permissive(B) -> High Rational, Low Control
+                    id: 'Free',
+                    icon: "🦄",
+                    sub: "흙 좀 먹으면 어때? 창의력 대장",
+                    title: "자유로운 영혼의 방목러",
+                    desc: "당신은 아이의 독립심을 중요하게 생각하는 쿨한 부모입니다.<br><br>✔️ 작은 일에 일희일비하지 않습니다. (이성적)<br>✔️ 위험하지만 않다면 뭐든 해보게 둡니다. (허용적)<br>✔️ 남들 다 하는 사교육? 굳이? 아이가 원하면 시킵니다.<br><br>💡 <strong>Tip:</strong> 너무 쿨해서 아이가 '관심 못 받는다'고 느낄 수도 있어요. 가끔은 뜨거운 리액션과 스킨십으로 사랑을 표현해주세요."
+                },
+                {
+                    // Type 4: Emotional(B) & Principle(A) -> High Emotional, High Control
+                    id: 'Edu',
+                    icon: "🔥",
+                    sub: "이건 뇌 발달에 좋아! 교육열 만렙",
+                    title: "열혈 에듀 케어",
+                    desc: "당신은 아이를 위해서라면 무엇이든 하는 열혈 부모입니다.<br><br>✔️ 아이에 대한 사랑만큼 기대치도 높습니다.<br>✔️ 좋은 건 다 해주고 싶지만, 예의범절은 칼같이 가르칩니다.<br>✔️ 정보력이 좋아서 맘카페나 육아 커뮤니티 헤비 유저일 확률이 높음!<br><br>💡 <strong>Tip:</strong> 당신의 불안이 아이에게 전달될 수 있어요. 조금은 마음의 여유를 갖고 아이를 믿고 기다려주는 시간이 필요합니다."
+                }
+            ]
+        };
+
+        const app = {
+            current: 0,
+            counts: {
+                rational: 0, // A in Q1-6
+                emotional: 0, // B in Q1-6
+                principle: 0, // A in Q7-12
+                permissive: 0 // B in Q7-12
+            },
+
+            start: function () {
+                document.getElementById('start-screen').classList.remove('active');
+                document.getElementById('q-screen').classList.add('active');
+                this.render();
+            },
+
+            render: function () {
+                const q = quizData.questions[this.current];
+                const percent = (this.current / quizData.questions.length) * 100;
+
+                document.getElementById('bar').style.width = percent + '%';
+                document.getElementById('q-num').innerText = this.current + 1;
+                document.getElementById('q-text').innerText = q.q;
+
+                const btnA = document.getElementById('choice-a');
+                const btnB = document.getElementById('choice-b');
+
+                // Clear previous tags to avoid dupes if re-rendering (simple replace)
+                btnA.innerText = q.a;
+                btnB.innerText = q.b;
+            },
+
+            answer: function (choice) {
+                // choice 0 = A, 1 = B
+
+                // Logic: Q1-6 (Index 0-5) -> Logical vs Emotional
+                // Logic: Q7-12 (Index 6-11) -> Principle vs Permissive
+                if (this.current < 6) {
+                    if (choice === 0) this.counts.rational++;
+                    else this.counts.emotional++;
+                } else {
+                    if (choice === 0) this.counts.principle++;
+                    else this.counts.permissive++;
+                }
+
+                this.current++;
+                if (this.current < quizData.questions.length) {
+                    this.render();
+                } else {
+                    this.showLoading();
+                }
+            },
+
+            showLoading: function () {
+                document.getElementById('q-screen').classList.remove('active');
+                document.getElementById('loading-screen').classList.add('active');
+
+                // 3.5s Delay
+                setTimeout(() => {
+                    this.showResult();
+                }, 3500);
+            },
+
+            showResult: function () {
+                document.getElementById('loading-screen').classList.remove('active');
+                document.getElementById('result-screen').classList.add('active');
+
+                // Calculate Type
+                // Major Traits
+                const isRational = this.counts.rational >= this.counts.emotional;
+                const isPrinciple = this.counts.principle >= this.counts.permissive;
+
+                let resultIndex = 0;
+                if (isRational && isPrinciple) resultIndex = 0; // AI Robot
+                else if (!isRational && !isPrinciple) resultIndex = 1; // Kangaroo
+                else if (isRational && !isPrinciple) resultIndex = 2; // Free Spirit
+                else resultIndex = 3; // Edu Care (Emotional + Principle)
+
+                const res = quizData.results[resultIndex];
+
+                document.getElementById('res-img').innerText = res.icon;
+                document.getElementById('res-sub').innerText = res.sub;
+                document.getElementById('res-title').innerText = res.title;
+                document.getElementById('res-desc').innerHTML = res.desc;
+            },
+
+            share: function () {
+                const text = "내 육아 성향은? [" + document.getElementById('res-title').innerText + "] 결과 보러가기";
+                if (navigator.share) {
+                    navigator.share({
+                        title: '실전 육아 성향 테스트',
+                        text: text,
+                        url: window.location.href,
+                    });
+                } else {
+                    alert('링크가 복사되었습니다!');
+                }
+            }
+        };
+    </script>
+</body>
+
+</html>

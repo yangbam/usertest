@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>숨겨진 천재 재능 찾기 테스트</title>
+    <style>
+        /* Professional Career Theme: Navy & Mint */
+        :root {
+            --navy: #001f3f;
+            --mint: #39cccc;
+            --light-mint: #d7fafa;
+            --white: #ffffff;
+            --gray: #f4f4f4;
+            --dark-gray: #333333;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--gray);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            color: var(--dark-gray);
+        }
+
+        #app {
+            width: 100%;
+            max-width: 500px;
+            background-color: var(--white);
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Utility */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-navy {
+            color: var(--navy);
+        }
+
+        .text-mint {
+            color: var(--mint);
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        /* Header */
+        .header {
+            padding: 20px;
+            background-color: var(--navy);
+            color: var(--white);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        /* Start Screen */
+        .container {
+            padding: 40px 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .main-img {
+            font-size: 80px;
+            margin-bottom: 30px;
+            color: var(--navy);
+            background-color: var(--light-mint);
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .title {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--navy);
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 18px;
+            background-color: var(--navy);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:hover {
+            background-color: #003366;
+        }
+
+        .btn-outline {
+            background-color: white;
+            border: 2px solid var(--navy);
+            color: var(--navy);
+        }
+
+        /* Quiz Screen */
+        .progress-bar-container {
+            width: 100%;
+            background-color: #eee;
+            height: 4px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--mint);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .question-card {
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            padding: 30px 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+            width: 100%;
+        }
+
+        .q-badge {
+            background-color: var(--light-mint);
+            color: var(--navy);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .q-text {
+            font-size: 22px;
+            font-weight: bold;
+            line-height: 1.4;
+            color: var(--navy);
+        }
+
+        .choice-btn {
+            width: 100%;
+            padding: 20px;
+            background-color: white;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            text-align: left;
+            font-size: 16px;
+            color: #444;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .choice-btn:hover {
+            border-color: var(--mint);
+            background-color: var(--light-mint);
+            color: var(--navy);
+        }
+
+        /* Loading Screen */
+        .loading-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+            animation: bounce 1.5s infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        /* Result Screen */
+        .result-header {
+            background-color: var(--navy);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-radius: 0 0 30px 30px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .res-job {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .res-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--mint);
+        }
+
+        .result-content {
+            padding: 0 25px;
+            text-align: left;
+            width: 100%;
+        }
+
+        .res-desc {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #555;
+            margin-bottom: 30px;
+            white-space: pre-line;
+        }
+
+        .rec-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--mint);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .keyword {
+            font-weight: bold;
+            color: var(--navy);
+            background-color: var(--light-mint);
+            padding: 2px 5px;
+        }
+
+        /* Ad Placeholder */
+        .ad-placeholder {
+            width: 100%;
+            background-color: #f0f0f0;
+            border: 1px dashed #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #999;
+            font-size: 12px;
+            margin: 20px 0;
+            text-align: center;
+            padding: 25px 10px;
+        }
+
+        .cta-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: var(--mint);
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="app">
+        <!-- Header -->
+        <div class="header">
+            <h1>🔍 숨겨진 천재 재능 찾기</h1>
+        </div>
+
+        <!-- 1. START SCREEN -->
+        <div id="start-screen" class="container">
+            <!-- AD: Top -->
+            <!--
+        <div class="ad-placeholder" style="height: 60px;">
+            채용/교육 사이트 상단 배너
+        </div>
+        -->
+
+            <div class="main-img">🚀</div>
+            <h2 class="title">나는 개발자일까?<br>아니면 유튜버일까?</h2>
+            <p class="subtitle">
+                지금 하고 있는 일이 적성에 안 맞나요?<br>
+                당신의 성향을 분석해<br>
+                숨겨진 **'천직'**을 찾아드립니다.
+            </p>
+
+            <button class="btn" onclick="app.start()">내 숨겨진 재능 확인하기</button>
+
+            <p style="font-size: 12px; color: #aaa;">
+                * 이직을 고민하는 2030 필수 테스트
+            </p>
+        </div>
+
+        <!-- 2. QUIZ SCREEN -->
+        <div id="quiz-screen" class="container hidden" style="justify-content: flex-start; padding: 0;">
+            <div class="progress-bar-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+
+            <div style="padding: 30px 20px; width: 100%;">
+                <div class="question-card">
+                    <span class="q-badge">Question <span id="q-num">1</span></span>
+                    <div id="q-text" class="q-text">질문 텍스트</div>
+                </div>
+
+                <div id="choices-area">
+                    <!-- Buttons -->
+                </div>
+            </div>
+
+            <!-- AD: Quiz Bottom -->
+            <!--
+        <div class="ad-placeholder" style="margin-top: auto;">
+            코딩 학원 배너 광고
+        </div>
+        -->
+        </div>
+
+        <!-- 3. LOADING SCREEN -->
+        <div id="loading-screen" class="container hidden">
+            <div class="loading-icon">🧠</div>
+            <h2 class="text-navy">잠재 능력 분석 중...</h2>
+            <p style="color: #666; margin-bottom: 30px;">
+                당신의 뇌 구조와 성향 데이터를<br>직업군과 매칭하고 있습니다.
+            </p>
+
+            <!-- AD: Interstitial (Big) -->
+            <!--
+        <div class="ad-placeholder" style="width: 300px; height: 250px; border: 2px solid var(--navy);">
+            <div style="font-weight: bold; color: var(--navy); margin-bottom: 10px;">[취업 성공 패키지]</div>
+            전면 광고 영역 (300x250)<br>
+            추천: 국비지원 코딩, 마케팅 부트캠프
+        </div>
+        -->
+        </div>
+
+        <!-- 4. RESULT SCREEN -->
+        <div id="result-screen" class="container hidden" style="padding: 0; justify-content: flex-start;">
+            <div class="result-header">
+                <div class="res-job" id="res-type">TYPE A</div>
+                <div class="res-title" id="res-title">방구석 스티브 잡스</div>
+            </div>
+
+            <div class="result-content">
+                <div class="res-desc" id="res-desc">
+                    결과 설명 부분...
+                </div>
+
+                <div class="rec-box">
+                    <h4 style="margin: 0 0 10px 0; color: var(--navy);">💡 추천 커리어 & 스킬</h4>
+                    <div id="res-rec" style="font-size: 14px; color: #555; line-height: 1.6;">
+                        추천 내용...
+                    </div>
+                </div>
+
+                <!-- AD: Result Middle -->
+                <!--
+            <div class="ad-placeholder" style="height: 100px;">
+                <span style="color: #333;">[광고] 연봉 1억 개발자 되는 법</span>
+            </div>
+            -->
+
+                <!-- Dummy CTA Button -->
+                <!--
+            <a href="#" class="cta-btn" onclick="alert('교육 사이트로 이동')">
+                🚀 내 재능으로 연봉 1억 버는 법 보기
+            </a>
+            -->
+
+                <div style="margin-top: 20px;">
+                    <button class="btn" onclick="app.share()">내 천직 공유하기</button>
+                    <button class="btn btn-outline" onclick="location.reload()">테스트 다시하기</button>
+                </div>
+
+                <div style="height: 50px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA ---
+        const quizData = [
+            {
+                q: "새로운 전자기기를 샀을 때, 당신의 행동은?",
+                choices: [
+                    { text: "설명서를 정독하고 기능부터 파악한다.", type: "logic" },
+                    { text: "일단 전원부터 켜고 이것저것 눌러본다.", type: "creative" }
+                ]
+            },
+            {
+                q: "친구들과 여행 계획을 짤 때 나는?",
+                choices: [
+                    { text: "엑셀로 10분 단위 일정을 짠다.", type: "logic" },
+                    { text: "큰 틀만 정하고 즉흥적으로 다닌다.", type: "creative" }
+                ]
+            },
+            {
+                q: "일을 할 때 더 선호하는 환경은?",
+                choices: [
+                    { text: "혼자 조용히 집중하는 게 편하다.", type: "logic" },
+                    { text: "팀원들과 계속 소통하며 하는 게 좋다.", type: "social" }
+                ]
+            },
+            {
+                q: "문제가 생겼을 때 해결하는 방식은?",
+                choices: [
+                    { text: "원인을 분석하고 논리적으로 접근한다.", type: "logic" },
+                    { text: "직관을 믿고 새로운 방법을 시도한다.", type: "creative" }
+                ]
+            },
+            {
+                q: "친구가 고민 상담을 해올 때 나는?",
+                choices: [
+                    { text: "현실적인 해결책을 제시해준다.", type: "logic" },
+                    { text: "감정에 공감해주고 위로해준다.", type: "social" }
+                ]
+            },
+            {
+                q: "평소 즐겨보는 유튜브 콘텐츠는?",
+                choices: [
+                    { text: "지식 정보, 뉴스, 테크 리뷰", type: "logic" },
+                    { text: "예능, 브이로그, 예술 관련", type: "creative" }
+                ]
+            },
+            {
+                q: "나에게 더 잘 어울리는 칭찬은?",
+                choices: [
+                    { text: "\"너 진짜 똑똑하다/스마트하다\"", type: "logic" },
+                    { text: "\"너 진짜 센스 있다/재미있다\"", type: "creative" }
+                ]
+            },
+            {
+                q: "발표 과제가 주어졌을 때 나는?",
+                choices: [
+                    { text: "자료 조사와 PPT 제작을 맡는다.", type: "logic" },
+                    { text: "앞에 나가서 발표하는 것을 맡는다.", type: "social" }
+                ]
+            },
+            {
+                q: "반복적인 단순 업무를 해야 한다면?",
+                choices: [
+                    { text: "효율적인 방법을 찾아 빠르게 끝낸다.", type: "logic" },
+                    { text: "금방 지루해져서 딴짓을 한다.", type: "creative" }
+                ]
+            },
+            {
+                q: "내 인생의 목표는?",
+                choices: [
+                    { text: "전문가로 인정받고 안정적으로 사는 것.", type: "logic" },
+                    { text: "나만의 브랜드를 만들고 유명해지는 것.", type: "social" }
+                ]
+            }
+        ];
+
+        // Types: logic (Developer/Analyst), creative (Designer/Planner), social (Influencer/Service)
+        // Simple Logic:
+        // Logic > 6 -> AI Brain
+        // Creative > 6 -> Steve Jobs
+        // Social > 3 && Creative > 3 -> Superstar
+        // Else -> Healer
+
+        const results = [
+            {
+                type: "기획/창업",
+                title: "방구석 스티브 잡스",
+                desc: "당신은 아이디어가 넘쳐나는 **창의적인 전략가**입니다.\n남들이 보지 못하는 관점으로 문제를 해결하는 능력이 탁월하네요.\n\n틀에 박힌 업무보다는 새로운 것을 기획하고 만드는 일이 천직입니다.\n창업을 하거나 서비스 기획자가 된다면 대박 날 스타일입니다.",
+                rec: "추천 직업: <span class='keyword'>PM/PO</span>, <span class='keyword'>창업가</span>, <span class='keyword'>서비스 기획자</span>\n추천 스킬: 경영 전략, UX/UI 기획"
+            },
+            {
+                type: "개발/데이터",
+                title: "논리왕 AI 두뇌",
+                desc: "당신은 논리적이고 **분석적인 완벽주의자**입니다.\n비효율적인 것을 참지 못하며, 딱 떨어지는 정답을 좋아합니다.\n\n감정보다는 팩트를 중요시하는 당신!\n복잡한 코드를 짜거나 데이터를 분석하는 일에서 희열을 느낄 것입니다.",
+                rec: "추천 직업: <span class='keyword'>백엔드 개발자</span>, <span class='keyword'>데이터 분석가</span>, <span class='keyword'>금융 전문가</span>\n추천 스킬: Python, Java, SQL, <span class='keyword'>코딩 부트캠프</span>"
+            },
+            {
+                type: "예술/인플루언서",
+                title: "관종끼 다분한 슈퍼스타",
+                desc: "당신은 끼를 주체할 수 없는 **타고난 연예인**입니다.\n사람들의 시선을 즐기고, 자신만의 매력을 어필하는 데 능숙합니다.\n\n딱딱한 사무실보다는 자유로운 환경에서 일해야 합니다.\n유튜브를 시작하거나 마케터가 된다면 트렌드를 리드할 수 있습니다.",
+                rec: "추천 직업: <span class='keyword'>유튜버/스트리머</span>, <span class='keyword'>퍼포먼스 마케터</span>, <span class='keyword'>예술가</span>\n추천 스킬: 영상 편집, SNS 마케팅, <span class='keyword'>퍼스널 브랜딩</span>"
+            },
+            {
+                type: "상담/교육",
+                title: "평화주의자 힐러",
+                desc: "당신은 공감 능력이 뛰어나고 **사람을 돕는 것**을 좋아하는 천사표입니다.\n경쟁보다는 협력을 중요시하며, 타인의 성장을 도울 때 보람을 느낍니다.\n\nAI가 대체할 수 없는 따뜻한 감성의 소유자!\n상담, 교육, 복지 분야에서 당신의 능력을 200% 발휘할 수 있습니다.",
+                rec: "추천 직업: <span class='keyword'>심리 상담사</span>, <span class='keyword'>교육 강사</span>, <span class='keyword'>HR 담당자</span>\n추천 스킬: 커뮤니케이션, 심리학, <span class='keyword'>직업 상담사 자격증</span>"
+            }
+        ];
+
+        // --- APP LOGIC ---
+        const app = {
+            scores: { logic: 0, creative: 0, social: 0 },
+            current: 0,
+
+            start: function () {
+                document.getElementById('start-screen').classList.add('hidden');
+                document.getElementById('quiz-screen').classList.remove('hidden');
+                this.render();
+            },
+
+            render: function () {
+                const data = quizData[this.current];
+                const percent = ((this.current) / quizData.length) * 100;
+
+                document.getElementById('progress-bar').style.width = percent + '%';
+                document.getElementById('q-num').innerText = this.current + 1;
+                document.getElementById('q-text').innerText = data.q;
+
+                const choicesArea = document.getElementById('choices-area');
+                choicesArea.innerHTML = '';
+
+                data.choices.forEach(choice => {
+                    const btn = document.createElement('button');
+                    btn.className = 'choice-btn';
+                    btn.innerText = choice.text;
+                    btn.onclick = () => this.select(choice.type);
+                    choicesArea.appendChild(btn);
+                });
+            },
+
+            select: function (type) {
+                if (this.scores[type] !== undefined) {
+                    this.scores[type]++;
+                } else {
+                    // If type is combined or simple mapping fallback, refine later.
+                    // For MVP, just map directly.
+                    // 'social' implies creative + logic balance usually or high empathy.
+                    // Let's keep simple accumulators.
+                    if (type === 'social') {
+                        this.scores.social++; // Distinct category
+                    }
+                }
+
+                this.current++;
+
+                if (this.current < quizData.length) {
+                    this.render();
+                } else {
+                    this.showLoading();
+                }
+            },
+
+            showLoading: function () {
+                document.getElementById('quiz-screen').classList.add('hidden');
+                document.getElementById('loading-screen').classList.remove('hidden');
+
+                setTimeout(() => {
+                    this.showResult();
+                }, 4000); // 4s
+            },
+
+            showResult: function () {
+                document.getElementById('loading-screen').classList.add('hidden');
+                document.getElementById('result-screen').classList.remove('hidden');
+
+                // Logic to determine result
+                const s = this.scores;
+                let resultIndex = 0;
+
+                if (s.logic >= 6) {
+                    resultIndex = 1; // AI Brain
+                } else if (s.creative >= 6) {
+                    resultIndex = 0; // Steve Jobs
+                } else if (s.social >= 4) {
+                    resultIndex = 2; // Superstar
+                } else {
+                    resultIndex = 3; // Healer (Default fallback for balanced/empathy types)
+                }
+
+                const res = results[resultIndex];
+
+                document.getElementById('res-type').innerText = res.type;
+                document.getElementById('res-title').innerText = res.title;
+                document.getElementById('res-desc').innerHTML = res.desc;
+                document.getElementById('res-rec').innerHTML = res.rec;
+            },
+
+            share: function () {
+                const title = document.getElementById('res-title').innerText;
+                const text = `내 숨겨진 천재 재능은? [${title}]\n\n지금 하는 일이 적성에 안 맞는다면? 당신의 진짜 천직을 찾아보세요! 🚀`;
+
+                if (navigator.share) {
+                    navigator.share({
+                        title: '숨겨진 천재 재능 찾기 테스트',
+                        text: text,
+                        url: window.location.href,
+                    });
+                } else {
+                    alert('결과가 복사되었습니다. 친구들에게 공유하세요!\n\n' + text);
+                }
+            }
+        };
+    </script>
+
+</body>
+
+</html>
