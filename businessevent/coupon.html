@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>무료 쿠폰 & 상품권 만들기 - 카페/이벤트/커플 소원권 도안</title>
+    <meta name="description"
+        content="매출을 올리는 카페 적립 쿠폰, 고객 감사 상품권, 연인을 위한 커플 소원권을 무료로 만드세요. A4 용지 8분할 자동 배치 및 인쇄 기능 제공.">
+    <meta name="keywords" content="무료쿠폰도안, 카페쿠폰만들기, 적립쿠폰, 커피쿠폰, 상품권양식, 소원권만들기, 커플쿠폰, 효도쿠폰, 이벤트티켓">
+    <meta name="author" content="Yangbam Lab">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://Yangbam-lab.com/businessevent/coupon.html">
+    <meta property="og:title" content="DIY 쿠폰 & 상품권 메이커 🎟️">
+    <meta property="og:description" content="우리 매장 쿠폰부터 소원권까지. 드래그 없이 클릭만으로 완성!">
+    <meta property="og:image" content="https://Yangbam-lab.com/assets/og_coupon.png">
+
+    <link rel="canonical" href="https://Yangbam-lab.com/businessevent/coupon.html">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Nanum+Gothic:wght@400;700;800&family=Noto+Sans+KR:wght@300;500;900&display=swap"
+        rel="stylesheet">
+
+    <!-- html2canvas Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #e91e63;
+            --bg: #fdf5e6;
+            --text: #2c3e50;
+
+            /* Coupon Size (approx Business Card size) */
+            --coupon-width: 350px;
+            --coupon-height: 200px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            background-color: #fafafa;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Navigation */
+        nav {
+            width: 100%;
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .nav-back {
+            position: absolute;
+            left: 20px;
+            text-decoration: none;
+            color: var(--text);
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .nav-title {
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+
+        /* Main Container */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 1200px;
+            gap: 40px;
+            padding: 40px 20px;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* Left: Control Panel */
+        .control-section {
+            flex: 1;
+            min-width: 320px;
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            width: 100%;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: #f8f9fa;
+            cursor: pointer;
+            font-weight: bold;
+            color: #666;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: #333;
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        .color-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .color-option.selected {
+            border-color: #333;
+            transform: scale(1.1);
+        }
+
+        .icon-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .icon-option {
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid transparent;
+        }
+
+        .icon-option.selected {
+            background-color: #eee;
+            border-color: #ccc;
+        }
+
+        /* Right: Preview Area */
+        .preview-section {
+            flex: 1;
+            min-width: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* COUPON STYLES */
+        .coupon-box {
+            width: var(--coupon-width);
+            height: var(--coupon-height);
+            background-color: white;
+            /* Will change */
+            position: relative;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            font-family: 'Noto Sans KR', sans-serif;
+            transition: background-color 0.3s;
+        }
+
+        /* Dashed Border Inside */
+        .coupon-inner {
+            width: 100%;
+            height: 100%;
+            border: 2px dashed rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            position: relative;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Barcode Stripe */
+        .barcode {
+            height: 30px;
+            width: 100%;
+            background-image: linear-gradient(90deg,
+                    #333 0%, #333 2%, transparent 2%, transparent 4%,
+                    #333 4%, #333 7%, transparent 7%, transparent 9%,
+                    #333 9%, #333 10%, transparent 10%, transparent 12%,
+                    #333 12%, #333 18%, transparent 18%, transparent 20%,
+                    #333 20%, #333 22%, transparent 22%, transparent 25%,
+                    #333 25%, #333 26%, transparent 26%, transparent 30%);
+            background-size: 100px 100%;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+
+        /* Elements */
+        .cp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cp-title {
+            font-size: 1.2rem;
+            font-weight: 900;
+        }
+
+        .cp-icon {
+            font-size: 1.5rem;
+        }
+
+        .cp-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .cp-footer {
+            text-align: center;
+            font-size: 0.7rem;
+            opacity: 0.7;
+        }
+
+        /* Mode Specifics */
+        /* Cafe */
+        .stamp-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 5px;
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .stamp-circle {
+            width: 100%;
+            aspect-ratio: 1;
+            border: 1px dashed rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: rgba(0, 0, 0, 0.2);
+        }
+
+        /* Gift */
+        .gift-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #d63031;
+            text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Couple */
+        .wish-text {
+            font-family: 'Gaegu', cursive;
+            font-size: 1.5rem;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+            width: 100%;
+            margin-bottom: 5px;
+        }
+
+        /* Buttons */
+        .action-btns {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            align-items: center;
+        }
+
+        .btn-download {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            max-width: 350px;
+            transition: all 0.2s;
+        }
+
+        .btn-download:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .btn-a4 {
+            background-color: #333;
+        }
+
+        /* Hidden A4 Container */
+        #a4-canvas {
+            position: fixed;
+            top: -9999px;
+            left: -9999px;
+            width: 794px;
+            /* A4 width at 96dpi approx */
+            height: 1123px;
+            /* A4 height */
+            background: white;
+            padding: 40px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            gap: 20px;
+            justify-items: center;
+            align-items: center;
+        }
+
+        .a4-item {
+            transform: scale(1);
+        }
+
+        /* Ad Banner */
+        .ad-banner {
+            width: 100%;
+            height: 100px;
+            background-color: #eee;
+            border: 1px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        /* SEO Footer */
+        .seo-section {
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+            line-height: 1.8;
+            color: #444;
+        }
+
+        .seo-section h2 {
+            font-size: 1.8rem;
+            margin-top: 40px;
+            color: #2d3436;
+            border-bottom: 2px solid var(--primary);
+            display: inline-block;
+        }
+
+        .seo-section h3 {
+            font-size: 1.4rem;
+            margin-top: 30px;
+            color: #e91e63;
+        }
+
+        .seo-section p {
+            margin-bottom: 20px;
+            word-break: keep-all;
+        }
+
+        .seo-section ul {
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .preview-section {
+                width: 100%;
+                overflow: hidden;
+            }
+
+            .coupon-box {
+                transform-origin: top center;
+            }
+        }
+    </style>
+    <script>
+        function resizePreview() {
+            const preview = document.querySelector('.coupon-box');
+            const baseWidth = 350;
+
+            if (window.innerWidth < 400) {
+                const scale = (window.innerWidth - 40) / baseWidth;
+                preview.style.transform = `scale(${scale})`;
+                preview.style.marginBottom = `-${(1 - scale) * 200}px`;
+            } else {
+                preview.style.transform = 'none';
+                preview.style.marginBottom = '0';
+            }
+        }
+        window.addEventListener('resize', resizePreview);
+        window.addEventListener('load', resizePreview);
+    </script>
+</head>
+
+<body>
+    <nav>
+        <a href="index.html" class="nav-back">← 돌아가기</a>
+        <span class="nav-title">DIY 쿠폰 & 상품권</span>
+    </nav>
+
+    <div class="container">
+        <!-- Input -->
+        <div class="control-section">
+
+            <!-- Ad Placeholder
+            <div class="ad-banner">
+                광고 영역 (Google AdSense)
+            </div>
+            -->
+
+            <div class="section-title">디자인 설정</div>
+
+            <div class="tabs">
+                <button class="tab-btn active" onclick="setMode('cafe')">☕ 카페 쿠폰</button>
+                <button class="tab-btn" onclick="setMode('gift')">🎁 상품권</button>
+                <button class="tab-btn" onclick="setMode('couple')">💖 커플 소원권</button>
+            </div>
+
+            <!-- Common Inputs -->
+            <div class="form-group">
+                <label class="form-label">쿠폰 제목</label>
+                <input type="text" id="inputTitle" class="form-control" value="COFFEE COUPON">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">배경 색상</label>
+                <div class="color-group">
+                    <div class="color-option selected" style="background:#fff;" onclick="setColor('#fff')"></div>
+                    <div class="color-option" style="background:#ffeaa7;" onclick="setColor('#ffeaa7')"></div>
+                    <div class="color-option" style="background:#fab1a0;" onclick="setColor('#fab1a0')"></div>
+                    <div class="color-option" style="background:#81ecec;" onclick="setColor('#81ecec')"></div>
+                    <div class="color-option" style="background:#dfe6e9;" onclick="setColor('#dfe6e9')"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">아이콘</label>
+                <div class="icon-group">
+                    <div class="icon-option selected" onclick="setIcon('☕')">☕</div>
+                    <div class="icon-option" onclick="setIcon('🥤')">🥤</div>
+                    <div class="icon-option" onclick="setIcon('🎁')">🎁</div>
+                    <div class="icon-option" onclick="setIcon('💆')">💆</div>
+                    <div class="icon-option" onclick="setIcon('💖')">💖</div>
+                    <div class="icon-option" onclick="setIcon('🎟️')">🎟️</div>
+                </div>
+            </div>
+
+            <!-- Mode Specific Inputs (Toggle visibility via JS) -->
+            <div id="cafeInputs">
+                <div class="form-group">
+                    <label class="form-label">목표 개수 (도장)</label>
+                    <select id="inputStampCount" class="form-control" onchange="updatePreview()">
+                        <option value="5">5개</option>
+                        <option value="10" selected>10개</option>
+                        <option value="12">12개</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">완성 혜택</label>
+                    <input type="text" id="inputReward" class="form-control" value="아메리카노 1잔 무료"
+                        oninput="updatePreview()">
+                </div>
+            </div>
+
+            <div id="giftInputs" style="display:none;">
+                <div class="form-group">
+                    <label class="form-label">금액 / 혜택</label>
+                    <input type="text" id="inputValue" class="form-control" value="10,000 P" oninput="updatePreview()">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">사용처</label>
+                    <input type="text" id="inputTarget" class="form-control" value="전 지점 사용 가능"
+                        oninput="updatePreview()">
+                </div>
+            </div>
+
+            <div id="coupleInputs" style="display:none;">
+                <div class="form-group">
+                    <label class="form-label">보내는 사람 (From)</label>
+                    <input type="text" id="inputFrom" class="form-control" value="길동" oninput="updatePreview()">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">받는 사람 (To)</label>
+                    <input type="text" id="inputTo" class="form-control" value="춘향" oninput="updatePreview()">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">소원 내용 (예시)</label>
+                    <input type="text" id="inputWish" class="form-control" value="전신 마사지 30분" oninput="updatePreview()">
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Preview -->
+        <div class="preview-section">
+            <div class="section-title" style="border:none;">미리보기</div>
+
+            <div id="coupon-target" class="coupon-box">
+                <div class="coupon-inner">
+                    <div class="cp-header">
+                        <div class="cp-title">COFFEE COUPON</div>
+                        <div class="cp-icon">☕</div>
+                    </div>
+
+                    <div class="cp-body" id="cpBody">
+                        <!-- Dynamic Content -->
+                        <div class="stamp-grid">
+                            <!-- JS will fill -->
+                        </div>
+                        <div style="font-size:0.8rem; margin-top:5px;">다 모으면 <strong id="viewReward">아메리카노 1잔
+                                무료</strong></div>
+                    </div>
+
+                    <div class="barcode"></div>
+                    <div class="cp-footer">
+                        Valid until 2026.12.31 | Serial No. 0001
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-btns">
+                <button class="btn-download" onclick="downloadSingle()">⬇️ 현재 이미지 저장 (JPG)</button>
+                <button class="btn-download btn-a4" onclick="downloadA4()">🖨️ A4 용지 8장 배치 저장</button>
+                <p style="font-size:0.8rem; color:#888;">'A4 배치 저장'을 누르면 인쇄용 고해상도 이미지가 생성됩니다.</p>
+            </div>
+
+            <!-- Ad Placeholder
+            <div class="ad-banner">
+                광고 영역
+            </div>
+            -->
+        </div>
+    </div>
+
+    <!-- Hidden A4 Canvas for Generation -->
+    <div id="a4-canvas"></div>
+
+    <!-- SEO Content -->
+    <article class="seo-section">
+        <h2>작은 종이 한 장의 마법: 쿠폰 마케팅 가이드</h2>
+        <p>
+            디지털 시대에도 여전히 지갑 속에 고이 간직하는 것이 있습니다. 바로 '단골 쿠폰'입니다.
+            고객에게는 "공짜 혜택을 놓치기 싫다"는 심리적 동기를, 연인에게는 "당신의 소원을 들어주겠다"는 따뜻한 약속을 전하는 쿠폰.
+            Yangbam Lab의 <strong>DIY 쿠폰 생성기</strong>를 활용하여 목적에 딱 맞는 세련된 쿠폰을 직접 만들어보세요.
+        </p>
+
+        <h3>1. 카페/매장 사장님을 위한 팁: 재방문율을 높이는 쿠폰 활용법</h3>
+        <p>
+            스탬프 쿠폰(적립 카드)은 가장 전통적이면서도 가장 강력한 락인(Lock-in) 효과를 가집니다.
+            '엔다우드 프로그레스 효과(Endowed Progress Effect)'에 따르면, 빈 도장판보다 이미 도장이 1~2개 찍혀 있는 도장판을 받았을 때
+            고객의 완주율(재방문율)이 훨씬 높다고 합니다.
+            따라서 10개짜리 쿠폰을 만들고 "첫 방문 기념으로 도장 2개 찍어드릴게요!"라고 말하며 건네보세요.
+            본 툴의 <strong>'A4 8장 배치'</strong> 기능을 사용하면, 매장 프린터로 즉시 출력하여 비용 부담 없이 마케팅을 시작할 수 있습니다.
+        </p>
+
+        <h3>2. 커플/가족을 위한 팁: 돈보다 감동적인 소원권 선물</h3>
+        <p>
+            기념일 선물, 무엇을 할지 고민되시나요? 값비싼 선물보다 상대방을 위해 내 시간을 쓰겠다는 '소원 쿠폰'이 때로는 더 큰 감동을 줍니다.
+            "설거지 면제권", "어깨 안마 30분", "맛있는 밥 사주기" 등 구체적이고 재치 있는 내용을 담아보세요.
+            파스텔톤 배경과 하트 아이콘을 선택하고, 손글씨 느낌의 폰트(자동 적용)가 더해진 쿠폰을 출력해 편지봉투에 담아 선물하면
+            센스 만점 애인, 효녀/효자가 될 수 있습니다.
+        </p>
+
+        <h3>3. 종이 쿠폰 vs 모바일 포인트</h3>
+        <p>
+            대형 프랜차이즈는 앱을 이용한 적립 시스템을 사용하지만, 개인 카페나 소규모 샵에서는 여전히 종이 쿠폰이 유효합니다.
+            앱 설치의 번거로움이 없고, '도장을 찍는' 아날로그적인 손맛과 성취감이 있기 때문입니다.
+            또한 쿠폰 자체가 가게의 명함 역할을 하여 브랜드를 고객의 기억 속에 물리적으로 남길 수 있습니다.
+        </p>
+    </article>
+
+    <script>
+        // State
+        let state = {
+            mode: 'cafe',
+            title: 'COFFEE COUPON',
+            bg: '#fff',
+            icon: '☕',
+            cafe: { count: 10, reward: '아메리카노 1잔 무료' },
+            gift: { value: '10,000 P', target: '전 지점 사용 가능' },
+            couple: { from: '길동', to: '춘향', wish: '전신 마사지 30분' }
+        };
+
+        // Elements
+        const elTitle = document.getElementById('inputTitle');
+        const elContainer = document.getElementById('coupon-target');
+        const elBody = document.getElementById('cpBody');
+        const elTitleView = document.querySelector('.cp-title');
+        const elIconView = document.querySelector('.cp-icon');
+
+        // Initial Render
+        render();
+
+        // Input Listeners
+        elTitle.addEventListener('input', (e) => { state.title = e.target.value; renderText(); });
+
+        function setMode(mode) {
+            state.mode = mode;
+            // UI Toggle
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active'); // assumes click
+
+            document.getElementById('cafeInputs').style.display = 'none';
+            document.getElementById('giftInputs').style.display = 'none';
+            document.getElementById('coupleInputs').style.display = 'none';
+            document.getElementById(mode + 'Inputs').style.display = 'block';
+
+            // Defaults per mode
+            if (mode === 'cafe') {
+                state.title = 'COFFEE COUPON';
+                state.icon = '☕';
+            } else if (mode === 'gift') {
+                state.title = 'GIFT VOUCHER';
+                state.icon = '🎁';
+            } else if (mode === 'couple') {
+                state.title = 'LOVE COUPON';
+                state.icon = '💖';
+            }
+            elTitle.value = state.title;
+
+            render();
+        }
+
+        function setColor(hex) {
+            state.bg = hex;
+            document.querySelectorAll('.color-option').forEach(el => el.classList.remove('selected'));
+            event.target.classList.add('selected');
+            render();
+        }
+
+        function setIcon(char) {
+            state.icon = char;
+            document.querySelectorAll('.icon-option').forEach(el => el.classList.remove('selected'));
+            event.target.classList.add('selected');
+            render();
+        }
+
+        function updatePreview() {
+            // Update state from inputs
+            state.cafe.count = document.getElementById('inputStampCount').value;
+            state.cafe.reward = document.getElementById('inputReward').value;
+            state.gift.value = document.getElementById('inputValue').value;
+            state.gift.target = document.getElementById('inputTarget').value;
+            state.couple.from = document.getElementById('inputFrom').value;
+            state.couple.to = document.getElementById('inputTo').value;
+            state.couple.wish = document.getElementById('inputWish').value;
+
+            render();
+        }
+
+        function renderText() {
+            elTitleView.textContent = state.title;
+            elIconView.textContent = state.icon;
+        }
+
+        function render() {
+            renderText();
+            elContainer.style.backgroundColor = state.bg;
+
+            // Render Body Content
+            let html = '';
+
+            if (state.mode === 'cafe') {
+                const count = parseInt(state.cafe.count);
+                const isLarge = count >= 10;
+
+                // For 10: 5 cols x 2 rows. For 12: 6 cols x 2 rows
+                const cols = (count === 12) ? 6 : 5;
+                const gap = isLarge ? '2px' : '8px';
+                const margin = isLarge ? '5px 0' : '15px 0';
+
+                // Reduce size for large counts to fit
+                const circleStyle = isLarge
+                    ? 'font-size:0.5rem; width:75%; height:auto; aspect-ratio:1; margin:0 auto;'
+                    : 'font-size:0.9rem; width:100%; height:auto; aspect-ratio:1;';
+
+                html = `<div class="stamp-grid" style="grid-template-columns: repeat(${cols}, 1fr); gap: ${isLarge ? '1px' : gap}; margin: ${isLarge ? '2px 0' : margin}; align-items:center;">`;
+                for (let i = 0; i < count; i++) {
+                    html += `<div class="stamp-circle" style="${circleStyle}">${i + 1}</div>`;
+                }
+                html += `</div>`;
+                html += `<div style="font-size:${isLarge ? '0.65rem' : '0.8rem'}; margin-top:2px; font-weight:bold;">완성 시: ${state.cafe.reward}</div>`;
+
+                // Font
+                elContainer.style.fontFamily = "'Noto Sans KR', sans-serif";
+
+            } else if (state.mode === 'gift') {
+                html = `<div class="gift-value">${state.gift.value}</div>`;
+                html += `<div style="margin-top:10px; font-size:0.9rem;">${state.gift.target}</div>`;
+                elContainer.style.fontFamily = "'Nanum Gothic', sans-serif";
+
+            } else if (state.mode === 'couple') {
+                html = `<div style="width:100%; text-align:left; font-size:1.1rem; margin-bottom:5px; font-family:'Gaegu';">To. ${state.couple.to}</div>`;
+                html += `<div class="wish-text">${state.couple.wish}</div>`;
+                html += `<div style="width:100%; text-align:right; font-size:1rem; margin-top:5px; font-family:'Gaegu';">From. ${state.couple.from}</div>`;
+                elContainer.style.fontFamily = "'Gaegu', cursive";
+            }
+
+            elBody.innerHTML = html;
+        }
+
+        function downloadSingle() {
+            html2canvas(elContainer, { scale: 3 }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `coupon_${state.mode}.jpg`;
+                link.href = canvas.toDataURL('image/jpeg', 0.9);
+                link.click();
+            });
+        }
+
+        function downloadA4() {
+            const a4Div = document.getElementById('a4-canvas');
+            a4Div.innerHTML = ''; // Clear
+
+            // Clone 8 times
+            for (let i = 0; i < 8; i++) {
+                const clone = elContainer.cloneNode(true);
+                clone.style.boxShadow = 'none'; // remove shadow for print
+                clone.style.border = '1px solid #ddd'; // light border for cutting
+                a4Div.appendChild(clone);
+            }
+
+            // Capture A4
+            // We need to show it temporarily to capture, but it's fixed off-screen.
+            // HTML2Canvas can capture valid DOM elements.
+
+            html2canvas(a4Div, {
+                scale: 2, // A4 print quality
+                windowWidth: 1500,
+                windowHeight: 2000
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `coupon_A4_print.jpg`;
+                link.href = canvas.toDataURL('image/jpeg', 0.9);
+                link.click();
+            });
+        }
+    </script>
+</body>
+
+</html>

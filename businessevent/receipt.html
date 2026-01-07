@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>무료 간이 영수증 발급기 - 온라인 영수증 양식 생성</title>
+    <meta name="description" content="로그인 없이 바로 발급하는 무료 온라인 간이 영수증. 공급자 정보와 품목만 입력하면 금액 자동 계산 및 한글 변환. 인쇄 및 이미지 저장 가능.">
+    <meta name="keywords" content="간이영수증, 무료영수증양식, 영수증발급, 온라인영수증, 간이영수증도장, 영수증서식, 엑셀영수증">
+    <meta name="author" content="Yangbam Lab">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://Yangbam-lab.com/businessevent/receipt.html">
+    <meta property="og:title" content="무료 간이 영수증 발급기 🧾">
+    <meta property="og:description" content="급할 때 바로 쓰는 온라인 영수증. 1분 만에 뚝딱, 도장까지 쾅!">
+    <meta property="og:image" content="https://Yangbam-lab.com/assets/og_receipt.png">
+
+    <link rel="canonical" href="https://Yangbam-lab.com/businessevent/receipt.html">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&family=Nanum+Myeongjo:wght@400;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- html2canvas Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #c0392b;
+            /* Traditional Red Ink */
+            --bg: #f8f9fa;
+            --text: #2c3e50;
+            --paper-color: #fffbf0;
+            /* Slight yellow tint */
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Navigation */
+        nav {
+            width: 100%;
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .nav-back {
+            position: absolute;
+            left: 20px;
+            text-decoration: none;
+            color: var(--text);
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .nav-title {
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+
+        /* Main Container */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 1200px;
+            gap: 40px;
+            padding: 40px 20px;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* Left: Inputs */
+        .input-section {
+            flex: 1;
+            min-width: 320px;
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            flex: 1;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        .item-list {
+            border-top: 2px solid #eee;
+            margin-top: 20px;
+            padding-top: 20px;
+        }
+
+        .item-row {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .item-row input {
+            padding: 8px;
+        }
+
+        .desc-title {
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .btn-stamp {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .btn-stamp.active {
+            background-color: #2c3e50;
+        }
+
+        /* Right: Preview */
+        .preview-section {
+            flex: 1;
+            min-width: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* RECEIPT DESIGN - Traditional Red */
+        .receipt-box {
+            width: 450px;
+            /* Standard proportions */
+            background-color: var(--paper-color);
+            border: 1px solid #ddd;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            font-family: 'Nanum Myeongjo', serif;
+            /* Serif fits better */
+            color: var(--primary);
+        }
+
+        .receipt-inner {
+            border: 2px solid var(--primary);
+            padding: 5px;
+            position: relative;
+        }
+
+        .r-header {
+            text-align: center;
+            border-bottom: 1px solid var(--primary);
+            padding-bottom: 10px;
+            margin-bottom: 5px;
+            position: relative;
+        }
+
+        .r-title {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: 10px;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .r-subtitle {
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            position: absolute;
+            right: 0;
+            bottom: 5px;
+        }
+
+        .r-meta {
+            display: flex;
+            border-bottom: 1px solid var(--primary);
+        }
+
+        .r-meta-left {
+            flex: 1;
+            padding: 5px;
+            border-right: 1px solid var(--primary);
+            display: flex;
+            align-items: center;
+        }
+
+        .r-meta-right {
+            flex: 1.5;
+            padding: 5px;
+            font-size: 0.9rem;
+        }
+
+        .meta-row {
+            display: flex;
+            margin-bottom: 4px;
+        }
+
+        .meta-label {
+            width: 60px;
+            text-align-last: justify;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .meta-val {
+            flex: 1;
+            border-bottom: 1px dotted var(--primary);
+            padding-left: 5px;
+            color: #000;
+        }
+
+        /* Info is usually black/blue on red lines, but full red is classic too. Let's make text black for readability */
+
+        .r-amount-row {
+            display: flex;
+            border-bottom: 1px solid var(--primary);
+            padding: 10px 5px;
+            align-items: center;
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+
+        .amount-kor {
+            flex: 1;
+            text-align: left;
+            color: black;
+        }
+
+        .amount-num {
+            margin-left: auto;
+            color: black;
+        }
+
+        /* Table */
+        .r-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+        .r-table th {
+            border-bottom: 1px solid var(--primary);
+            border-right: 1px solid var(--primary);
+            text-align: center;
+            padding: 5px 0;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .r-table th:last-child {
+            border-right: none;
+        }
+
+        .r-table td {
+            border-bottom: 1px dashed var(--primary);
+            /* Dotted lines usually */
+            border-right: 1px solid var(--primary);
+            padding: 8px 5px;
+            text-align: center;
+            color: black;
+            height: 35px;
+        }
+
+        .r-table td:last-child {
+            border-right: none;
+        }
+
+        .r-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .btn-download {
+            background-color: var(--text);
+            color: white;
+            border: none;
+            padding: 15px 50px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+            transition: all 0.2s;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Ad Banner */
+        .ad-banner {
+            width: 100%;
+            height: 100px;
+            background-color: #eee;
+            border: 1px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        /* SEO Footer */
+        .seo-section {
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+            line-height: 1.8;
+            color: #444;
+        }
+
+        .seo-section h2 {
+            font-size: 1.8rem;
+            margin-top: 40px;
+            color: #c0392b;
+            border-bottom: 2px solid #c0392b;
+            display: inline-block;
+        }
+
+        .seo-section h3 {
+            font-size: 1.4rem;
+            margin-top: 30px;
+            color: #2c3e50;
+        }
+
+        .seo-section p {
+            margin-bottom: 20px;
+            word-break: keep-all;
+        }
+
+        .seo-section ul {
+            margin-bottom: 20px;
+        }
+
+        .caution-box {
+            background: #fff3e0;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ff9800;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            /* Mobile Scaling for Receipt */
+            .preview-section {
+                width: 100%;
+                overflow: hidden;
+                /* Hide overflow from transform */
+            }
+
+            .receipt-box {
+                transform: scale(0.7);
+                transform-origin: top center;
+                margin-bottom: -150px;
+                /* Compensate for empty space */
+            }
+        }
+    </style>
+    <script>
+        // Scaling script for dynamic resize
+        function resizePreview() {
+            const preview = document.querySelector('.receipt-box');
+            if (window.innerWidth < 480) {
+                const scale = (window.innerWidth - 40) / 450; // 450 is base width
+                preview.style.transform = `scale(${scale})`;
+                preview.style.marginBottom = `-${(1 - scale) * 600}px`; // Approx height adjust
+            } else if (window.innerWidth <= 768) {
+                preview.style.transform = 'scale(0.8)';
+                preview.style.marginBottom = '-100px';
+            } else {
+                preview.style.transform = 'none';
+                preview.style.marginBottom = '0';
+            }
+        }
+        window.addEventListener('resize', resizePreview);
+        window.addEventListener('load', resizePreview);
+    </script>
+</head>
+
+<body>
+    <nav>
+        <a href="index.html" class="nav-back">← 돌아가기</a>
+        <span class="nav-title">간이 영수증 발급기</span>
+    </nav>
+
+    <div class="container">
+        <!-- Inputs -->
+        <div class="input-section">
+            <div class="section-title">공급자 정보</div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">사업자 등록번호</label>
+                    <input type="text" id="inRegNum" class="form-control" value="123-45-67890"
+                        oninput="updateReceipt()">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">상호명</label>
+                    <input type="text" id="inCompany" class="form-control" value="양밤상사" oninput="updateReceipt()">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">성명 (대표자)</label>
+                    <input type="text" id="inName" class="form-control" value="홍길동" oninput="updateReceipt()">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">사업장 주소</label>
+                    <input type="text" id="inAddress" class="form-control" value="서울시 강남구 테헤란로 123"
+                        oninput="updateReceipt()">
+                </div>
+            </div>
+
+            <div class="section-title" style="margin-top:30px;">거래 내역</div>
+            <div class="form-group">
+                <label class="form-label">작성 일자</label>
+                <input type="text" id="inDate" class="form-control" value="2026년 01월 07일" oninput="updateReceipt()">
+            </div>
+
+            <div class="item-list">
+                <div class="desc-title">품목 / 수량 / 단가 (금액 자동계산)</div>
+                <!-- Rows -->
+                <div class="item-row">
+                    <input type="text" class="form-control i-name" placeholder="품목명" value="사무용품"
+                        oninput="updateReceipt()">
+                    <input type="number" class="form-control i-qty" placeholder="수량" value="1" style="width:70px;"
+                        oninput="updateReceipt()">
+                    <input type="number" class="form-control i-price" placeholder="단가" value="25000"
+                        style="width:100px;" oninput="updateReceipt()">
+                </div>
+                <div class="item-row">
+                    <input type="text" class="form-control i-name" placeholder="품목명" value="커피 원두"
+                        oninput="updateReceipt()">
+                    <input type="number" class="form-control i-qty" placeholder="수량" value="2" style="width:70px;"
+                        oninput="updateReceipt()">
+                    <input type="number" class="form-control i-price" placeholder="단가" value="12500"
+                        style="width:100px;" oninput="updateReceipt()">
+                </div>
+                <div class="item-row">
+                    <input type="text" class="form-control i-name" placeholder="품목명" oninput="updateReceipt()">
+                    <input type="number" class="form-control i-qty" placeholder="수량" style="width:70px;"
+                        oninput="updateReceipt()">
+                    <input type="number" class="form-control i-price" placeholder="단가" style="width:100px;"
+                        oninput="updateReceipt()">
+                </div>
+                <div class="item-row">
+                    <input type="text" class="form-control i-name" placeholder="품목명" oninput="updateReceipt()">
+                    <input type="number" class="form-control i-qty" placeholder="수량" style="width:70px;"
+                        oninput="updateReceipt()">
+                    <input type="number" class="form-control i-price" placeholder="단가" style="width:100px;"
+                        oninput="updateReceipt()">
+                </div>
+            </div>
+
+            <!-- Stamp Removed as per request -->
+
+            <!-- Ad Placeholder
+            <div class="ad-banner">
+                광고 영역
+            </div>
+            -->
+        </div>
+
+        <!-- Preview -->
+        <div class="preview-section">
+            <div class="section-title" style="border:none;">미리보기</div>
+
+            <div id="receipt-target" class="receipt-box">
+                <div class="receipt-inner">
+                    <div class="r-header">
+                        <h1 class="r-title">영 수 증</h1>
+                        <span class="r-subtitle">(공급받는자 보관용)</span>
+                    </div>
+
+                    <div class="r-meta">
+                        <div class="r-meta-left">
+                            <div style="font-size:0.9rem; font-weight:bold; width:100%; text-align:center;">
+                                귀하
+                            </div>
+                        </div>
+                        <div class="r-meta-right">
+                            <div class="meta-row">
+                                <span class="meta-label">거주지</span>
+                                <span class="meta-val" id="outRegNum"></span>
+                            </div>
+                            <div class="meta-row">
+                                <span class="meta-label">상 호</span>
+                                <span class="meta-val" id="outCompany"></span>
+                            </div>
+                            <div class="meta-row">
+                                <span class="meta-label">성 명</span>
+                                <span class="meta-val" id="outName">
+                                </span>
+                            </div>
+                            <div class="meta-row">
+                                <span class="meta-label">사업장</span>
+                                <span class="meta-val" id="outAddress"
+                                    style="font-size:0.8rem; line-height:1.2;"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stage-date" id="outDate"></div>
+
+                    <div class="r-amount-row">
+                        <span style="font-size:0.95rem; margin-right:5px;">합계금액</span>
+                        <span class="amount-kor" id="outTotalKor">일금 영원정</span>
+                        <span class="amount-num" id="outTotalNum">₩ 0</span>
+                    </div>
+
+                    <table class="r-table">
+                        <colgroup>
+                            <col width="45%">
+                            <col width="15%">
+                            <col width="20%">
+                            <col width="20%">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>품 목</th>
+                                <th>수 량</th>
+                                <th>단 가</th>
+                                <th>금 액</th>
+                            </tr>
+                        </thead>
+                        <tbody id="outTableBody">
+                            <!-- JS Generated -->
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <button class="btn-download" onclick="downloadReceipt()">⬇️ 영수증 발급 (저장)</button>
+            <p style="font-size:0.8rem; color:#888; margin-top:10px;">이 영수증은 법적 효력이 없는 임의 서식일 수 있습니다.</p>
+        </div>
+    </div>
+
+    <!-- SEO Content -->
+    <article class="seo-section">
+        <h2>"이거 경비 처리 되나요?" - 간이 영수증의 모든 것</h2>
+        <p>
+            사업을 하다 보면 식당이나 문구점에서 "영수증 끊어주세요"라고 했을 때, 붉은색 얇은 종이에 수기로 적어주는 영수증을 받아본 적이 있을 것입니다.
+            흔히 '간이 영수증'이라고 불리는 이 문서는 과연 세무적으로 적격한 증빙이 될 수 있을까요?
+            갑자기 영수증이 필요한 프리랜서나 소상공인 여러분을 위해 간이 영수증의 기준과 한도를 정리해 드립니다.
+        </p>
+
+        <div class="caution-box">
+            <strong>⚠️ 중요 알림:</strong> 본 웹 도구에서 생성된 영수증 이미지는 사용 편의를 위해 제공되는 '임의 서식'입니다.
+            실제 거래명세서나 세무 증빙용으로 사용할 경우, 반드시 공급자의 실제 도장 날인과 자필 서명이 포함되어야 안전하며,
+            중요한 금액의 거래는 반드시 세금계산서나 현금영수증, 신용카드 매출전표 등 '적격 증빙'을 수취해야 가산세를 피할 수 있습니다.
+        </div>
+
+        <h3>1. 간이 영수증이란 무엇인가요?</h3>
+        <p>
+            간이 영수증은 공급받는 자(구매자)의 인적 사항이 없이, 공급자(판매자)의 정보만 기재된 약식 영수증을 말합니다.
+            세금계산서처럼 부가가치세액이 별도로 표기되지 않고 공급대가(총액)만 기재되므로,
+            원칙적으로 이를 수취한 매입자는 <strong>부가가치세 매입세액 공제를 받을 수 없습니다.</strong>
+            (매입세액 공제를 받으려면 사업자등록번호가 기재된 현금영수증이나 세금계산서가 필수입니다.)
+        </p>
+
+        <h3>2. 간이 영수증 인정 한도 (3만원의 진실)</h3>
+        <p>
+            세법상 사업자가 재화나 용역을 공급받고 대가를 지급할 때 적격 증빙(세금계산서 등)을 수취하지 않아도 가산세가 부과되지 않는 기준 금액은 <strong>3만 원 이하</strong>입니다.
+            즉, 3만 원 초과 금액에 대해 간이 영수증으로 경비 처리를 하려고 하면, 건당 2%의 <strong>증빙불비가산세</strong>를 내야 할 수 있습니다.
+            이 기준은 일반과세자, 간이과세자 모두에게 적용되므로 큰 금액의 거래 시에는 주의해야 합니다.
+            (단, 접대비의 경우 1만 원(상조비 등 20만 원) 초과 시 적격 증빙 필수이며 간이 영수증은 비용 인정 자체가 안 될 수 있습니다.)
+        </p>
+
+        <h3>3. 이런 경우에 유용해요!</h3>
+        <ul>
+            <li><strong>소액 비용 처리:</strong> 다이소, 문구점 등에서 3만 원 이하의 소모품 구입 시 급하게 증빙이 필요할 때.</li>
+            <li><strong>동호회/모임 정산:</strong> 회비 사용 내역을 회원들에게 투명하게 공개해야 할 때 약식으로나마 영수증을 만들어 첨부하면 신뢰를 높일 수 있습니다.</li>
+            <li><strong>프리랜서 비용 증빙:</strong> 사업자등록증이 없는 개인 프리랜서가 클라이언트에게 대략적인 비용 내역을 청구할 때(거래명세서 대용) 사용하기도 합니다.</li>
+        </ul>
+    </article>
+
+    <script>
+        // Logic
+        function updateReceipt() {
+            // 1. Supplier Info
+            document.getElementById('outRegNum').textContent = document.getElementById('inRegNum').value; // Usually this field is 'Registration No' but layout says 'Residence'? Traditional form is weird. In meta, Left is Customer, Right is Supplier. 
+            // Wait, standard form:
+            // "귀하" -> Customer Name (Usually blank in simple receipt)
+            // Right Side -> Supplier Info with labels (No, Company, Name, Address).
+            // My HTML layout used labels: '거주지', '상호', '성명', '사업장'.
+            // Matches input: RegNum -> 거주지(usually Reg No goes here in simple forms), Company -> 상호, Name -> 성명, Addr -> 사업장.
+
+            document.getElementById('outCompany').textContent = document.getElementById('inCompany').value;
+            document.getElementById('outName').textContent = document.getElementById('inName').value; // Stamp inside here
+            document.getElementById('outAddress').textContent = document.getElementById('inAddress').value;
+
+            document.getElementById('outDate').textContent = "작성: " + document.getElementById('inDate').value;
+
+            // 2. Items Calculation
+            const itemRows = document.querySelectorAll('.item-row');
+            const tbody = document.getElementById('outTableBody');
+            tbody.innerHTML = ''; // Clear
+
+            let grandTotal = 0;
+            let rowsUsed = 0;
+
+            itemRows.forEach(row => {
+                const name = row.querySelector('.i-name').value;
+                const qty = parseInt(row.querySelector('.i-qty').value) || 0;
+                const price = parseInt(row.querySelector('.i-price').value) || 0;
+
+                if (name || qty || price) {
+                    const rowTotal = qty * price;
+                    grandTotal += rowTotal;
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td style="text-align:left; padding-left:10px;">${name}</td>
+                        <td>${qty > 0 ? qty : ''}</td>
+                        <td style="text-align:right; padding-right:5px;">${price > 0 ? price.toLocaleString() : ''}</td>
+                        <td style="text-align:right; padding-right:5px;">${rowTotal > 0 ? rowTotal.toLocaleString() : ''}</td>
+                    `;
+                    tbody.appendChild(tr);
+                    rowsUsed++;
+                }
+            });
+
+            // Fill empty rows to maintain height (Standard 4 rows)
+            const minRows = 4;
+            for (let i = rowsUsed; i < minRows; i++) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>&nbsp;</td><td></td><td></td><td></td>`;
+                tbody.appendChild(tr);
+            }
+
+            // 3. Totals
+            document.getElementById('outTotalNum').textContent = "₩ " + grandTotal.toLocaleString();
+            document.getElementById('outTotalKor').textContent = convertNumToKor(grandTotal);
+        }
+
+        function convertNumToKor(num) {
+            if (num === 0) return "일금 영원정";
+            const units = ['', '만', '억', '조'];
+            const digits = ['', '일', '이', '삼', '사', '오', '육', '칠', '팔', '구'];
+            const tenUnits = ['', '십', '백', '천'];
+
+            let sNum = num.toString();
+            let result = '';
+            let unitIndex = 0;
+
+            while (sNum.length > 0) {
+                let chunk = sNum.slice(-4); // Get last 4 chars
+                sNum = sNum.slice(0, -4);
+
+                let chunkStr = '';
+                for (let i = 0; i < chunk.length; i++) {
+                    const n = parseInt(chunk.charAt(chunk.length - 1 - i)); // Reverse inside chunk
+                    if (n > 0) {
+                        chunkStr = digits[n] + tenUnits[i] + chunkStr;
+                    }
+                }
+
+                if (chunkStr !== '') {
+                    result = chunkStr + units[unitIndex] + result;
+                }
+                unitIndex++;
+            }
+
+            return "일금 " + result + "원정";
+        }
+
+        function downloadReceipt() {
+            html2canvas(document.getElementById('receipt-target'), {
+                scale: 2,
+                backgroundColor: null // Transparent logic? No, paper color.
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `receipt_${document.getElementById('inDate').value}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+
+        // Init
+        const today = new Date();
+        document.getElementById('inDate').value = `${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일`;
+        updateReceipt();
+
+    </script>
+</body>
+
+</html>

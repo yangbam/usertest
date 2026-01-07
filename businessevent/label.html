@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>네임스티커 & 라벨 도안 생성기 - 어린이집, 주방 정리 필수템</title>
+    <meta name="description" content="귀여운 이모지와 패턴으로 나만의 네임스티커와 라벨을 만드세요. A4 라벨지 규격에 맞춰 자동 배치 후 무료로 다운로드할 수 있습니다.">
+    <meta name="keywords" content="네임스티커제작, 라벨도안, 이름표만들기, 어린이집준비물, 주방라벨, 양념통라벨, 다이소라벨지">
+    <meta name="author" content="Yangbam Lab">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://Yangbam-lab.com/businessevent/label.html">
+    <meta property="og:title" content="엄마표 라벨 만들기! 네임스티커 생성기 🏷️">
+    <meta property="og:description" content="어린이집 준비물, 주방 양념통 정리. A4 라벨지에 맞춰서 직접 뽑으세요.">
+    <meta property="og:image" content="https://Yangbam-lab.com/assets/og_label.png">
+
+    <link rel="canonical" href="https://Yangbam-lab.com/businessevent/label.html">
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Gamja+Flower&family=Jua&family=Noto+Sans+KR:wght@400;700&family=Sunflower:wght@500&display=swap"
+        rel="stylesheet">
+
+    <!-- html2canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #FF9F43;
+            /* Pastel Orange */
+            --secondary: #54a0ff;
+            --bg: #fef9e7;
+            --text: #576574;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Navigation */
+        nav {
+            width: 100%;
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .nav-back {
+            position: absolute;
+            left: 20px;
+            text-decoration: none;
+            color: var(--text);
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .nav-title {
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+
+        /* Container */
+        .container {
+            display: flex;
+            flex-wrap: wrap-reverse;
+            /* Mobile: Preview on Top (in markup Preview is second, so reverse makes it top? No, let's use standard order and media query for consistency) */
+            /* Actually, let's keep markup: Controls then Preview. On Mobile: flex-direction column-reverse */
+            width: 100%;
+            max-width: 1200px;
+            gap: 40px;
+            padding: 40px 20px;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* Left: Preview (Visual priority) */
+        .preview-section {
+            flex: 1;
+            min-width: 340px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: sticky;
+            top: 20px;
+        }
+
+        /* Right: Controls */
+        .controls-section {
+            flex: 1;
+            min-width: 320px;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            border: 3px solid #fff;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '🎨';
+        }
+
+        .control-group {
+            margin-bottom: 25px;
+        }
+
+        .control-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 700;
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        /* Grids for Selection */
+        .grid-select {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+
+        .grid-item {
+            aspect-ratio: 1;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .grid-item:hover {
+            transform: translateY(-3px);
+        }
+
+        .grid-item.active {
+            border-color: var(--primary);
+            background-color: #fff3cd;
+        }
+
+        /* Pattern Selection */
+        .pattern-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .pattern-item {
+            aspect-ratio: 1;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #ddd;
+            position: relative;
+        }
+
+        .pattern-item.active {
+            border-color: var(--primary);
+            transform: scale(1.1);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Label Preview Single */
+        .label-preview-box {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            min-height: 200px;
+        }
+
+        .single-label {
+            width: 300px;
+            height: 120px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            padding: 15px 25px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(0, 0, 0, 0.05);
+            /* Subtle outline */
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+        }
+
+        .label-icon {
+            font-size: 3.5rem;
+            margin-right: 20px;
+            z-index: 2;
+        }
+
+        .label-text {
+            font-size: 2.5rem;
+            font-weight: bold;
+            z-index: 2;
+            word-break: keep-all;
+            line-height: 1.2;
+        }
+
+        /* Patterns CSS */
+        .pat-none {
+            background: white;
+        }
+
+        .pat-dot {
+            background-color: #ffffff;
+            background-image: radial-gradient(#FF9F43 20%, transparent 20%);
+            background-size: 10px 10px;
+        }
+
+        .pat-check {
+            background-color: #ffffff;
+            background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee),
+                linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee);
+            background-position: 0 0, 10px 10px;
+            background-size: 20px 20px;
+        }
+
+        .pat-pastel1 {
+            background: #ffeaa7;
+        }
+
+        /* Yellow */
+        .pat-pastel2 {
+            background: #fab1a0;
+        }
+
+        /* Pink */
+        .pat-pastel3 {
+            background: #81ecec;
+        }
+
+        /* Cyan */
+        .pat-pastel4 {
+            background: #a29bfe;
+            color: white !important;
+        }
+
+        /* Purple */
+
+        /* A4 Preview Container */
+        .a4-wrapper {
+            background: #555;
+            padding: 20px;
+            border-radius: 8px;
+            overflow: auto;
+            max-width: 100%;
+            margin-top: 20px;
+            display: none;
+            /* Toggle */
+        }
+
+        #page-a4 {
+            width: 210mm;
+            height: 297mm;
+            background: white;
+            padding: 10mm;
+            display: grid;
+            gap: 2mm;
+            /* Grid configured by JS */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .label-copy {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            /* Slightly less round for print */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Center content for small labels */
+            padding: 5px;
+            border: 1px dashed #ccc;
+            /* Cutting line */
+            overflow: hidden;
+            font-size: 50%;
+            /* Scale down text for grid */
+        }
+
+        .label-copy .label-icon {
+            font-size: 1.5em;
+            margin-right: 5px;
+        }
+
+        .label-copy .label-text {
+            font-size: 1.5em;
+        }
+
+
+        /* Action Buttons */
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-main {
+            flex: 2;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 159, 67, 0.3);
+        }
+
+        .btn-main:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-sub {
+            flex: 1;
+            background: white;
+            border: 2px solid #ddd;
+            color: #555;
+            padding: 15px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* SEO */
+        .seo-section {
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 0 20px;
+            line-height: 1.8;
+            color: #555;
+        }
+
+        .seo-section h2 {
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 10px;
+            color: #333;
+            margin-top: 40px;
+        }
+
+        /* Mobile */
+        /* Mobile Responsive Improvements */
+        @media (max-width: 768px) {
+            body {
+                padding-bottom: 150px;
+                overflow-x: hidden;
+            }
+
+            .container {
+                flex-direction: column;
+                padding: 10px;
+                gap: 20px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            /* Sticky Preview */
+            .preview-section {
+                order: -1;
+                width: 100%;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                background-color: var(--bg);
+                padding: 10px 0;
+                border-bottom: 2px solid #e0dfd5;
+                margin-bottom: 0;
+            }
+
+            .label-preview-box {
+                padding: 10px;
+                min-height: auto;
+                margin-bottom: 10px;
+                background: none;
+                box-shadow: none;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+            }
+
+            /* Single label scaling handled by JS to preserve proportions */
+            .single-label {
+                transform-origin: center top;
+                /* Max width constraint */
+                max-width: 100%;
+            }
+
+            /* Responsive Grids */
+            .grid-select {
+                grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+            }
+
+            .pattern-grid {
+                grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+            }
+
+            /* A4 Preview scrolling */
+            .a4-wrapper {
+                width: 100%;
+                padding: 5px;
+                overflow-x: auto;
+                background: #555;
+                border-radius: 4px;
+            }
+
+            #page-a4 {
+                /* Maintain size, allow scroll */
+                transform: scale(0.5);
+                /* Initial zoom out */
+                transform-origin: top left;
+                margin-bottom: -50%;
+                /* Compensation for scale */
+            }
+
+            .controls-section {
+                border: none;
+                box-shadow: none;
+                padding: 10px;
+                background: white;
+                border-radius: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <a href="index.html" class="nav-back">← 돌아가기</a>
+        <span class="nav-title">네임스티커 생성기</span>
+    </nav>
+
+    <div class="container">
+        <!-- Preview Section -->
+        <div class="preview-section">
+            <div class="label-preview-box">
+                <div id="labelSingle" class="single-label pat-pastel1">
+                    <div class="label-icon">🐻</div>
+                    <div class="label-text">김철수</div>
+                </div>
+            </div>
+
+            <div class="a4-wrapper" id="a4Wrapper">
+                <div id="page-a4">
+                    <!-- Grid items injected -->
+                </div>
+            </div>
+
+            <p style="text-align:center; font-size:0.8rem; color:#888; margin-top:10px;" id="previewNote">
+                * 위 이미지는 미리보기입니다. [A4 채우기]를 하면 인쇄용 파일이 생성됩니다.
+            </p>
+        </div>
+
+        <!-- Controls Section -->
+        <div class="controls-section">
+
+            <!-- Ad Placeholder
+            <div class="ad-banner" style="background:#f1f1f1; height:60px; margin-bottom:20px; border-radius:8px; display:flex; justify-content:center; align-items:center; color:#aaa;">광고 영역</div>
+            -->
+
+            <div class="section-title">디자인 (Design)</div>
+
+            <div class="control-group">
+                <label class="control-label">이름 / 내용</label>
+                <input type="text" id="inputText" class="form-control" value="김철수" placeholder="이름을 입력하세요">
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">아이콘 (Emoji)</label>
+                <div class="grid-select" id="iconGrid">
+                    <!-- JS Injected -->
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">배경 패턴</label>
+                <div class="pattern-grid">
+                    <div class="pattern-item pat-pastel1 active" onclick="setPattern('pat-pastel1')"></div>
+                    <div class="pattern-item pat-pastel2" onclick="setPattern('pat-pastel2')"></div>
+                    <div class="pattern-item pat-pastel3" onclick="setPattern('pat-pastel3')"></div>
+                    <div class="pattern-item pat-pastel4" onclick="setPattern('pat-pastel4')"></div>
+                    <div class="pattern-item pat-dot" onclick="setPattern('pat-dot')"></div>
+                    <div class="pattern-item pat-check" onclick="setPattern('pat-check')"></div>
+                    <div class="pattern-item pat-none" onclick="setPattern('pat-none')"></div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">폰트 스타일</label>
+                <select id="selFont" class="form-control" onchange="upd()">
+                    <option value="'Jua', sans-serif">동글동글 (Jua)</option>
+                    <option value="'Gamja Flower', cursive">손글씨 (Gamja)</option>
+                    <option value="'Sunflower', sans-serif">단정함 (Sunflower)</option>
+                    <option value="'Noto Sans KR', sans-serif">고딕 (Standard)</option>
+                </select>
+            </div>
+
+            <hr style="border:0; border-top:1px dashed #ddd; margin:30px 0;">
+
+            <div class="section-title">출력 옵션 (Print)</div>
+
+            <div class="control-group">
+                <label class="control-label">라벨 사이즈</label>
+                <div class="grid-select" style="grid-template-columns: 1fr 1fr;">
+                    <div class="grid-item active" id="sizeMed" onclick="setSize('medium')"
+                        style="border-radius:8px; font-size:1rem; flex-direction:column;">
+                        <strong>중형 (이름표)</strong>
+                        <span style="font-size:0.8rem; color:#888;">63 x 38 mm (21칸)</span>
+                    </div>
+                    <div class="grid-item" id="sizeSmall" onclick="setSize('small')"
+                        style="border-radius:8px; font-size:1rem; flex-direction:column;">
+                        <strong>소형 (견출지)</strong>
+                        <span style="font-size:0.8rem; color:#888;">38 x 21 mm (65칸)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn-sub" onclick="downloadSingle()">낱개 저장</button>
+                <button class="btn-main" onclick="previewA4()">A4 채우기 & 저장</button>
+            </div>
+
+            <p style="font-size:0.8rem; color:#888; margin-top:15px; line-height:1.4;">
+                * 'A4 채우기'를 누르면 인쇄용 시트가 생성됩니다.<br>
+                * 폼텍 3105(중형), 3108(소형) 규격과 유사하게 배치됩니다. (정확한 오차 없는 인쇄를 위해서는 전용 SW를 권장합니다.)
+            </p>
+
+        </div>
+    </div>
+
+    <!-- SEO Content -->
+    <article class="seo-section">
+        <h2>어린이집 입학 & 주방 정리를 위한 셀프 라벨링 가이드</h2>
+        <p>
+            새 학기가 시작되면 어린이집이나 유치원에 보낼 물건마다 이름을 붙이는 '지옥의 네임스티커 작업'이 시작됩니다.
+            칫솔, 물통, 수저통, 여벌 옷까지... 하나하나 네임펜으로 쓰자니 번지고, 인터넷 주문은 배송비가 아깝죠.
+            이제 <strong>Yangbam Lab 네임스티커 생성기</strong>로 집에서 간편하게 라벨을 디자인하고 출력해보세요.
+            A4 라벨지(폼텍, 애니라벨 등)만 있으면 다이소 라벨기 부럽지 않은 고퀄리티 스티커를 만들 수 있습니다.
+        </p>
+
+        <h3>1. 주방 양념통 라벨링 노하우</h3>
+        <p>
+            깔끔한 주방을 꿈꾼다면 '소분'과 '라벨링'이 핵심입니다.
+            제각각인 양념통 대신 통일된 용기에 내용을 옮겨 담고, 내용물 이름(소금, 설탕, 고춧가루)과 **유통기한**을 함께 적어두는 것이 좋습니다.
+            본 툴의 '단정함(Sunflower)' 폰트와 심플한 테두리를 활용하면 모던한 주방 인테리어를 완성할 수 있습니다.
+        </p>
+
+        <h3>2. 라벨지 선택 팁 (방수 vs 일반)</h3>
+        <ul>
+            <li><strong>일반 종이 라벨:</strong> 노트, 교과서, 파일철 등 물이 닿지 않는 곳에 적합합니다. 가성비가 좋습니다.</li>
+            <li><strong>방수 라벨 (잉크젯/레이저 전용):</strong> 물통, 식판, 수저통 등 설거지가 필요한 물건에는 반드시 '방수 라벨지'를 사용해야 합니다.
+                단, 집의 프린터 종류(잉크젯/레이저)에 맞는 용지를 사야 번지지 않습니다.</li>
+            <li><strong>크라프트 라벨:</strong> 빈티지한 감성을 원할 때 사용하세요. 수제청이나 쿠키 포장에 잘 어울립니다.</li>
+        </ul>
+
+        <h3>3. 프린터가 없다면?</h3>
+        <p>
+            집에 프린터가 없다면 '낱개 저장' 기능을 이용해 이미지를 스마트폰에 저장한 후,
+            가까운 문구점이나 편의점(프린팅박스)에서 A4 스티커 용지에 인쇄할 수 있습니다.
+            (단, 공용 프린터 사용 시 용지 걸림 주의)
+        </p>
+    </article>
+
+    <script>
+        // Data
+        const icons = ['🐻', '🐰', '🐶', '🐱', '🦁', '🐸', '🐥', '🐙', '🍎', '🍓', '🥕', '🥐', '🍭', '⚽', '🚗', '🚀', '⭐', '❤️', '😊', '😎'];
+        let state = {
+            text: '김철수',
+            icon: '🐻',
+            pattern: 'pat-pastel1',
+            font: "'Jua', sans-serif",
+            sizeMode: 'medium' // medium or small
+        };
+
+        // DOM
+        const els = {
+            preview: document.getElementById('labelSingle'),
+            iconGrid: document.getElementById('iconGrid'),
+            text: document.getElementById('inputText'),
+            labelIcon: document.querySelector('.label-icon'),
+            labelText: document.querySelector('.label-text'),
+            a4Wrapper: document.getElementById('a4Wrapper'),
+            pageA4: document.getElementById('page-a4')
+        };
+
+        // Init
+        function init() {
+            // Render Icons
+            icons.forEach(ico => {
+                const d = document.createElement('div');
+                d.className = 'grid-item';
+                d.textContent = ico;
+                d.onclick = () => setIcon(ico);
+                if (ico === state.icon) d.classList.add('active');
+                els.iconGrid.appendChild(d);
+            });
+            upd();
+        }
+
+        // Actions
+        els.text.addEventListener('input', (e) => {
+            state.text = e.target.value;
+            upd();
+        });
+
+        function setIcon(ic) {
+            state.icon = ic;
+            // UI
+            Array.from(els.iconGrid.children).forEach(c => {
+                c.classList.toggle('active', c.textContent === ic);
+            });
+            upd();
+        }
+
+        function setPattern(pat) {
+            state.pattern = pat;
+            // UI
+            document.querySelectorAll('.pattern-item').forEach(c => {
+                c.classList.toggle('active', c.classList.contains(pat));
+            });
+            upd();
+        }
+
+        function setSize(sz) {
+            state.sizeMode = sz;
+            document.getElementById('sizeMed').classList.toggle('active', sz === 'medium');
+            document.getElementById('sizeSmall').classList.toggle('active', sz === 'small');
+        }
+
+        function upd() {
+            state.font = document.getElementById('selFont').value;
+
+            // Single Preview Update
+            const p = els.preview;
+            p.className = `single-label ${state.pattern}`;
+            p.style.fontFamily = state.font;
+            els.labelIcon.textContent = state.icon;
+            els.labelText.textContent = state.text;
+        }
+
+        // Generate A4
+        function previewA4() {
+            els.a4Wrapper.style.display = 'block';
+            els.pageA4.innerHTML = '';
+
+            // Layout Config
+            // Medium: Formtec 3105 (63.5 x 38.1) -> 3 cols, 7 rows = 21 (approx)
+            // Small: Formtec 3108 (38.1 x 21.2) -> 5 cols, 13 rows = 65 (approx)
+
+            let cols, rows, w, h;
+            if (state.sizeMode === 'medium') {
+                cols = 3; rows = 7;
+                w = '63.5mm'; h = '38.1mm';
+            } else {
+                cols = 5; rows = 13;
+                w = '38.1mm'; h = '21.2mm';
+            }
+
+            els.pageA4.style.gridTemplateColumns = `repeat(${cols}, ${w})`;
+            els.pageA4.style.gridTemplateRows = `repeat(${rows}, ${h})`;
+            els.pageA4.style.justifyContent = 'center';
+
+            const count = cols * rows;
+            for (let i = 0; i < count; i++) {
+                const item = document.createElement('div');
+                item.className = `label-copy ${state.pattern}`;
+                item.style.fontFamily = state.font;
+
+                // Content
+                // Use innerHTML for simple icon/text structure
+                item.innerHTML = `<div class="label-icon">${state.icon}</div><div class="label-text">${state.text}</div>`;
+
+                els.pageA4.appendChild(item);
+            }
+
+            // Scroll to preview
+            els.a4Wrapper.scrollIntoView({ behavior: 'smooth' });
+
+            // Small delay then download prompt or just wait for user to click download?
+            // User button said "A4 채우기 & 저장". Let's trigger download.
+            setTimeout(downloadA4, 500);
+        }
+
+        function downloadSingle() {
+            html2canvas(els.preview, { scale: 3, backgroundColor: null }).then(canvas => {
+                linkDownload(canvas, `label_${state.text}.png`);
+            });
+        }
+
+        function downloadA4() {
+            html2canvas(els.pageA4, { scale: 2 }).then(canvas => {
+                linkDownload(canvas, `label_A4_${state.text}.jpg`);
+            });
+        }
+
+        function linkDownload(canvas, name) {
+            const link = document.createElement('a');
+            link.download = name;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        init();
+
+        // Mobile Scaling Logic
+        function resizeLabel() {
+            if (window.innerWidth < 450) {
+                const preview = document.getElementById('labelSingle');
+                // Base width of label is 300px + padding/border ~ 350px space needed
+                // If screen is smaller, scale it down
+                const availableWidth = window.innerWidth - 40;
+                const baseWidth = 320; // safe width
+
+                if (availableWidth < baseWidth) {
+                    const scale = availableWidth / baseWidth;
+                    preview.style.transform = `scale(${scale})`;
+                    preview.style.marginBottom = `-${120 * (1 - scale)}px`; // Adjust height overlap
+                } else {
+                    preview.style.transform = 'none';
+                    preview.style.marginBottom = '0';
+                }
+            }
+        }
+
+        window.addEventListener('resize', resizeLabel);
+        window.addEventListener('load', resizeLabel);
+    </script>
+</body>
+
+</html>

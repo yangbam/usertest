@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>모바일 초대장 만들기 - 결혼식, 돌잔치 셀프 제작</title>
+    <meta name="description" content="사진 한 장으로 만드는 감성 모바일 청첩장 & 돌잔치 초대장. 설치 없이 웹에서 무료로 디자인하고 이미지로 저장해서 카톡으로 전송하세요.">
+    <meta name="keywords" content="모바일청첩장, 셀프청첩장, 돌잔치초대장, 모바일초대장먼들기, 무료청첩장디자인, 결혼식초대장">
+    <meta name="author" content="Yangbam Lab">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://Yangbam-lab.com/businessevent/invitation.html">
+    <meta property="og:title" content="1분 완성! 감성 모바일 초대장 만들기 💌">
+    <meta property="og:description" content="우리만의 특별한 날, 세상에서 가장 쉬운 셀프 초대장 제작.">
+    <meta property="og:image" content="https://Yangbam-lab.com/assets/og_invitation.png">
+
+    <link rel="canonical" href="https://Yangbam-lab.com/businessevent/invitation.html">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&family=Noto+Sans+KR:wght@300;400;700&family=Parisienne&display=swap"
+        rel="stylesheet">
+
+    <!-- html2canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        :root {
+            /* Theme Variables (Default: Simple White) */
+            --bg-color: #f5f6fa;
+            --inv-bg: #ffffff;
+            --text-main: #2d3436;
+            --text-acc: #636e72;
+            --point-color: #aeb6bf;
+            --font-family: 'Gowun Batang', serif;
+        }
+
+        /* Theme Classes */
+        .theme-white {
+            --inv-bg: #ffffff;
+            --text-main: #2d3436;
+            --text-acc: #636e72;
+            --point-color: #b2bec3;
+        }
+
+        .theme-pink {
+            --inv-bg: #fff0f3;
+            /* misty rose */
+            --text-main: #5e3023;
+            --text-acc: #8d5d5d;
+            --point-color: #fab1a0;
+        }
+
+        .theme-green {
+            --inv-bg: #f1f8e9;
+            --text-main: #1b5e20;
+            --text-acc: #558b2f;
+            --point-color: #a5d6a7;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: var(--bg-color);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Navigation */
+        nav {
+            width: 100%;
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .nav-back {
+            position: absolute;
+            left: 20px;
+            text-decoration: none;
+            color: #333;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .nav-title {
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+
+        /* Layout */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 1100px;
+            gap: 40px;
+            padding: 40px 20px;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* Left: Inputs */
+        .controls-section {
+            flex: 1;
+            min-width: 320px;
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            order: 1;
+            /* Desktop: Right side or Left? Standard is Left control, Right preview. */
+        }
+
+        /* Right: Preview (Mobile: Top) */
+        .preview-section {
+            flex: 1;
+            min-width: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            order: 2;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background-color: #333;
+            color: white;
+        }
+
+        /* Form styling */
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        .control-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        /* Theme Selection */
+        .theme-grid {
+            display: flex;
+            gap: 10px;
+        }
+
+        .theme-opt {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .theme-opt.active {
+            transform: scale(1.1);
+            border-color: #333;
+        }
+
+        .opt-white {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+        }
+
+        .opt-pink {
+            background-color: #ffe0e9;
+        }
+
+        .opt-green {
+            background-color: #dcedc8;
+        }
+
+        /* Preview Card */
+        .invitation-card {
+            width: 360px;
+            /* Base mobile width 9:16 approx 360x640 */
+            height: 640px;
+            background-color: var(--inv-bg);
+            color: var(--text-main);
+            font-family: var(--font-family);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            transition: background-color 0.3s;
+        }
+
+        .inv-photo-area {
+            width: 100%;
+            height: 380px;
+            /* Approx 60% */
+            background-color: #eee;
+            background-image: url('data:image/svg+xml,%3Csvg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M20 20.5V19.5M19.5 20H20.5" stroke="%23ccc" stroke-width="2"/%3E%3C/svg%3E');
+            /* Crosshair center */
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .inv-photo-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            background: linear-gradient(to top, var(--inv-bg), transparent);
+        }
+
+        .inv-content {
+            flex: 1;
+            padding: 20px 30px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            /* Distribute vertical space */
+        }
+
+        .inv-title-group {
+            margin-top: -10px;
+            /* Pull up into gradient */
+            z-index: 1;
+        }
+
+        .inv-type {
+            font-family: 'Parisienne', cursive;
+            /* Elegant English font */
+            font-size: 1.5rem;
+            color: var(--point-color);
+            margin-bottom: 5px;
+        }
+
+        .inv-names {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .inv-message {
+            font-size: 0.9rem;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            color: var(--text-acc);
+            margin-bottom: 20px;
+        }
+
+        .inv-info-box {
+            width: 100%;
+            border-top: 1px solid var(--point-color);
+            border-bottom: 1px solid var(--point-color);
+            padding: 15px 0;
+            margin-bottom: 10px;
+        }
+
+        .inv-date {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .inv-time-place {
+            font-size: 0.85rem;
+            color: var(--text-acc);
+        }
+
+        /* Download Button */
+        .btn-download {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 15px 50px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin-top: 25px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Ad Banner */
+        .ad-banner {
+            width: 100%;
+            height: 100px;
+            background-color: #f1f1f1;
+            border: 1px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        /* SEO Section */
+        .seo-section {
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+            line-height: 1.8;
+            color: #555;
+        }
+
+        .seo-section h2 {
+            font-size: 1.6rem;
+            margin-top: 40px;
+            color: #333;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .seo-section h3 {
+            font-size: 1.3rem;
+            margin-top: 30px;
+            color: #555;
+        }
+
+        .seo-section p {
+            margin-bottom: 15px;
+        }
+
+        .seo-section ul {
+            margin-bottom: 20px;
+            padding-left: 20px;
+        }
+
+        .seo-section li {
+            margin-bottom: 10px;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            body {
+                padding-bottom: 200px;
+            }
+
+            .container {
+                flex-direction: column;
+                gap: 20px;
+                padding: 10px;
+            }
+
+            .preview-section {
+                order: -1;
+                /* Top */
+                width: 100%;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                background-color: var(--bg-color);
+                padding: 10px 0 20px 0;
+                border-bottom: 1px solid #ddd;
+            }
+
+            .invitation-card {
+                /* Scale down visual only using transform if screen is very small, 
+                   but usually 360px fits most phones. */
+                transform-origin: top center;
+                margin-bottom: 10px;
+            }
+
+            .controls-section {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <a href="index.html" class="nav-back">← 돌아가기</a>
+        <span class="nav-title">모바일 초대장 메이커</span>
+    </nav>
+
+    <div class="container">
+        <!-- Controls -->
+        <div class="controls-section">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="setMode('wedding')">결혼식 청첩장</button>
+                <button class="tab-btn" onclick="setMode('firstbirth')">돌잔치 초대장</button>
+            </div>
+
+            <!-- Ad Placeholder
+            <div class="ad-banner">광고 영역 (상단)</div>
+            -->
+
+            <div class="control-group">
+                <label class="control-label">테마 선택</label>
+                <div class="theme-grid">
+                    <div class="theme-opt opt-white active" onclick="setTheme('white')"></div>
+                    <div class="theme-opt opt-pink" onclick="setTheme('pink')"></div>
+                    <div class="theme-opt opt-green" onclick="setTheme('green')"></div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">메인 사진 업로드</label>
+                <input type="file" id="inputImage" class="form-control" accept="image/*">
+                <p style="font-size:0.8rem; color:#888; margin-top:5px;">* 세로형 사진(9:16 비율) 권장</p>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" id="labelNames">신랑 & 신부 이름</label>
+                <input type="text" id="inputNames" class="form-control" value="김철수 & 이영희">
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">초대 문구</label>
+                <textarea id="inputMsg" class="form-control">저희 두 사람, 사랑으로 하나되어
+새로운 시작을 하려 합니다.
+따스한 격려와 축복으로
+자리를 빛내 주시기 바랍니다.</textarea>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">날짜 및 시간</label>
+                <input type="text" id="inputDate" class="form-control" value="2026년 5월 20일 토요일 오후 1시">
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">장소 (홀 이름)</label>
+                <input type="text" id="inputPlace" class="form-control" value="아모르 웨딩홀 2층 그랜드볼룸">
+            </div>
+
+        </div>
+
+        <!-- Preview -->
+        <div class="preview-section">
+            <h3 style="margin:0 0 10px 0; font-size:1rem; color:#888;">미리보기</h3>
+
+            <div id="cardPreview" class="invitation-card theme-white">
+                <!-- Photo -->
+                <div class="inv-photo-area" id="viewPhoto">
+                    <div class="inv-photo-overlay"></div>
+                </div>
+
+                <!-- Content -->
+                <div class="inv-content">
+                    <div class="inv-title-group">
+                        <div class="inv-type" id="viewType">Wedding Invitation</div>
+                        <div class="inv-names" id="viewNames">김철수 & 이영희</div>
+                    </div>
+
+                    <div class="inv-message" id="viewMsg">저희 두 사람, 사랑으로 하나되어<br>새로운 시작을 하려 합니다.<br>따스한 격려와 축복으로<br>자리를
+                        빛내 주시기 바랍니다.</div>
+
+                    <div class="inv-info-box">
+                        <div class="inv-date" id="viewDate">2026. 05. 20. SAT PM 01:00</div>
+                        <div class="inv-time-place" id="viewPlace">아모르 웨딩홀 2층 그랜드볼룸</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-download" onclick="downloadLink()">⬇️ 초대장 이미지 저장 (JPG)</button>
+            <p style="font-size:0.8rem; color:#888; margin-top:10px;">이미지는 갤러리/약도 기능이 없는 단순 전송용 파일입니다.</p>
+
+            <!-- Ad Placeholder
+            <div class="ad-banner" style="margin-top:20px;">광고 영역 (하단)</div>
+            -->
+        </div>
+    </div>
+
+    <!-- SEO Content -->
+    <article class="seo-section">
+        <h2>결혼 준비의 시작, 모바일 청첩장 스마트하게 준비하기</h2>
+        <p>
+            종이 청첩장을 돌리는 문화가 점차 축소되면서, 이제는 <strong>모바일 청첩장(모청)</strong>이 선택이 아닌 필수가 되었습니다.
+            격식을 갖춰야 할 어르신들께는 종이 카드를, 친구와 직장 동료들에게는 간편하게 링크나 이미지를 보내는 것이 일반적인 예절이 되었죠.
+            하지만 스튜디오 촬영 수정본이 늦게 나오거나, 급하게 일정이 변경되었을 때, 또는 너무 비싼 유료 모바일 청첩장 제작 비용이 부담스러울 때가 있습니다.
+            <strong>Yangbam Lab 모바일 초대장 메이커</strong>는 누구나 1분 만에 감각적인 초대장을 무료로 만들 수 있는 솔루션입니다.
+        </p>
+
+        <h3>1. 스드메 예산 아끼는 꿀팁: 셀프 제작의 시대</h3>
+        <p>
+            결혼 준비 비용은 '부르는 게 값'이라는 말이 있죠. 스튜디오, 드레스, 메이크업(스드메) 비용만 수백만 원이 듭니다.
+            여기에 모바일 청첩장 제작비(평균 3~5만 원), 식전 영상 제작비 등을 추가하면 부담은 더 커집니다.
+            최근 알뜰한 예비부부들은 '미리캔버스'나 '망고보드' 같은 툴을 이용해 식전 영상과 초대장을 직접 만듭니다.
+            본 툴은 디자인 감각이 부족해도 텍스트만 입력하면 전문가 수준의 레이아웃을 잡아주므로 시간과 비용을 동시에 절약할 수 있습니다.
+        </p>
+
+        <h3>2. 모바일 청첩장 전송 예절 (Etiquette)</h3>
+        <ul>
+            <li><strong>시기:</strong> 본식 2주~1달 전이 가장 적당합니다. 너무 일찍 보내면 잊어버리고, 너무 늦으면 일정을 비우기 어렵습니다.</li>
+            <li><strong>멘트:</strong> "저희 결혼합니다, 오세요"라고 퉁명스럽게 링크만 보내는 것은 실례입니다. 반드시 안부 인사와 함께 "바쁘시겠지만 축복해주시면 감사하겠습니다"라는
+                정중한 메시지를 덧붙이세요.</li>
+            <li><strong>이미지형 vs 링크형:</strong> 카카오톡 프로필 사진으로 해놓거나 인스타그램 스토리에 올리기에는 **'이미지형(카드형)'**이 훨씬 직관적이고 예쁩니다. 링크형은
+                클릭해야만 내용을 볼 수 있어 번거로울 수 있습니다.</li>
+        </ul>
+
+        <h3>3. 돌잔치 답례품 & 초대장 트렌드</h3>
+        <p>
+            돌잔치는 결혼식보다 좀 더 캐주얼하고 귀여운 느낌이 강합니다.
+            초대장 사진으로는 아이가 활짝 웃는 클로즈업 샷이나, 가족이 함께 자연스럽게 찍은 스냅 사진이 인기가 많습니다.
+            최근 인기 있는 답례품으로는 실용적인 손세정제, 고급 소금, 유기농 수건 등이 있으며,
+            초대장에 "답례품은 정성껏 준비했습니다"라는 문구를 넣으면 참석률을 높이는 데 도움이 됩니다.
+        </p>
+    </article>
+
+    <script>
+        // DOM Elements
+        const els = {
+            inputNames: document.getElementById('inputNames'),
+            inputMsg: document.getElementById('inputMsg'),
+            inputDate: document.getElementById('inputDate'),
+            inputPlace: document.getElementById('inputPlace'),
+            inputImage: document.getElementById('inputImage'),
+
+            viewNames: document.getElementById('viewNames'),
+            viewMsg: document.getElementById('viewMsg'),
+            viewDate: document.getElementById('viewDate'),
+            viewPlace: document.getElementById('viewPlace'),
+            viewPhoto: document.getElementById('viewPhoto'),
+            viewType: document.getElementById('viewType'),
+
+            cardPreview: document.getElementById('cardPreview'),
+            labelNames: document.getElementById('labelNames')
+        };
+
+        let currentMode = 'wedding';
+
+        // 1. Text Input Listeners
+        els.inputNames.addEventListener('input', e => els.viewNames.innerText = e.target.value);
+        els.inputMsg.addEventListener('input', e => els.viewMsg.innerText = e.target.value); // innerText keeps newlines? Browsers vary.
+        // For textarea sync specifically:
+        els.inputMsg.addEventListener('input', e => {
+            els.viewMsg.innerHTML = e.target.value.replace(/\n/g, '<br>');
+        });
+
+        els.inputDate.addEventListener('input', e => els.viewDate.innerText = e.target.value);
+        els.inputPlace.addEventListener('input', e => els.viewPlace.innerText = e.target.value);
+
+        // 2. Image Upload
+        els.inputImage.addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (evt) {
+                    els.viewPhoto.style.backgroundImage = `url('${evt.target.result}')`;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // 3. Mode Switching
+        window.setMode = (mode) => {
+            currentMode = mode;
+            // Tabs UI
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active'); // Assumption: triggered by click
+
+            if (mode === 'wedding') {
+                els.labelNames.innerText = "신랑 & 신부 이름";
+                els.viewType.innerText = "Wedding Invitation";
+                els.viewType.style.fontFamily = "'Parisienne', cursive";
+                els.inputMsg.value = "저희 두 사람, 사랑으로 하나되어\n새로운 시작을 하려 합니다.\n따스한 격려와 축복으로\n자리를 빛내 주시기 바랍니다.";
+            } else {
+                els.labelNames.innerText = "아기 이름 (또는 가족 이름)";
+                els.viewType.innerText = "First Birthday";
+                els.viewType.style.fontFamily = "'Gowun Batang', serif"; // Less cursive for baby? Or keep cute.
+                els.inputMsg.value = "우리 아기 첫 생일파티에\n소중한 분들을 초대합니다.\n함께 촛불 끄고 축하해주시면\n더없는 기쁨이 되겠습니다.";
+            }
+            // Trigger updates
+            els.inputNames.value = mode === 'wedding' ? "김철수 & 이영희" : "이로운 아기";
+            els.viewNames.innerText = els.inputNames.value;
+            els.viewMsg.innerHTML = els.inputMsg.value.replace(/\n/g, '<br>');
+        };
+
+        // 4. Theme Switching
+        window.setTheme = (theme) => {
+            const card = els.cardPreview;
+            card.classList.remove('theme-white', 'theme-pink', 'theme-green');
+            card.classList.add(`theme-${theme}`);
+
+            // UI
+            document.querySelectorAll('.theme-opt').forEach(o => o.classList.remove('active'));
+            // Find active element manually or via passed event? 
+            // Simple way: check classList of children
+            const opts = document.querySelectorAll('.theme-opt');
+            opts.forEach(o => {
+                if (o.className.includes(theme)) o.classList.add('active');
+            });
+        };
+
+        // 5. Download
+        window.downloadLink = () => {
+            html2canvas(els.cardPreview, {
+                scale: 2,
+                useCORS: true
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `invitation_${currentMode}.jpg`; // JPG is fine for photos
+                link.href = canvas.toDataURL('image/jpeg', 0.9);
+                link.click();
+            });
+        };
+
+        // Init Mobile Resize Logic (similar to others)
+        function resizePreview() {
+            if (window.innerWidth < 768) {
+                const preview = document.getElementById('cardPreview');
+                const scale = (window.innerWidth - 40) / 360; // 360 is base width
+                if (scale < 1) {
+                    preview.style.transform = `scale(${scale})`;
+                    preview.style.marginBottom = `-${640 * (1 - scale)}px`; // Adjust layout flow
+                } else {
+                    preview.style.transform = 'none';
+                    preview.style.marginBottom = '0';
+                }
+            }
+        }
+        window.addEventListener('resize', resizePreview);
+        window.addEventListener('load', resizePreview);
+
+    </script>
+</body>
+
+</html>

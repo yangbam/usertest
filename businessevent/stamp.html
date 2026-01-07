@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>무료 온라인 도장 만들기 - 투명 배경 전자 직인/인감 생성</title>
+    <meta name="description" content="회원가입 없이 이름만 입력하면 투명한 배경의 전자 도장(직인, 인감)을 즉시 만들어드립니다. 한글/워드/구글문서용 전자서명 이미지 생성기.">
+    <meta name="keywords" content="무료도장만들기, 전자도장, 투명도장, 온라인도장, 도장이미지, 전자서명, 직인만들기">
+    <meta name="author" content="Yangbam Lab">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://Yangbam-lab.com/businessevent/stamp.html">
+    <meta property="og:title" content="무료 전자 도장 만들기 💮">
+    <meta property="og:description" content="1초 만에 만드는 우리 회사 직인. 투명 배경으로 문서에 바로 사용하세요.">
+    <meta property="og:image" content="https://Yangbam-lab.com/assets/og_stamp.png">
+
+    <link rel="canonical" href="https://Yangbam-lab.com/businessevent/stamp.html">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Gungsuh&family=Nanum+Brush+Script&family=Nanum+Myeongjo:wght@700&family=Noto+Serif+KR:wght@600;900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #c0392b;
+            /* Stamp Red */
+            --accent: #e74c3c;
+            --bg: #fdf5e6;
+            /* Paper color */
+            --text: #2c3e50;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            background-color: #f5f6fa;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Navigation */
+        nav {
+            width: 100%;
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .nav-back {
+            position: absolute;
+            left: 20px;
+            text-decoration: none;
+            color: var(--text);
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .nav-title {
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+
+        /* Container */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 1100px;
+            gap: 40px;
+            padding: 40px 20px;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* Left: Form */
+        .input-section {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        /* Option Grid */
+        .option-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .radio-card {
+            border: 2px solid #eee;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            padding: 15px 5px;
+            transition: all 0.2s;
+        }
+
+        .radio-card:hover {
+            border-color: #ccc;
+        }
+
+        .radio-card input {
+            display: none;
+        }
+
+        .radio-card.active {
+            border-color: var(--primary);
+            background-color: #fff5f5;
+            color: var(--primary);
+        }
+
+        .option-icon {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .option-text {
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        /* Right: Preview */
+        .preview-section {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .canvas-wrapper {
+            width: 320px;
+            height: 320px;
+            background-color: #ffffff;
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23f0f0f0' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+            /* Subtle Pattern */
+            border: 1px solid #ddd;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .canvas-bg-text {
+            position: absolute;
+            color: #ccc;
+            font-size: 0.9rem;
+            top: 10px;
+            left: 10px;
+            pointer-events: none;
+        }
+
+        canvas {
+            max-width: 100%;
+            max-height: 100%;
+            cursor: pointer;
+        }
+
+        .btn-download {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 50px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(192, 57, 43, 0.4);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-download:hover {
+            background-color: #a93226;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(192, 57, 43, 0.5);
+        }
+
+        /* Ad Banner */
+        .ad-banner {
+            width: 100%;
+            height: 100px;
+            background-color: #eee;
+            border: 1px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        /* SEO Footer */
+        .seo-section {
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+            line-height: 1.8;
+            color: #444;
+        }
+
+        .seo-section h2 {
+            font-size: 1.8rem;
+            margin-top: 40px;
+            color: #2c3e50;
+            border-bottom: 2px solid var(--primary);
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .seo-section h3 {
+            font-size: 1.4rem;
+            margin-top: 30px;
+            color: #c0392b;
+        }
+
+        .seo-section p {
+            margin-bottom: 15px;
+            word-break: keep-all;
+        }
+
+        .seo-section ul,
+        ol {
+            margin-bottom: 20px;
+            padding-left: 20px;
+        }
+
+        .highlight {
+            background-color: #fff3e0;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .preview-section {
+                width: 100%;
+            }
+
+            .canvas-wrapper {
+                width: 100%;
+                max-width: 300px;
+                /* Limit max width */
+                height: auto;
+                aspect-ratio: 1/1;
+                /* Maintain square */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <a href="index.html" class="nav-back">← 돌아가기</a>
+        <span class="nav-title">온라인 도장 만들기</span>
+    </nav>
+
+    <div class="container">
+        <!-- Input -->
+        <div class="input-section">
+            <div class="section-title">옵션 선택</div>
+
+            <div class="form-group">
+                <label class="form-label">이름 입력 (3~4자 권장)</label>
+                <input type="text" id="nameInput" class="form-control" placeholder="홍길동 또는 주식회사양밤" value="홍길동인"
+                    maxlength="10">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">도장 모양</label>
+                <div class="option-grid">
+                    <div class="radio-card active" onclick="selectShape('circle')">
+                        <input type="radio" name="shape" value="circle" checked>
+                        <span class="option-icon">⚪</span>
+                        <div class="option-text">원형 (인감)</div>
+                    </div>
+                    <div class="radio-card" onclick="selectShape('oval')">
+                        <input type="radio" name="shape" value="oval">
+                        <span class="option-icon">🥚</span>
+                        <div class="option-text">타원형</div>
+                    </div>
+                    <div class="radio-card" onclick="selectShape('square')">
+                        <input type="radio" name="shape" value="square">
+                        <span class="option-icon">⬜</span>
+                        <div class="option-text">사각형 (직인)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">서체 선택</label>
+                <div class="option-grid">
+                    <div class="radio-card active" onclick="selectFont('Nanum Myeongjo')">
+                        <input type="radio" name="font" value="Nanum Myeongjo" checked>
+                        <span class="option-icon" style="font-family: 'Nanum Myeongjo';">가</span>
+                        <div class="option-text">명조체</div>
+                    </div>
+                    <!-- Using Noto Serif as a proxy for Gungsuh-style standard serif -->
+                    <div class="radio-card" onclick="selectFont('Noto Serif KR')">
+                        <input type="radio" name="font" value="Noto Serif KR">
+                        <span class="option-icon" style="font-family: 'Noto Serif KR';">나</span>
+                        <div class="option-text">궁서/바탕</div>
+                    </div>
+                    <div class="radio-card" onclick="selectFont('Nanum Brush Script')">
+                        <input type="radio" name="font" value="Nanum Brush Script">
+                        <span class="option-icon" style="font-family: 'Nanum Brush Script';">다</span>
+                        <div class="option-text">붓글씨</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ad Placeholder
+            <div class="ad-banner">
+                광고 영역 (Google AdSense)
+            </div>
+            -->
+        </div>
+
+        <!-- Preview -->
+        <div class="preview-section">
+            <div class="section-title" style="border:none; margin-bottom:10px;">미리보기</div>
+
+            <div class="canvas-wrapper">
+                <div class="canvas-bg-text">Transparent Background Check</div>
+                <canvas id="stampCanvas" width="300" height="300"></canvas>
+            </div>
+
+            <!-- Ad Placeholder
+            <div class="ad-banner" style="margin-top:0;">
+                광고 영역 (Canvas Bottom)
+            </div>
+            -->
+
+            <button class="btn-download" onclick="downloadStamp()">
+                ⬇️ 도장 이미지 저장 (PNG)
+            </button>
+            <p style="font-size:0.8rem; color:#888; margin-top:10px;">배경이 투명한 이미지로 저장됩니다.</p>
+        </div>
+    </div>
+
+    <!-- SEO Content -->
+    <article class="seo-section">
+        <h2>전자 도장의 세계: 법적 효력부터 활용법까지</h2>
+        <p>
+            재택근무와 전자결재가 일상화된 요즘, 종이 계약서에 인주를 묻혀 도장을 찍는 일은 점차 줄어들고 있습니다.
+            하지만 여전히 많은 문서(견적서, 청구서, 이력서 등)는 신뢰성과 격식을 갖추기 위해 '도장 날인'을 요구합니다.
+            <strong>온라인 무료 도장 만들기</strong> 도구를 사용하면 스캐너 없이도 깨끗하고 선명한 도장 이미지를 만들어
+            한글(HWP), 워드(Word), 엑셀(Excel), PDF 등에 즉시 삽입할 수 있습니다.
+        </p>
+
+        <h3>1. 온라인 전자 도장의 법적 효력</h3>
+        <p>
+            "인터넷으로 만든 도장 이미지도 법적 효력이 있나요?" 가장 많이 묻는 질문입니다.
+            대한민국 <strong>전자서명법 제3조</strong>에 따르면, 전자문서에 포함된 전자서명(도장 이미지 포함)은
+            단지 전자적이라는 이유만으로 법적 효력이 부인되지 않습니다.
+            즉, 당사자 간의 합의가 있다면 이미지 도장도 유효한 서명 방식으로 인정받을 수 있습니다.
+            다만, 부동산 매매나 금융 대출 등 중요한 법적 행위에서는 '공인된 전자서명(공동인증서 등)'이나
+            실물 인감 날인이 요구될 수 있으므로 용도에 맞게 사용하는 것이 중요합니다.
+        </p>
+
+        <h3>2. 이미지 저작권 걱정 없는 "착한 도장"</h3>
+        <p>
+            인터넷에 떠도는 도장 이미지를 무단으로 캡처해서 사용하면 저작권 침해나 사문서 위조의 위험이 있습니다.
+            특히 폰트(서체)의 경우, 유료 폰트를 무단으로 사용하여 만든 도장 이미지를 상업적 용도로 사용하면
+            폰트 제작사로부터 저작권 소송을 당할 수 있습니다.
+            <br><br>
+            <strong>Yangbam Lab 도장 메이커</strong>는 상업적 이용이 허용된
+            <strong>오픈 라이선스 폰트(Google Fonts - SIL Open Font License)</strong>만을 사용합니다.
+            여기서 만든 도장 이미지는 개인적 용도는 물론, 회사의 공식 문서 등 상업적 용도로도 자유롭게 사용하실 수 있습니다.
+        </p>
+
+        <h3>3. 문서 프로그램별 투명 도장 넣는 법 (꿀팁)</h3>
+        <p>배경이 투명한 PNG 도장을 만들었다면, 이제 문서에 자연스럽게 얹어야겠죠? 프로그램별 설정법을 알려드립니다.</p>
+        <ol>
+            <li><strong>한글 (HWP/HWPX):</strong>
+                <ul>
+                    <li>[입력] > [그림]으로 도장 이미지 삽입.</li>
+                    <li>이미지 클릭 > [개체 속성] > <strong>[글 앞으로]</strong> 배치 선택. (이 설정이 중요합니다! 글자 뒤로 숨지 않습니다.)</li>
+                    <li>서명란 위로 드래그하여 위치 조절.</li>
+                </ul>
+            </li>
+            <li><strong>마이크로소프트 워드 (Word):</strong>
+                <ul>
+                    <li>[삽입] > [그림]으로 이미지 불러오기.</li>
+                    <li>그림 선택 > [레이아웃 옵션] 아이콘 클릭 > <strong>[텍스트 앞]</strong> 선택.</li>
+                    <li>자유롭게 위치 이동 가능.</li>
+                </ul>
+            </li>
+            <li><strong>엑셀 (Excel):</strong>
+                <ul>
+                    <li>[삽입] > [그림]. 엑셀은 셀 위에 이미지가 '둥둥 떠 있는' 레이어 방식이므로 별도 설정 없이 바로 원하는 셀 위(예: (인) 옆)에 배치하면 됩니다.</li>
+                    <li><code>Alt</code> 키를 누른 채 드래그하면 셀 눈금에 딱 의도하여 맞출 수 있습니다.</li>
+                </ul>
+            </li>
+        </ol>
+
+        <p class="highlight">
+            💡 <strong>Tip:</strong> 도장을 찍을 때는 이름이나 "(인)" 글자가 도장 정중앙에 오도록 겹쳐서 배치해야
+            "이 문서의 주인은 나"라는 서명 날인의 진정성이 더 잘 느껴집니다.
+        </p>
+    </article>
+
+    <script>
+        // Init logic
+        const canvas = document.getElementById('stampCanvas');
+        const ctx = canvas.getContext('2d');
+        const nameInput = document.getElementById('nameInput');
+
+        let currentState = {
+            shape: 'circle',
+            font: 'Nanum Myeongjo',
+            text: '홍길동인'
+        };
+
+        // Event Listeners
+        nameInput.addEventListener('input', (e) => {
+            currentState.text = e.target.value || '홍길동인';
+            drawStamp();
+        });
+
+        // Shape Selection
+        window.selectShape = (shape) => {
+            currentState.shape = shape;
+            // Update UI
+            document.querySelectorAll('input[name="shape"]').forEach(el => {
+                el.closest('.radio-card').classList.remove('active');
+                if (el.value === shape) el.closest('.radio-card').classList.add('active');
+            });
+            drawStamp();
+        };
+
+        // Font Selection
+        window.selectFont = (font) => {
+            currentState.font = font;
+            // Update UI
+            document.querySelectorAll('input[name="font"]').forEach(el => {
+                el.closest('.radio-card').classList.remove('active');
+                if (el.value === font) el.closest('.radio-card').classList.add('active');
+            });
+            drawStamp();
+        };
+
+        function drawStamp() {
+            // Clear Canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const color = '#CC3D3D'; // Stamp Red
+            const text = currentState.text;
+
+            ctx.fillStyle = color;
+            ctx.strokeStyle = color;
+
+            // 1. Draw Shape
+            ctx.lineWidth = 7;
+            ctx.beginPath();
+
+            let drawWidth, drawHeight;
+
+            if (currentState.shape === 'circle') {
+                const radius = 100;
+                ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                drawWidth = 140;
+                drawHeight = 140;
+            } else if (currentState.shape === 'oval') {
+                drawWidth = 120;
+                drawHeight = 180;
+                ctx.ellipse(centerX, centerY, 60, 90, 0, 0, Math.PI * 2);
+            } else if (currentState.shape === 'square') {
+                drawWidth = 180;
+                drawHeight = 180;
+                const size = 180;
+                ctx.rect(centerX - size / 2, centerY - size / 2, size, size);
+            }
+
+            ctx.stroke();
+
+            // 2. Double Border (Inner thin line) - Optional but adds realism
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            const padding = 6;
+
+            if (currentState.shape === 'circle') {
+                ctx.arc(centerX, centerY, 100 - padding, 0, Math.PI * 2);
+            } else if (currentState.shape === 'oval') {
+                ctx.ellipse(centerX, centerY, 60 - padding / 1.5, 90 - padding, 0, 0, Math.PI * 2);
+            } else if (currentState.shape === 'square') {
+                const size = 180 - (padding * 2);
+                ctx.rect(centerX - size / 2, centerY - size / 2, size, size);
+            }
+            ctx.stroke();
+
+            // 3. Draw Text
+            ctx.font = `bold ${getTextSize(text, currentState.shape)}px '${currentState.font}'`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            // Text Layout Logic
+            if (currentState.shape === 'square' || currentState.shape === 'oval') {
+                // Vertical or Grid
+                drawVerticalOrGrid(text, centerX, centerY);
+            } else {
+                // Circle
+                drawCircleText(text, centerX, centerY);
+            }
+
+            // 4. Apply Texture (Noise/Grunge)
+            addTexture();
+        }
+
+        function getTextSize(text, shape) {
+            const len = text.length;
+            if (shape === 'circle') {
+                if (len <= 2) return 80;
+                if (len === 3) return 60;
+                return 50;
+            } else {
+                // Square/Oval usually smaller per char if many
+                if (len <= 2) return 90;
+                if (len <= 4) return 70;
+                return 50;
+            }
+        }
+
+        function drawVerticalOrGrid(text, x, y) {
+            const lines = [];
+            const len = text.length;
+
+            if (currentState.shape === 'square' && len === 4) {
+                // 2x2 Grid (Top-Right, Bottom-Right, Top-Left, Bottom-Left... tricky. Standard is Top-Left to Bottom-Right reading?)
+                // Standard seal reading: Right col (Top->Down), Left col (Top->Down).
+                // Ex: 주식(right col) 회사(left col)
+                const rightCol = text.substring(0, 2);
+                const leftCol = text.substring(2, 4);
+
+                const offset = 45;
+                const fontSize = 70;
+                ctx.font = `bold ${fontSize}px '${currentState.font}'`;
+
+                ctx.fillText(rightCol[0], x + offset, y - offset);
+                ctx.fillText(rightCol[1], x + offset, y + offset);
+                ctx.fillText(leftCol[0], x - offset, y - offset);
+                ctx.fillText(leftCol[1], x - offset, y + offset);
+                return;
+            }
+
+            // Simple Vertical fallback
+            const lineHeight = 55;
+            const startY = y - ((len - 1) * lineHeight) / 2;
+            for (let i = 0; i < len; i++) {
+                ctx.fillText(text[i], x, startY + (i * lineHeight));
+            }
+        }
+
+        function drawCircleText(text, x, y) {
+            const len = text.length;
+
+            if (len === 3) {
+                // Special 3-char layout: 1 Right, 1 Left-Top, 1 Left-Bottom? Or just vertical?
+                // Most simple seals: Vertical 3 chars inside circle.
+                // 1
+                // 2
+                // 3
+                const lineHeight = 55;
+                const startY = y - ((len - 1) * lineHeight) / 2;
+                for (let i = 0; i < len; i++) {
+                    ctx.fillText(text[i], x, startY + (i * lineHeight));
+                }
+            } else if (len === 4) {
+                // 2x2 Grid in Circle
+                const offset = 35;
+                ctx.fillText(text[0], x + offset, y - offset); // Right Top
+                ctx.fillText(text[1], x + offset, y + offset); // Right Bottom
+                ctx.fillText(text[2], x - offset, y - offset); // Left Top
+                ctx.fillText(text[3], x - offset, y + offset); // Left Bottom
+                // Note: Reading order varies, sticking to simple visual grid
+            } else {
+                // 1, 2, or 5+ : Just vertical
+                const lineHeight = len > 4 ? 40 : 55;
+                const startY = y - ((len - 1) * lineHeight) / 2;
+                for (let i = 0; i < len; i++) {
+                    ctx.fillText(text[i], x, startY + (i * lineHeight));
+                }
+            }
+        }
+
+        function addTexture() {
+            // Get pixel data
+            const idata = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = idata.data;
+
+            // Loop through pixels
+            for (let i = 0; i < data.length; i += 4) {
+                const alpha = data[i + 3];
+                if (alpha > 0) {
+                    // Only texture non-transparent pixels
+                    const noise = Math.random();
+
+                    // 1. Edge erosion (simplified by alpha check threshold? No, just random noise)
+                    // 2. Internal dots
+                    if (noise > 0.96) {
+                        // Make fully transparent (hole)
+                        data[i + 3] = 0;
+                    } else if (noise > 0.85) {
+                        // Semi-transparent (faded ink)
+                        data[i + 3] = alpha * 0.6;
+                    }
+                }
+            }
+
+            ctx.putImageData(idata, 0, 0);
+        }
+
+        function downloadStamp() {
+            const link = document.createElement('a');
+            link.download = `stamp_${nameInput.value}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        // Initial Draw
+        // Wait for fonts to load?
+        document.fonts.ready.then(function () {
+            drawStamp();
+        });
+
+        // Redraw on font load just in case (sometimes promise fires early?)
+        setTimeout(drawStamp, 500);
+
+    </script>
+</body>
+
+</html>

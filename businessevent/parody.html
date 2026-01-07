@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNS 대화 패러디 생성기 - 카톡/인스타 DM 짤방 만들기</title>
+    <meta name="description" content="카카오톡, 인스타 DM 대화 화면을 100% 리얼하게 패러디하세요. 유튜브 썸네일, 상황극 짤방 제작 필수템. 설치 없이 웹에서 바로 만듭니다.">
+    <meta name="keywords" content="카톡패러디, 카톡대화조작, 인스타DM패러디, 짤방만들기, 가상대화생성기, 유튜브썸네일, 바이럴마케팅">
+    <meta name="author" content="Yangbam Lab">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://Yangbam-lab.com/businessevent/parody.html">
+    <meta property="og:title" content="상상 속 대화가 현실로! SNS 패러디 생성기 💬">
+    <meta property="og:description" content="카톡, DM 완벽 재현. 재미있는 짤방을 직접 만들어보세요.">
+    <meta property="og:image" content="https://Yangbam-lab.com/assets/og_parody.png">
+
+    <link rel="canonical" href="https://Yangbam-lab.com/businessevent/parody.html">
+
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Roboto:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- html2canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #f0f2f5;
+            --primary: #3b5998;
+            /* Kakao Theme Colors */
+            --k-bg: #b2c7d9;
+            --k-primary: #FEE500;
+            --k-text: #000;
+            --k-bubble-me: #FEE500;
+            --k-bubble-other: #ffffff;
+
+            /* Insta Theme Colors */
+            --i-bg: #ffffff;
+            --i-text: #262626;
+            --i-bubble-me: #efefef;
+            /* Or gradient blue in real DM, mostly lt gray now */
+            --i-bubble-other: #ffffff;
+            --i-border: #dbdbdb;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Nav */
+        nav {
+            width: 100%;
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .nav-back {
+            position: absolute;
+            left: 20px;
+            text-decoration: none;
+            color: #333;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .nav-title {
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+
+        /* Container */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 1200px;
+            gap: 40px;
+            padding: 40px 20px;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* Controls */
+        .controls-section {
+            flex: 1;
+            min-width: 340px;
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        .control-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Mode Switcher */
+        .mode-switch {
+            display: flex;
+            background: #eee;
+            border-radius: 8px;
+            padding: 5px;
+            margin-bottom: 25px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .mode-btn.active {
+            background: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .mode-k.active {
+            color: #3c1e1e;
+            /* Kakao Brown */
+        }
+
+        .mode-i.active {
+            color: #E1306C;
+            /* Insta Pink */
+        }
+
+        /* Chat Builder */
+        .chat-builder {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #eee;
+        }
+
+        .speaker-select {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .speaker-btn {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .speaker-btn.active {
+            background: #333;
+            color: white;
+            border-color: #333;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-add {
+            flex: 2;
+            background: #333;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-clear {
+            flex: 1;
+            background: #fff;
+            color: #c0392b;
+            border: 1px solid #c0392b;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        /* Preview (Phone) */
+        .preview-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .phone-frame {
+            width: 375px;
+            /* Standard Mobile width */
+            height: 700px;
+            /* Long enough */
+            background-color: var(--k-bg);
+            border: 10px solid #222;
+            border-radius: 30px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            transition: background 0.3s;
+        }
+
+        /* Top Bar */
+        .status-bar {
+            height: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #000;
+            z-index: 5;
+        }
+
+        .app-header {
+            height: 50px;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            z-index: 5;
+            background: transparent;
+        }
+
+        .app-header-title {
+            flex: 1;
+            font-weight: bold;
+            font-size: 16px;
+            margin-left: 10px;
+        }
+
+        .header-icon {
+            font-size: 18px;
+            color: #000;
+        }
+
+        /* Chat Area */
+        .chat-body {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Chat Input (Visual Fake) */
+        .chat-footer {
+            height: 50px;
+            background: white;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+        }
+
+        .fake-input {
+            flex: 1;
+            height: 34px;
+            background: #f0f0f0;
+            border-radius: 17px;
+            margin: 0 10px;
+            color: #aaa;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+        }
+
+        /* Bubbles */
+        .msg-row {
+            display: flex;
+            align-items: flex-start;
+            max-width: 100%;
+        }
+
+        .msg-row.me {
+            justify-content: flex-end;
+        }
+
+        .profile-img {
+            width: 38px;
+            height: 38px;
+            border-radius: 14px;
+            /* Kakao squircle */
+            background: #eee;
+            margin-right: 8px;
+            background-size: cover;
+            background-position: center;
+            flex-shrink: 0;
+        }
+
+        .msg-content-wrapper {
+            display: flex;
+            flex-direction: column;
+            max-width: 70%;
+        }
+
+        .msg-name {
+            font-size: 12px;
+            color: #555;
+            margin-bottom: 4px;
+        }
+
+        .msg-bubble {
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.4;
+            word-break: break-all;
+            position: relative;
+        }
+
+        .msg-time {
+            font-size: 10px;
+            color: #555;
+            margin: 0 5px;
+            align-self: flex-end;
+            /* Bottom align time */
+            min-width: 45px;
+            /* Prevent wrap */
+        }
+
+        /* Kakao Styles */
+        .theme-kakao .msg-row.other .msg-bubble {
+            background-color: #ffffff;
+            color: #000;
+            border-top-left-radius: 2px;
+        }
+
+        .theme-kakao .msg-row.me .msg-bubble {
+            background-color: #FEE500;
+            color: #000;
+            border-top-right-radius: 2px;
+        }
+
+        .theme-kakao .msg-row.other {
+            flex-direction: row;
+        }
+
+        .theme-kakao .msg-row.me {
+            flex-direction: row-reverse;
+        }
+
+        /* Time on left */
+
+        /* Insta Styles */
+        .theme-insta {
+            background-color: #ffffff;
+            color: #000;
+        }
+
+        .theme-insta .profile-img {
+            border-radius: 50%;
+            /* Circle */
+            width: 30px;
+            height: 30px;
+        }
+
+        .theme-insta .msg-row.other .msg-bubble {
+            background-color: #efefef;
+            /* Light gray */
+            border-radius: 20px;
+            padding: 10px 14px;
+        }
+
+        .theme-insta .msg-row.me .msg-bubble {
+            background-color: #3797f0;
+            /* Insta blue */
+            color: white;
+            border-radius: 20px;
+            padding: 10px 14px;
+        }
+
+        .theme-insta .msg-name {
+            display: none;
+        }
+
+        /* Usually hides name in DM unless group */
+        .theme-insta .msg-time {
+            display: none;
+        }
+
+        /* Time usually hidden or on tap */
+        .theme-insta .app-header {
+            border-bottom: 1px solid #efefef;
+        }
+
+
+        .btn-download {
+            margin-top: 20px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(46, 204, 113, 0.4);
+        }
+
+        /* Warnings */
+        .warning-box {
+            background-color: #fff5f5;
+            border: 1px solid #feb2b2;
+            color: #c53030;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* SEO Content */
+        .seo-section {
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 0 20px;
+            line-height: 1.8;
+            color: #555;
+        }
+
+        .seo-section h2 {
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+            color: #222;
+            margin-top: 40px;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                padding: 10px;
+            }
+
+            .preview-section {
+                order: -1;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                margin-bottom: 20px;
+            }
+
+            .phone-frame {
+                transform: scale(0.85);
+                transform-origin: top center;
+                margin-bottom: -100px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <a href="index.html" class="nav-back">← 돌아가기</a>
+        <span class="nav-title">SNS 대화 패러디 생성기</span>
+    </nav>
+
+    <div class="container">
+        <!-- Controls -->
+        <div class="controls-section">
+            <div class="mode-switch">
+                <button class="mode-btn mode-k active" onclick="setMode('kakao')">카카오톡 스타일</button>
+                <button class="mode-btn mode-i" onclick="setMode('insta')">인스타 DM 스타일</button>
+            </div>
+
+            <!-- Ad Placeholder
+            <div class="ad-banner" style="background:#eee; height:80px; margin-bottom:20px; border-radius:8px; display:flex; justify-content:center; align-items:center; color:#aaa;">광고 영역</div>
+            -->
+
+            <div class="section-title">기본 설정</div>
+            <div class="control-group">
+                <label class="control-label">상대방 이름</label>
+                <input type="text" id="inputName" class="form-control" value="썸녀">
+            </div>
+            <div class="control-group">
+                <label class="control-label">현재 시간</label>
+                <input type="text" id="inputTime" class="form-control" value="오후 2:30">
+            </div>
+            <div class="control-group">
+                <label class="control-label">상대방 프로필 사진</label>
+                <input type="file" id="inputProfileOther" class="form-control" accept="image/*">
+            </div>
+
+            <div class="section-title" style="margin-top:30px;">대화 입력</div>
+            <div class="chat-builder">
+                <div class="speaker-select">
+                    <button class="speaker-btn active" onclick="setSpeaker('me')" id="btnMe">나 (Me)</button>
+                    <button class="speaker-btn" onclick="setSpeaker('other')" id="btnOther">상대방 (Other)</button>
+                </div>
+                <div class="control-group">
+                    <textarea id="chatMsg" class="form-control" placeholder="메시지 내용을 입력하세요..."></textarea>
+                </div>
+                <div class="action-row">
+                    <button class="btn-clear" onclick="clearChat()">초기화</button>
+                    <button class="btn-add" onclick="addMessage()">대화 추가 (+)</button>
+                </div>
+                <p style="font-size:0.8rem; color:#888; margin-top:10px;">* 줄바꿈은 Enter를 누르세요.</p>
+            </div>
+
+            <div class="warning-box">
+                ⚠️ 주의: 본 도구는 유머 및 패러디 목적으로 제작되었습니다.<br>타인을 사칭하거나 악의적인 목적으로 조작된 이미지를 유포할 경우<br>법적 책임을 질 수 있습니다.
+            </div>
+        </div>
+
+        <!-- Preview -->
+        <div class="preview-section">
+            <div id="captureArea" class="phone-frame theme-kakao">
+                <!-- Status Bar -->
+                <div class="status-bar">
+                    <span id="dispTimeSmall">14:30</span>
+                    <span><i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></span>
+                </div>
+
+                <!-- Header -->
+                <div class="app-header">
+                    <i class="fas fa-chevron-left header-icon"></i>
+                    <div class="app-header-title" id="dispName">썸녀</div>
+                    <i class="fas fa-search header-icon" style="margin-right:15px;"></i>
+                    <i class="fas fa-bars header-icon"></i>
+                </div>
+
+                <!-- Body -->
+                <div class="chat-body" id="chatBody">
+                    <!-- Default Initial Message -->
+                    <!-- Injected via JS -->
+                </div>
+
+                <!-- Footer -->
+                <div class="chat-footer">
+                    <i class="fas fa-plus" style="color:#aaa; font-size:18px;"></i>
+                    <div class="fake-input">메시지 보내기...</div>
+                    <i class="far fa-smile" style="color:#aaa; font-size:18px;"></i>
+                    <i class="fas fa-hashtag" style="color:#aaa; font-size:18px; margin-left:10px;"></i>
+                </div>
+            </div>
+
+            <button class="btn-download" onclick="downloadImage()">
+                <i class="fas fa-download"></i> 이미지 저장 (JPG)
+            </button>
+        </div>
+    </div>
+
+    <!-- SEO -->
+    <article class="seo-section">
+        <h2>SNS 마케팅과 패러디 콘텐츠의 힘</h2>
+        <p>
+            최근 유튜브 썸네일이나 페이스북, 인스타그램의 광고 콘텐츠를 보면, 마치 실제 메신저 대화인 것처럼 연출된 이미지를 흔히 볼 수 있습니다.
+            이러한 <strong>'페이크 메신저(Fake Messenger)'</strong> 기법은 소비자의 호기심을 자극하고, 친근감을 유발하여 클릭률(CTR)을 높이는 데 매우 효과적입니다.
+            "전 남친한테 연락 왔어..." 같은 제목과 함께 카톡 대화창이 썸네일로 있다면 누구나 클릭해보고 싶어지는 심리를 이용한 것이죠.
+        </p>
+
+        <h3>1. 바이럴 마케팅 성공 사례 분석</h3>
+        <p>
+            배달의 민족, 토스 등 유니콘 기업들도 초기에는 B급 감성의 패러디 콘텐츠로 팬덤을 모았습니다.
+            특히, 고객 센터 문의 내역을 재치 있게 재구성하거나, 회사 내부의 재미있는 에피소드를 메신저 대화 형식으로 공개하여 '일하는 방식'을 브랜딩 하기도 합니다.
+            이러한 콘텐츠는 텍스트만 나열하는 것보다 <strong>가독성</strong>이 뛰어나고, <strong>공유(Share)</strong>되기에 최적화된 포맷입니다.
+        </p>
+
+        <h3>2. 패러디물 제작 시 저작권 및 초상권 주의사항</h3>
+        <div style="background:#fff3e0; padding:15px; border-radius:8px;">
+            <p style="color:#e65100; font-weight:bold;">🚨 이것만은 꼭 지켜주세요!</p>
+            <ul>
+                <li><strong>사칭 금지:</strong> 유명인, 공인, 혹은 특정 지인을 사칭하여 허위 사실을 유포하면 명예훼손으로 처벌받을 수 있습니다.</li>
+                <li><strong>초상권:</strong> 타인의 사진을 허락 없이 프로필 사진으로 사용해서는 안 됩니다. 무료 이미지 사이트나 본인의 사진을 사용하세요.</li>
+                <li><strong>명시:</strong> 콘텐츠 하단이나 설명란에 "연출된 이미지입니다" 또는 "패러디입니다"라고 명시하는 것이 안전합니다.</li>
+            </ul>
+        </div>
+    </article>
+
+    <script>
+        // State
+        let currentMode = 'kakao';
+        let currentSpeaker = 'me';
+        let currentTime = '오후 2:30';
+        let otherName = '썸녀';
+        let otherProfileImg = ''; // Data URL
+
+        let messages = [
+            { speaker: 'me', text: '오늘 뭐해?', time: currentTime },
+            { speaker: 'other', text: '그냥 집에서 쉬고 있어 ㅎㅎ 너는?', time: currentTime } // has profile
+        ];
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            renderChat();
+        });
+
+        // Event Listeners
+        document.getElementById('inputName').addEventListener('input', (e) => {
+            otherName = e.target.value;
+            document.getElementById('dispName').innerText = otherName;
+        });
+
+        document.getElementById('inputTime').addEventListener('input', (e) => {
+            currentTime = e.target.value;
+            // Update visual top bar
+            // Assuming simplified top bar matches input roughly or JS parse. 
+            // For simplicitly, just use the string for chat bubbles, maybe update status bar with current real time or fixed.
+        });
+
+        document.getElementById('inputProfileOther').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (evt) => {
+                    otherProfileImg = evt.target.result;
+                    renderChat();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Functions
+        function setMode(mode) {
+            currentMode = mode;
+            const frame = document.getElementById('captureArea');
+
+            // Buttons
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            if (mode === 'kakao') document.querySelector('.mode-k').classList.add('active');
+            else document.querySelector('.mode-i').classList.add('active');
+
+            // Apply Theme Class
+            frame.classList.remove('theme-kakao', 'theme-insta');
+            frame.classList.add(`theme-${mode}`);
+
+            // Specific Adjustments
+            const headTitle = document.querySelector('.app-header-title');
+            if (mode === 'insta') {
+                headTitle.style.textAlign = 'center';
+                document.querySelector('.fa-search').className = 'fas fa-video header-icon'; // Video icon
+                document.querySelector('.fa-bars').className = 'fas fa-info-circle header-icon'; // Info icon
+            } else {
+                headTitle.style.textAlign = 'left';
+                document.querySelector('.fa-video')?.setAttribute('class', 'fas fa-search header-icon');
+                document.querySelector('.fa-info-circle')?.setAttribute('class', 'fas fa-bars header-icon');
+            }
+            renderChat();
+        }
+
+        function setSpeaker(who) {
+            currentSpeaker = who;
+            document.querySelectorAll('.speaker-btn').forEach(b => b.classList.remove('active'));
+            if (who === 'me') document.getElementById('btnMe').classList.add('active');
+            else document.getElementById('btnOther').classList.add('active');
+        }
+
+        function addMessage() {
+            const txt = document.getElementById('chatMsg').value;
+            if (!txt.trim()) return;
+
+            messages.push({
+                speaker: currentSpeaker,
+                text: txt,
+                time: currentTime
+            });
+            document.getElementById('chatMsg').value = '';
+            renderChat();
+
+            // Scroll to bottom
+            const body = document.getElementById('chatBody');
+            body.scrollTop = body.scrollHeight;
+        }
+
+        function clearChat() {
+            if (confirm('대화 내용을 모두 지우시겠습니까?')) {
+                messages = [];
+                renderChat();
+            }
+        }
+
+        function renderChat() {
+            const body = document.getElementById('chatBody');
+            body.innerHTML = '';
+
+            messages.forEach(msg => {
+                const row = document.createElement('div');
+                row.className = `msg-row ${msg.speaker}`;
+
+                let html = '';
+
+                if (msg.speaker === 'other') {
+                    // Profile Image
+                    const imgStyle = otherProfileImg ? `background-image:url('${otherProfileImg}')` : `background-color:#ccc`;
+                    html += `<div class="profile-img" style="${imgStyle}"></div>`;
+
+                    html += `<div class="msg-content-wrapper">`;
+                    if (currentMode === 'kakao') {
+                        html += `<div class="msg-name">${otherName}</div>`;
+                    }
+                    html += `<div style="display:flex; align-items:flex-end;">`;
+                    html += `<div class="msg-bubble">${msg.text.replace(/\n/g, '<br>')}</div>`;
+                    if (currentMode === 'kakao') html += `<div class="msg-time">${msg.time}</div>`;
+                    html += `</div>`; // flex/wrapper
+                    html += `</div>`; // content-wrapper
+                } else {
+                    // Me
+                    html += `<div class="msg-time">${msg.time}</div>`;
+                    html += `<div class="msg-bubble">${msg.text.replace(/\n/g, '<br>')}</div>`;
+                }
+
+                row.innerHTML = html;
+                body.appendChild(row);
+            });
+        }
+
+        function downloadImage() {
+            const area = document.getElementById('captureArea');
+            html2canvas(area, {
+                scale: 2,
+                useCORS: true
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `parody_chat_${Date.now()}.jpg`;
+                link.href = canvas.toDataURL('image/jpeg');
+                link.click();
+            });
+        }
+    </script>
+</body>
+
+</html>

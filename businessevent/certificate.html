@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>무료 상장 양식 만들기 - 고퀄리티 수료증/감사패 제작</title>
+    <meta name="description" content="학원, 유치원, 이벤트를 위한 무료 상장 제작 프로그램. 금박 테두리 디자인, 재미있는 상장 문구 템플릿 제공. PDF 및 이미지 다운로드.">
+    <meta name="keywords" content="무료상장양식, 상장만들기, 수료증제작, 감사패문구, 상장디자인, 상장테두리, 재미있는상장, 칭찬스티커판">
+    <meta name="author" content="Yangbam Lab">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://Yangbam-lab.com/businessevent/certificate.html">
+    <meta property="og:title" content="고퀄리티 무료 상장 만들기 🏆">
+    <meta property="og:description" content="감동과 재미를 선물하세요. 1분 만에 완성하는 우리만의 특별한 시상식.">
+    <meta property="og:image" content="https://Yangbam-lab.com/assets/og_certificate.png">
+
+    <link rel="canonical" href="https://Yangbam-lab.com/businessevent/certificate.html">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Serif+KR:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <!-- html2canvas Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #d4af37;
+            /* Gold */
+            --primary-dark: #b8860b;
+            --bg: #f5f6fa;
+            --card-width: 595px;
+            /* A4 Ratio scaled for screen */
+            --card-height: 842px;
+            --text: #2c3e50;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Navigation */
+        nav {
+            width: 100%;
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .nav-back {
+            position: absolute;
+            left: 20px;
+            text-decoration: none;
+            color: var(--text);
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .nav-title {
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+
+        /* Container */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 1200px;
+            gap: 40px;
+            padding: 40px 20px;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* Left: Form */
+        .input-section {
+            flex: 1;
+            min-width: 320px;
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            max-width: 450px;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            height: 120px;
+            line-height: 1.6;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .btn-template {
+            padding: 8px 15px;
+            background-color: #f1f2f6;
+            border: 1px solid #dfe4ea;
+            border-radius: 20px;
+            color: #636e72;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-template:hover {
+            background-color: #e3f2fd;
+            color: #0984e3;
+            border-color: #0984e3;
+        }
+
+        /* Right: Preview */
+        .preview-section {
+            flex: 1;
+            min-width: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .certificate-wrapper {
+            position: relative;
+            width: var(--card-width);
+            height: var(--card-height);
+            background-color: white;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Transform for small screens */
+            transform-origin: top center;
+        }
+
+        /* --- CERTIFICATE DESIGN --- */
+        .cert-border {
+            width: 100%;
+            height: 100%;
+            border: 5px double var(--primary);
+            padding: 5px;
+            position: relative;
+        }
+
+        .cert-inner-border {
+            width: 100%;
+            height: 100%;
+            border: 2px solid var(--primary);
+            position: relative;
+            background-image:
+                radial-gradient(circle at 0 0, transparent 0, white 0),
+                radial-gradient(circle at 100% 0, transparent 0, white 0),
+                radial-gradient(circle at 100% 100%, transparent 0, white 0),
+                radial-gradient(circle at 0 100%, transparent 0, white 0);
+        }
+
+        /* Fancy Corner Decorations (CSS shapes) */
+        .cert-corner {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 H40 Q10 10 10 40 V10 H40 V0' fill='%23d4af37'/%3E%3Cpath d='M5 5 H30 Q15 15 15 30 V15 H30 V5' fill='%23d4af37' opacity='0.5'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+        }
+
+        .c-tl {
+            top: 0;
+            left: 0;
+        }
+
+        .c-tr {
+            top: 0;
+            right: 0;
+            transform: rotate(90deg);
+        }
+
+        .c-br {
+            bottom: 0;
+            right: 0;
+            transform: rotate(180deg);
+        }
+
+        .c-bl {
+            bottom: 0;
+            left: 0;
+            transform: rotate(270deg);
+        }
+
+        /* Content */
+        .cert-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 60px 40px;
+            font-family: 'Nanum Myeongjo', serif;
+            color: #111;
+        }
+
+        .cert-header {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+
+        .cert-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            margin: 0 0 40px 0;
+            text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.1);
+            letter-spacing: 10px;
+        }
+
+        .cert-recipient-label {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .cert-recipient {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #ccc;
+            padding: 0 20px 10px 20px;
+            min-width: 200px;
+        }
+
+        .cert-body {
+            font-size: 1.3rem;
+            line-height: 2.2;
+            margin-bottom: auto;
+            /* Push footer down */
+            white-space: pre-wrap;
+            width: 90%;
+            word-break: keep-all;
+        }
+
+        .cert-date {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        .cert-footer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        .cert-giver {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        .cert-seal {
+            width: 80px;
+            height: 80px;
+            border: 3px solid #c0392b;
+            /* Red Stamp */
+            border-radius: 4px;
+            color: #c0392b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+            transform: rotate(-5deg);
+            opacity: 0.8;
+            /* Simple css stamp visual */
+            background-image: radial-gradient(#c0392b 20%, transparent 20%), radial-gradient(#c0392b 20%, transparent 20%);
+            background-color: transparent;
+            background-position: 0 0, 5px 5px;
+            background-size: 10px 10px;
+            -webkit-background-clip: padding-box;
+            background-clip: padding-box;
+            /* Let's use a cleaner method: Just text overlay */
+            background: none;
+            position: relative;
+        }
+
+        .cert-seal::after {
+            content: '인';
+            font-size: 2rem;
+            border: 3px solid #c0392b;
+            border-radius: 50%;
+            /* Circle Seal */
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Namum Myeongjo', serif;
+        }
+
+
+        .btn-download {
+            background-color: var(--primary-dark);
+            color: white;
+            border: none;
+            padding: 15px 50px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(184, 134, 11, 0.3);
+            margin-top: 30px;
+            transition: all 0.3s;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(184, 134, 11, 0.4);
+        }
+
+        /* Ad Banner */
+        .ad-banner {
+            width: 100%;
+            height: 100px;
+            background-color: #eee;
+            border: 1px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        /* SEO Footer */
+        .seo-section {
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 0 20px;
+            line-height: 1.8;
+            color: #444;
+        }
+
+        .seo-section h2 {
+            font-size: 1.8rem;
+            margin-top: 50px;
+            color: var(--text);
+            border-bottom: 2px solid var(--primary);
+            display: inline-block;
+        }
+
+        .seo-section h3 {
+            font-size: 1.4rem;
+            margin-top: 30px;
+            color: var(--primary-dark);
+        }
+
+        .seo-section p {
+            margin-bottom: 20px;
+            word-break: keep-all;
+        }
+
+        .seo-section ul {
+            margin-bottom: 20px;
+        }
+
+        .seo-section li {
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .preview-section {
+                width: 100%;
+                overflow: hidden;
+            }
+
+            .certificate-wrapper {
+                /* Remove previous fixed transform */
+                transform: none;
+                margin: 0;
+                transform-origin: top center;
+            }
+        }
+    </style>
+    <script>
+        function resizeCert() {
+            const preview = document.getElementById('certificate');
+            const baseWidth = 595; // A4 width at screen px
+
+            // Standard A4 Ratio 1:1.414
+            // If screen is smaller than baseWidth
+            if (window.innerWidth < 768) {
+                const scale = (window.innerWidth - 40) / baseWidth;
+                preview.style.transform = `scale(${scale})`;
+                // Adjust margin bottom to close the gap created by scaling
+                // Height is 842. Space saved = 842 * (1-scale)
+                preview.style.marginBottom = `-${842 * (1 - scale)}px`;
+            } else {
+                preview.style.transform = 'none';
+                preview.style.marginBottom = '0';
+            }
+        }
+        window.addEventListener('resize', resizeCert);
+        window.addEventListener('load', resizeCert);
+    </script>
+</head>
+
+<body>
+    <nav>
+        <a href="index.html" class="nav-back">← 돌아가기</a>
+        <span class="nav-title">무료 상장 만들기</span>
+    </nav>
+
+    <div class="container">
+        <!-- Input Section -->
+        <div class="input-section">
+
+            <!-- Ad Placeholder
+            <div class="ad-banner">
+                광고 영역 (Google AdSense)
+            </div>
+            -->
+
+            <div class="section-title">내용 입력</div>
+
+            <div class="form-group">
+                <label class="form-label">상장 종류</label>
+                <select id="inputType" class="form-control" onchange="updateContent()">
+                    <option value="상 장">상 장</option>
+                    <option value="수 료 증">수 료 증</option>
+                    <option value="감 사 패">감 사 패</option>
+                    <option value="표 창 장">표 창 장</option>
+                    <option value="임 명 장">임 명 장</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">상 이름 / 호수</label>
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="inputNum" class="form-control" placeholder="제 2026-001호" value="제 2026-01호"
+                        style="flex:1">
+                    <input type="text" id="inputAwardName" class="form-control" placeholder="최우수상" style="flex:2">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">받는 사람 (소속/성명)</label>
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="inputBelong" class="form-control" placeholder="비즈니스팀" value="비즈니스팀"
+                        style="flex:1">
+                    <input type="text" id="inputName" class="form-control" placeholder="홍길동" value="홍길동" style="flex:1">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">본문 내용</label>
+                <div class="btn-group">
+                    <button class="btn-template" onclick="setTemplate('best')">🏆 우수사원</button>
+                    <button class="btn-template" onclick="setTemplate('edu')">🎓 수료증</button>
+                    <button class="btn-template" onclick="setTemplate('fun1')">🍚 밥상</button>
+                    <button class="btn-template" onclick="setTemplate('fun2')">😠 밉상</button>
+                </div>
+                <textarea id="inputBody"
+                    class="form-control">위 사람은 평소 타의 모범이 되며 맡은 바 업무를 성실히 수행하였기에 이 상장을 수여합니다.</textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">수여 날짜</label>
+                <input type="text" id="inputDate" class="form-control" value="2026년 01월 07일">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">주는 사람 (기관장)</label>
+                <input type="text" id="inputGiver" class="form-control" value="양밤연구소 대표 양밤">
+            </div>
+
+        </div>
+
+        <!-- Preview Section -->
+        <div class="preview-section">
+            <div class="section-title" style="border:none; text-align:center;">미리보기</div>
+
+            <div id="certificate" class="certificate-wrapper">
+                <div class="cert-border">
+                    <div class="cert-inner-border">
+                        <!-- Corners -->
+                        <div class="cert-corner c-tl"></div>
+                        <div class="cert-corner c-tr"></div>
+                        <div class="cert-corner c-br"></div>
+                        <div class="cert-corner c-bl"></div>
+
+                        <div class="cert-content">
+                            <div class="cert-header" id="viewNum">제 2026-01호</div>
+                            <h1 class="cert-title" id="viewTitle">상 장</h1>
+
+                            <div class="cert-recipient-label" id="viewBelong">비즈니스팀</div>
+                            <div class="cert-recipient" id="viewName">성 명 홍 길 동</div>
+
+                            <div class="cert-body" id="viewBody">위 사람은 평소 타의 모범이 되며 맡은 바 업무를 성실히 수행하였기에 이 상장을 수여합니다.
+                            </div>
+
+                            <div class="cert-date" id="viewDate">2026년 01월 07일</div>
+
+                            <div class="cert-footer">
+                                <div class="cert-giver" id="viewGiver">양밤연구소 대표 양밤</div>
+                                <div class="cert-seal"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-download" onclick="downloadCert()">
+                ⬇️ 상장 이미지 저장 (HD)
+            </button>
+            <p style="color:#888; font-size:0.8rem; margin-top:10px;">A4 사이즈 비율로 제작되었습니다.</p>
+
+            <!-- Ad Placeholder
+            <div class="ad-banner" style="margin-top:20px;">
+                광고 영역
+            </div>
+            -->
+        </div>
+    </div>
+
+    <!-- SEO Content -->
+    <article class="seo-section">
+        <h2>칭찬은 고래도 춤추게 한다: 상장의 힘과 활용법</h2>
+        <p>
+            '상장'은 단순한 종이 한 장이 아닙니다. 그것은 누군가의 노력에 대한 <strong>인정(Recognition)</strong>이자, 앞으로의 성장을 위한 강력한 동기부여입니다.
+            양밤랩 무료 상장 제작기는 유치원, 학원, 학교의 교육 현장부터 회사의 시무식, 연말 파티, 심지어 커플 기념일 이벤트까지
+            다양한 상황에서 마음을 전할 수 있는 도구입니다.
+        </p>
+
+        <h3>1. 교육적 효과: 아이의 자존감을 높이는 칭찬 스티커판의 완성</h3>
+        <p>
+            아이들에게 작은 성취에 대한 보상은 매우 중요합니다. '양치 잘하기', '편식 안 하기' 같은 사소한 행동이라도
+            "이 어린이는 밥을 골고루 잘 먹었으므로 이 상장을 수여함(밥상)"과 같이 위트 있는 상장을 수여해 보세요.
+            공식적인 형태의 상장은 아이에게 "내가 해냈다"는 커다란 성취감과 자존감을 심어줍니다.
+            수여식을 할 때는 가족들이 모여 박수를 쳐주고 BGM을 트는 등 분위기를 연출하면 효과가 배가 됩니다.
+        </p>
+
+        <h3>2. 센스 있는 연말 파티 & 회사 이벤트 아이디어</h3>
+        <p>
+            딱딱한 송년회 대신, '이색 시상식'을 기획해 보는 건 어떨까요?
+            지각 한 번 안 한 동료에게 주는 '개근상', 회식 분위기를 띄운 '분위기 메이커상', 야근을 많이 한 동료를 위로하는 '불꽃 투혼상' 등
+            재미있는 상장 문구는 조직의 분위기를 부드럽게 만들고 구성원 간의 유대감을 강화합니다.
+            본 툴의 '재미있는 상' 템플릿 기능을 활용하여 창의적인 상 이름을 지어보세요.
+        </p>
+
+        <h3>3. 상장 용지 인쇄 및 액자 보관 팁</h3>
+        <p>
+            디지털 파일을 다운로드한 후, 더욱 퀄리티 있게 출력하고 싶다면 다음 팁을 참고하세요.
+        </p>
+        <ul>
+            <li><strong>용지 두께:</strong> 일반 A4 용지(75g~80g)는 너무 얇아 비칠 수 있습니다. 문구점에서 '상장 용지' 혹은 120g 이상의 '두꺼운 백상지', '메머드지'를
+                구매하여 출력하면 훨씬 고급스럽습니다.</li>
+            <li><strong>금박 테두리:</strong> 만약 이미 금박 테두리가 인쇄된 상장 용지를 구매하셨다면, 본 툴의 미리보기 화면에서 테두리가 없는 안쪽 텍스트 내용만 캡처하거나 편집하여
+                용지 위치에 맞춰 인쇄해야 합니다. (본 웹 도구는 백지에 전체 이미지를 출력하는 용도입니다.)</li>
+            <li><strong>상장 케이스/액자:</strong> 다이소나 문구점에서 A4 사이즈 상장 케이스(우단 케이스)를 저렴하게 구매할 수 있습니다. 케이스에 넣어 수여하면 받는 사람에게 훨씬 큰
+                감동을 줄 수 있습니다.</li>
+        </ul>
+
+        <h3>4. 무료 상장 양식 문구 모음</h3>
+        <ul>
+            <li><strong>위촉장:</strong> 귀하를 본 회의 운영위원으로 위촉합니다. 앞으로의 활약을 기대합니다.</li>
+            <li><strong>수료증:</strong> 위 사람은 소정의 교육 과정을 성실히 이수하였기에 이 증서를 수여합니다.</li>
+            <li><strong>감사패:</strong> 평소 남다른 관심과 사랑으로 본 단체의 발전에 기여한 공이 크므로 감사의 마음을 담아 드립니다.</li>
+        </ul>
+    </article>
+
+    <script>
+        // Data & Logic
+        const inputs = {
+            type: document.getElementById('inputType'),
+            num: document.getElementById('inputNum'),
+            awardName: document.getElementById('inputAwardName'),
+            belong: document.getElementById('inputBelong'),
+            name: document.getElementById('inputName'),
+            body: document.getElementById('inputBody'),
+            date: document.getElementById('inputDate'),
+            giver: document.getElementById('inputGiver')
+        };
+        const views = {
+            title: document.getElementById('viewTitle'),
+            num: document.getElementById('viewNum'),
+            belong: document.getElementById('viewBelong'),
+            name: document.getElementById('viewName'),
+            body: document.getElementById('viewBody'),
+            date: document.getElementById('viewDate'),
+            giver: document.getElementById('viewGiver')
+        };
+
+        // Date Init
+        const today = new Date();
+        inputs.date.value = `${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일`;
+        views.date.textContent = inputs.date.value;
+
+        // Templates
+        const templates = {
+            best: { type: '상 장', award: '우수사원상', body: '위 사람은 투철한 사명감과 애사심으로 맡은 바 직무에 정려하여 타의 모범이 되었으므로 이에 상장을 수여합니다.' },
+            edu: { type: '수 료 증', award: '과정수료', body: '위 사람은 양밤랩에서 주관하는 [고급 웹 개발자 과정]을 성실히 이수하였기에 이 증서를 수여합니다.' },
+            fun1: { type: '상 장', award: '밥 상', body: '위 사람은 평소 밥을 남기지 않고 싹싹 긁어먹어 농부 아저씨의 피땀 어린 노력을 헛되이 하지 않았기에, 감사의 마음을 담아 이 상(밥상)을 차려드립니다.' },
+            fun2: { type: '상 장', award: '밉 상', body: '위 사람은 평소 눈치 없는 행동과 썰렁한 개그로 주변 분위기를 싸하게 만들었으며, 하는 짓이 아주 밉상이므로 이 상을 수여합니다.' }
+        };
+
+        function setTemplate(key) {
+            const t = templates[key];
+            inputs.type.value = t.type;
+            inputs.awardName.value = t.award;
+            inputs.body.value = t.body;
+            updateContent();
+        }
+
+        function updateContent() {
+            views.title.textContent = inputs.type.value;
+            views.num.textContent = inputs.num.value;
+            views.belong.textContent = inputs.belong.value;
+            views.name.textContent = '성 명  ' + inputs.name.value; // Add label manually? Or just name. Usually Name is prominent.
+            views.body.textContent = inputs.body.value;
+            views.date.textContent = inputs.date.value;
+            views.giver.textContent = inputs.giver.value;
+
+            // Optional: If Award Name is present, maybe prepend or append to Title? 
+            // Standard format: Main Title "상 장", Small Title "우수상".
+            // Here we only have Main Title. Let's append Award Name if it's not empty?
+            if (inputs.awardName.value) {
+                // Actually, standard certificates have Title "상 장" and then below "상명: 우수상".
+                // But simplified design often just uses "상 장" or user changes Title to "우수상".
+                // Let's keep it simple. User can select "Type".
+            }
+        }
+
+        // Add Listeners
+        Object.values(inputs).forEach(input => {
+            input.addEventListener('input', updateContent);
+        });
+
+        function downloadCert() {
+            const target = document.getElementById('certificate');
+            html2canvas(target, {
+                scale: 2,
+                useCORS: true
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `certificate_${inputs.name.value}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+    </script>
+</body>
+
+</html>

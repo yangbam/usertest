@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>셀프 명함 메이커 - 무료 온라인 명함 제작</title>
+    <meta name="description" content="디자이너 없이 나만의 명함을 만드세요. HTML5 캔버스를 이용한 고화질 명함 이미지 생성 및 무료 다운로드. 인쇄 가능한 고품질 시안 제공.">
+    <meta name="keywords" content="무료명함제작, 셀프명함, 명함디자인, 온라인명함만들기, 명함이미지다운로드, html2canvas">
+    <meta name="author" content="Yangbam Lab">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://Yangbam-lab.com/businessevent/namecard.html">
+    <meta property="og:title" content="셀프 명함 메이커 📇">
+    <meta property="og:description" content="텍스트만 입력하면 명함 디자인 완성! 1초 만에 만드는 나만의 비즈니스 카드.">
+    <meta property="og:image" content="https://Yangbam-lab.com/assets/og_namecard.png">
+
+    <link rel="canonical" href="https://Yangbam-lab.com/businessevent/namecard.html">
+
+    <!-- html2canvas Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #2d3436;
+            --accent: #0984e3;
+            --bg: #f5f6fa;
+            --text: #2d3436;
+            --card-width: 540px;
+            /* 90mm * 6 (Screen Scale) */
+            --card-height: 300px;
+            /* 50mm * 6 */
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Navigation */
+        nav {
+            width: 100%;
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .nav-back {
+            position: absolute;
+            left: 20px;
+            text-decoration: none;
+            color: var(--text);
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .nav-title {
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+
+        /* Main Layout */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 1200px;
+            gap: 40px;
+            padding: 40px 20px;
+            justify-content: center;
+        }
+
+        /* Left Column: Input */
+        .input-section {
+            flex: 1;
+            min-width: 320px;
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: var(--primary);
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #636e72;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dfe6e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(9, 132, 227, 0.1);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .radio-option {
+            flex: 1;
+        }
+
+        .radio-option input[type="radio"] {
+            display: none;
+        }
+
+        .radio-option label {
+            display: block;
+            padding: 15px;
+            text-align: center;
+            border: 2px solid #dfe6e9;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .radio-option input[type="radio"]:checked+label {
+            border-color: var(--accent);
+            background-color: #e3f2fd;
+            color: var(--accent);
+        }
+
+        /* Right Column: Preview */
+        .preview-section {
+            flex: 1;
+            min-width: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .preview-wrapper {
+            background-color: white;
+            /* Card Background */
+            width: var(--card-width);
+            height: var(--card-height);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            /* Scale for smaller screens handled by JS or simple CSS transform if needed, 
+               but for print quality, we keep actual pixel size and scale down visually with transform */
+            transform-origin: top center;
+        }
+
+        /* --- CARD STYLES --- */
+
+        /* Common */
+        .card-content {
+            width: 100%;
+            height: 100%;
+            padding: 30px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Type A: Clean */
+        .style-a {
+            background: white;
+            color: #2d3436;
+            text-align: left;
+        }
+
+        .style-a .card-name {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 5px;
+            letter-spacing: -1px;
+        }
+
+        .style-a .card-title {
+            font-size: 16px;
+            color: #636e72;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        .style-a .card-info-group {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #2d3436;
+        }
+
+        .style-a .card-company {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            font-size: 18px;
+            font-weight: 800;
+            color: #2d3436;
+        }
+
+        /* Type B: Modern */
+        .style-b {
+            background: white;
+        }
+
+        .style-b::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 15px;
+            height: 100%;
+            background-color: #0984e3;
+            /* Point Color */
+        }
+
+        .style-b .card-content {
+            padding-left: 50px;
+            /* Offset for bar */
+        }
+
+        .style-b .card-name {
+            font-size: 38px;
+            font-weight: 900;
+            color: #0984e3;
+            margin-bottom: 5px;
+        }
+
+        .style-b .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3436;
+            margin-bottom: 40px;
+            display: inline-block;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        .style-b .card-info-group {
+            font-size: 14px;
+            color: #636e72;
+            text-align: right;
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            line-height: 1.6;
+        }
+
+        .style-b .card-company {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            font-size: 20px;
+            font-weight: 800;
+            color: #b2bec3;
+            letter-spacing: 2px;
+        }
+
+        /* Action Buttons */
+        .btn-download {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(9, 132, 227, 0.3);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-download:hover {
+            background-color: #007bb5;
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(9, 132, 227, 0.4);
+        }
+
+        /* Ad Placeholders */
+        .ad-banner {
+            width: 100%;
+            height: 100px;
+            background-color: #eee;
+            border: 1px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        /* SEO Footer */
+        .seo-section {
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+            line-height: 1.8;
+            color: #444;
+        }
+
+        .seo-section h2 {
+            font-size: 1.8rem;
+            margin-top: 40px;
+            color: var(--primary);
+        }
+
+        .seo-section h3 {
+            font-size: 1.4rem;
+            margin-top: 30px;
+            color: var(--accent);
+        }
+
+        .seo-section p {
+            margin-bottom: 15px;
+        }
+
+        .seo-section ul {
+            margin-bottom: 20px;
+            padding-left: 20px;
+        }
+
+        .seo-section li {
+            margin-bottom: 10px;
+        }
+
+        /* Responsive */
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .preview-section {
+                width: 100%;
+                overflow: hidden;
+            }
+
+            .preview-wrapper {
+                transform: none;
+                /* Controlled by JS */
+                margin-bottom: 0;
+                transform-origin: top center;
+            }
+        }
+    </style>
+    <script>
+        function resizeCard() {
+            const preview = document.getElementById('card-preview');
+            const baseWidth = 540;
+
+            if (window.innerWidth < 600) {
+                const scale = (window.innerWidth - 40) / baseWidth;
+                preview.style.transform = `scale(${scale})`;
+                preview.style.marginBottom = `-${300 * (1 - scale)}px`; // 300 is height
+            } else {
+                preview.style.transform = 'none';
+                preview.style.marginBottom = '0';
+            }
+        }
+        window.addEventListener('resize', resizeCard);
+        window.addEventListener('load', resizeCard);
+    </script>
+</head>
+</head>
+
+<body>
+    <!-- Nav -->
+    <nav>
+        <a href="index.html" class="nav-back">← 돌아가기</a>
+        <span class="nav-title">셀프 명함 메이커</span>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+
+        <!-- Left: Input Form -->
+        <div class="input-section">
+
+            <!-- Ad Placeholder Top
+            <div class="ad-banner">
+                광고 영역 (Google AdSense)
+            </div>
+            -->
+
+            <div class="section-title">정보 입력</div>
+
+            <div class="radio-group">
+                <div class="radio-option">
+                    <input type="radio" name="style" id="styleA" value="style-a" checked>
+                    <label for="styleA">심플 (Clean)</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" name="style" id="styleB" value="style-b">
+                    <label for="styleB">모던 (Modern)</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>이름 (필수)</label>
+                <input type="text" id="inputName" class="form-control" placeholder="홍길동" value="홍길동">
+            </div>
+
+            <div class="form-group">
+                <label>직함 / 부서 (필수)</label>
+                <input type="text" id="inputTitle" class="form-control" placeholder="영업팀 / 대리" value="영업팀 / 대리">
+            </div>
+
+            <div class="form-group">
+                <label>휴대폰 (필수)</label>
+                <input type="text" id="inputPhone" class="form-control" placeholder="010-1234-5678"
+                    value="010-1234-5678">
+            </div>
+
+            <div class="form-group">
+                <label>이메일 (필수)</label>
+                <input type="text" id="inputEmail" class="form-control" placeholder="hong@company.com"
+                    value="hong@company.com">
+            </div>
+
+            <div class="form-group">
+                <label>회사명 (선택)</label>
+                <input type="text" id="inputCompany" class="form-control" placeholder="My Company" value="Yangbam Lab">
+            </div>
+
+            <div class="form-group">
+                <label>주소 (선택)</label>
+                <input type="text" id="inputAddress" class="form-control" placeholder="서울시 강남구..."
+                    value="서울시 강남구 테헤란로 123">
+            </div>
+
+            <div class="form-group">
+                <label>웹사이트 (선택)</label>
+                <input type="text" id="inputWeb" class="form-control" placeholder="www.example.com"
+                    value="www.yangbam-lab.com">
+            </div>
+
+        </div>
+
+        <!-- Right: Preview -->
+        <div class="preview-section">
+            <div class="section-title" style="width:100%; border:none; text-align:center;">미리보기</div>
+
+            <!-- Target for html2canvas -->
+            <div id="card-preview" class="preview-wrapper style-a">
+                <div class="card-content">
+                    <div class="card-company" id="viewCompany">Yangbam Lab</div>
+                    <div class="card-name" id="viewName">홍길동</div>
+                    <div class="card-title" id="viewTitle">영업팀 / 대리</div>
+
+                    <div class="card-info-group">
+                        <div id="viewPhone">Mobile. 010-1234-5678</div>
+                        <div id="viewEmail">Email. hong@company.com</div>
+                        <div id="viewWeb">Web. www.yangbam-lab.com</div>
+                        <div id="viewAddress">Addr. 서울시 강남구 테헤란로 123</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-download" onclick="downloadCard()">
+                📸 명함 이미지 저장
+            </button>
+
+            <!-- Ad Placeholder Bottom
+            <div class="ad-banner" style="height: 250px;">
+                광고 영역 (Square)
+            </div>
+            -->
+        </div>
+
+    </div>
+
+    <!-- SEO Content -->
+    <article class="seo-section">
+        <h2>성공을 부르는 명함 제작의 모든 것: 디자인부터 인쇄까지</h2>
+        <p>
+            비즈니스의 첫인상은 3초 안에 결정됩니다. 그 짧은 순간에 당신을 증명하는 가장 강력한 도구는 바로 '명함'입니다.
+            Yangbam Lab의 <strong>셀프 명함 메이커</strong>는 디자인 감각이 없어도, 복잡한 그래픽 툴을 다룰 줄 몰라도 누구나 전문가 수준의 명함을 만들 수 있도록 돕습니다.
+            간단한 정보 입력만으로 완성되는 나만의 명함, 어떻게 하면 더 효과적으로 만들고 활용할 수 있을까요?
+        </p>
+
+        <h3>1. 명함 제작 시 필수 체크리스트</h3>
+        <p>
+            명함에 너무 많은 정보를 담으려 하지 마세요. '여백의 미'는 가독성을 높이는 핵심 요소입니다. 반드시 포함해야 할 정보는 다음과 같습니다.
+        </p>
+        <ul>
+            <li><strong>이름과 직함:</strong> 가장 크고 잘 보이게 배치해야 합니다. 영문 이름을 병기하면 글로벌 비즈니스에도 유용합니다.</li>
+            <li><strong>핵심 연락처:</strong> 휴대폰 번호와 이메일은 필수입니다. 팩스 번호는 최근 제외하는 추세입니다.</li>
+            <li><strong>회사 로고 및 슬로건:</strong> 회사의 정체성을 나타냅니다. 고화질 로고를 사용하는 것이 좋습니다.</li>
+            <li><strong>SNS 및 QR코드:</strong> 포트트폴리오나 회사 소개 페이지로 연결되는 QR코드를 넣으면 명함의 정보 전달력을 확장할 수 있습니다.</li>
+        </ul>
+
+        <h3>2. 표준 명함 사이즈 및 재단 가이드</h3>
+        <p>
+            대한민국에서 가장 보편적으로 사용되는 명함 규격은 <strong>90mm x 50mm</strong>입니다.
+            해외 비즈니스가 잦다면 신용카드 사이즈인 85mm x 55mm (European Format)나 89mm x 51mm (US Format)를 고려해볼 수도 있습니다.
+            직접 디자인해서 인쇄소에 넘길 때는 반드시 사방 1~2mm의 '작업선(Bleed)'을 고려해야 재단 시 흰 여백이 생기는 것을 방지할 수 있습니다.
+            (본 툴에서 생성된 이미지는 90x50mm 비율에 맞춰져 있어 웹용 시안으로 사용하거나, 여백 없이 바로 출력하여 간이용으로 사용하기 적합합니다.)
+        </p>
+
+        <h3>3. 명함 재질(용지) 고르는 팁</h3>
+        <p>
+            디자인이 같다면 퀄리티의 차이는 '종이'에서 나옵니다.
+        </p>
+        <ul>
+            <li><strong>스노우지/아트지 (250g~300g):</strong> 가장 일반적이고 저렴합니다. 대량 배포용으로 적합하며, 코팅을 추가하면 내구성이 좋아집니다.</li>
+            <li><strong>반누보/랑데뷰 (수입지):</strong> 종이 본연의 질감이 살아있고 잉크 흡수성이 좋아 색감이 차분하고 고급스럽습니다. 전문직 종사자에게 추천합니다.</li>
+            <li><strong>카드지/PET:</strong> 찢어지지 않는 플라스틱 소재로, 물에 젖지 않고 독특한 느낌을 줍니다. 특별한 인상을 남기고 싶을 때 선택하세요.</li>
+            <li><strong>박 가공 (후가공):</strong> 로고나 이름 부분에 금박, 은박, 적박 등을 입히면 신뢰감과 권위를 표현할 수 있습니다.</li>
+        </ul>
+
+        <h3>4. 셀프 명함의 장점</h3>
+        <p>
+            급하게 미팅이 잡혔는데 명함이 떨어졌다면? 혹은 창업 초기라 대량 인쇄가 부담스럽다면?
+            온라인 셀프 명함 메이커를 활용하세요.
+            디자인 대기 시간 없이 즉시 시안을 확인하고, 필요한 만큼만 소량으로 출력하거나 카카오톡, 문자, 이메일로 '디지털 명함'을 전송할 수 있습니다.
+            환경을 생각하는 페이퍼리스(Paperless) 시대, 디지털 이미지 형태의 명함은 스마트한 비즈니스 매너가 되고 있습니다.
+        </p>
+    </article>
+
+    <script>
+        // DOM Elements
+        const inputs = {
+            name: document.getElementById('inputName'),
+            title: document.getElementById('inputTitle'),
+            phone: document.getElementById('inputPhone'),
+            email: document.getElementById('inputEmail'),
+            company: document.getElementById('inputCompany'),
+            address: document.getElementById('inputAddress'),
+            web: document.getElementById('inputWeb')
+        };
+
+        const views = {
+            name: document.getElementById('viewName'),
+            title: document.getElementById('viewTitle'),
+            phone: document.getElementById('viewPhone'),
+            email: document.getElementById('viewEmail'),
+            company: document.getElementById('viewCompany'),
+            address: document.getElementById('viewAddress'),
+            web: document.getElementById('viewWeb')
+        };
+
+        const previewContainer = document.getElementById('card-preview');
+        const styleRadios = document.querySelectorAll('input[name="style"]');
+
+        // 1. input Event Listeners (Real-time Update)
+        Object.keys(inputs).forEach(key => {
+            inputs[key].addEventListener('input', (e) => {
+                const val = e.target.value;
+                // Add prefixes for contact info if not empty
+                if (key === 'phone') views[key].textContent = val ? 'Mobile. ' + val : '';
+                else if (key === 'email') views[key].textContent = val ? 'Email. ' + val : '';
+                else if (key === 'address') views[key].textContent = val ? 'Addr. ' + val : '';
+                else if (key === 'web') views[key].textContent = val ? 'Web. ' + val : '';
+                else views[key].textContent = val;
+            });
+        });
+
+        // 2. Style Switcher
+        styleRadios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                // Remove all style classes
+                previewContainer.classList.remove('style-a', 'style-b');
+                // Add selected style class
+                previewContainer.classList.add(e.target.value);
+            });
+        });
+
+        // 3. Download Function
+        function downloadCard() {
+            // Temporarily Scroll to top to ensure no capture glitches (sometimes html2canvas behaves weirdly on scrolled elements)
+            // But we can just capture the element.
+
+            html2canvas(previewContainer, {
+                scale: 2, // High resolution (x2)
+                backgroundColor: null, // Transparent if needed, but card has bg
+                logging: false,
+                useCORS: true
+            }).then(canvas => {
+                // Create dummy link
+                const link = document.createElement('a');
+                link.download = 'my-namecard.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+    </script>
+</body>
+
+</html>
