@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>20g Lab - 대학생 & 실무자를 위한 시크릿 유틸리티</title>
+    <meta name="description" content="과제 제출 실수 예방, 파일 파손기, 핑계거리 생성 등 20대를 위한 특별한 웹 유틸리티 모음집입니다.">
+    <meta property="og:title" content="20g Lab Utilities">
+    <meta property="og:description" content="과제할 때 꼭 필요한 시크릿 툴.">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-18HBM95WEK"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-18HBM95WEK');
+    </script>
+
+    <style>
+        :root {
+            --primary: #9c27b0;
+            /* Purple */
+            --bg: #F8F9FA;
+            --card-bg: #FFFFFF;
+            --text: #2D3436;
+        }
+
+        /* RESET & BOX-SIZING */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Mobile Container Wrapper */
+        .mobile-container {
+            width: 100%;
+            max-width: 500px;
+            /* Constrain width for mobile optimization */
+            background-color: white;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        /* Home Button Style */
+        .nav-home {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 800;
+        }
+
+        h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        main {
+            width: 100%;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Tool Card Style (Unified) */
+        .tool-card {
+            background: var(--card-bg);
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.2s;
+            border-left: 5px solid var(--primary);
+        }
+
+        .tool-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border-color: #555;
+        }
+
+        .tool-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .tool-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .tool-icon {
+            font-size: 1.5rem;
+        }
+
+        .tool-desc {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .badge {
+            font-size: 0.7rem;
+            padding: 3px 6px;
+            border-radius: 4px;
+            background: #eee;
+            color: #666;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .disabled-card {
+            opacity: 0.6;
+            pointer-events: none;
+            filter: grayscale(1);
+            border-left-color: #ccc;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #b2bec3;
+            font-size: 0.85rem;
+            border-top: 1px solid #eee;
+        }
+
+        /* SEO Content Area - Now inside mobile container for improved alignment */
+        .seo-section {
+            padding: 1rem 1.5rem 3rem;
+            background: #fdfdfd;
+            border-top: 10px solid #f0f2f5;
+            /* Separator look */
+            color: #555;
+            line-height: 1.7;
+            text-align: left;
+        }
+
+        .seo-section h2 {
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        .seo-section h3 {
+            font-size: 1.1rem;
+            color: #333;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+            border-left: 4px solid var(--primary);
+            padding-left: 10px;
+        }
+
+        .seo-section p {
+            margin-bottom: 1rem;
+            word-break: break-all;
+            font-size: 0.95rem;
+        }
+
+        .seo-section ul {
+            padding-left: 20px;
+            margin-bottom: 1.5rem;
+        }
+
+        .seo-section li {
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mobile-container">
+        <header>
+            <a href="../index.html" class="nav-home">←</a>
+            <h3>20g Lab 🧪</h3>
+            <p style="margin:5px 0 0 0; font-size:0.9rem; opacity:0.9;">청춘을 위한 실전 압축 유틸리티</p>
+        </header>
+
+        <main>
+            <!-- Corrupter -->
+            <a href="corrupter.html" class="tool-card" style="border-left-color: #ff5252;">
+                <div class="tool-header">
+                    <span class="tool-title"><span class="badge" style="background:#ffebee; color:#ff5252;">HOT</span>파일
+                        파손기 (Corrupter)</span>
+                    <span class="tool-icon">💣</span>
+                </div>
+                <div class="tool-desc">멀쩡한 파일을 '열리지 않는 파일'로 만듭니다. 과제 마감 시간이 부족할 때를 위한 비상 대책 도구.</div>
+            </a>
+
+            <!-- Hacker Typer -->
+            <a href="hacker.html" class="tool-card" style="border-left-color: #00e676;">
+                <div class="tool-header">
+                    <span class="tool-title"><span class="badge"
+                            style="background:#003300; color:#00e676;">FUN</span>Starbucks Hacker</span>
+                    <span class="tool-icon">💻</span>
+                </div>
+                <div class="tool-desc">아무 키나 눌러도 천재 해커처럼 코드가 작성됩니다. 카페 창가 자리 필수템.</div>
+            </a>
+
+            <!-- Apology Generator -->
+            <a href="apology.html" class="tool-card" style="border-left-color: #6c5ce7;">
+                <div class="tool-header">
+                    <span class="tool-title"><span class="badge" style="background:#e0e0ff; color:#6c5ce7;">NEW</span>만능
+                        반성문 생성기</span>
+                    <span class="tool-icon">🙇‍♂️</span>
+                </div>
+                <div class="tool-desc">지각, 실수, 다툼... 뭐라고 사과해야 할지 막막할 때. 상대방의 마음을 녹이는 사과문 자동 완성.</div>
+            </a>
+            <!-- Random Picker Removed -->
+        </main>
+
+        <!-- Rich SEO Content placed INSIDE the mobile container -->
+        <article class="seo-section">
+            <h2>[20g Lab] 대학생의 위기를 구출하는 기술연구소</h2>
+            <p>
+                대한민국 모든 대학생이 한 번쯤 겪어봤을 아찔한 순간들. 과제 마감 5분 전인데 프린터가 고장나거나, 밤새 쓴 레포트 파일이 날아가는 상황.
+                혹은 정말 불가피한 사정으로 제출 기한을 조금이라도 늘려야만 하는 절박한 순간들.
+                <strong>20g Lab(이공지 랩)</strong>은 이러한 위기 상황에서 여러분을 구출하기 위해 설립된, 대학생 및 사회초년생을 위한 '시크릿 유틸리티' 저장소입니다.
+            </p>
+            <p>
+                우리는 단순히 재미를 위한 도구가 아니라, 실제 데이터 구조 원리와 웹 기술을 활용하여 실생활의 문제를 해결하는 '디지털 맥가이버 칼'이 되고자 합니다.
+                모든 툴은 회원가입 없이 무료로 제공되며, 서버에 기록을 남기지 않는 클라이언트 사이드 기술로 여러분의 프라이버시를 완벽하게 보호합니다.
+            </p>
+
+            <h3>1. 파일 파손기(File Corrupter)의 원리와 활용법</h3>
+            <p>
+                20g Lab에서 가장 사랑받는 도구인 '파일 파손기'는 정상적인 문서 파일(Word, Excel, PPT, PDF, Zip 등)을 '손상된 파일'처럼 보이게 만드는 도구입니다.
+                단순히 확장자만 바꾸는 것이 아닙니다. 메모장으로 열어서 깨진 글자를 억지로 넣는 수준도 아닙니다.
+            </p>
+            <p>
+                이 도구는 바이너리 레벨에서 <strong>파일의 내부 데이터 구조를 정교하게 조작</strong>합니다.
+                파일의 용량(Byte)은 원본과 100% 동일하게 유지하면서, 파일을 여는 프로그램(MS Office, 아래아한글 등)이 데이터를 해석하지 못하도록
+                특정 오프셋(Offset)의 비트값을 무작위로 치환(Bit-flipping)합니다.
+                이로 인해 교수님이나 조교님이 파일을 열었을 때, "파일 형식이 잘못되었습니다" 또는 "치명적인 오류로 파일을 열 수 없습니다"라는
+                시스템 경고창을 보게 됩니다.
+            </p>
+
+            <h3>2. 과제 제출의 골든타임과 백업의 중요성</h3>
+            <p>
+                파일 파손기를 사용하여 시간을 버는 것은 어디까지나 '임시 방편'이자 '최후의 수단'이어야 합니다.
+                가장 좋은 것은 미리미리 과제를 저장하고 백업하는 습관입니다. 여러분의 학점을 지키기 위한 <strong>3-2-1 백업 규칙</strong>을 소개합니다.
+            </p>
+            <ul>
+                <li><strong>3</strong>개의 복사본을 유지하세요: 원본 + 사본 1 + 사본 2</li>
+                <li><strong>2</strong>개의 다른 매체에 저장하세요: 노트북 하드디스크 + USB 메모리</li>
+                <li><strong>1</strong>개의 오프사이트(Off-site) 백업을 두세요: 구글 드라이브, 드롭박스 등 클라우드 스토리지</li>
+            </ul>
+            <p>
+                특히 요즘 대학의 LMS(학습관리시스템)는 과제 제출 시각을 '초' 단위까지 기록합니다.
+                "인터넷이 끊겨서 늦게 올라갔어요"라는 변명보다는, 평소에 Ctrl+S 생활화와 자동 저장 기능을 켜두는 것이 여러분의 정신 건강을 지키는 길입니다.
+            </p>
+
+            <h3>3. A+를 부르는 문서 편집의 기술 (준비 중)</h3>
+            <p>
+                20g Lab은 단순히 파일 오류를 만드는 것을 넘어, 여러분의 과제 퀄리티를 높이는 도구들도 준비 중입니다.
+                <strong>'문서 분량 늘리기 도구'</strong>는 교수님이 정해준 '5페이지 이상'이라는 분량 압박을 해결해 줄 것입니다.
+                폰트 크기를 키우면 금방 티가 나지만, 글자 사이의 간격(자간)과 줄 사이의 간격(행간), 심지어 마침표(.)의 크기만을 미세하게 조절하면
+                눈치채지 못하게 0.5페이지 이상을 늘릴 수 있습니다.
+            </p>
+            <p>
+                또한 <strong>'참고문헌 생성기'</strong>는 여러분이 급하게 긁어온 나무위키나 블로그 링크를
+                마치 학술 논문을 인용한 것처럼 'APA 스타일'이나 '시카고 스타일'로 자동 변환해 줍니다.
+                레포트의 마지막 페이지인 '참고문헌(References)' 목록이 그럴듯하게 채워져 있다면, 과제의 신뢰도는 급상승할 것입니다.
+            </p>
+
+            <h3>4. 20대의 고민을 함께 나누는 공간</h3>
+            <p>
+                여러분이 대학 생활 중, 혹은 취업 준비나 사회 생활 중에 겪는 사소한 불편함이 있다면 언제든 20g Lab에 제보해 주세요.
+                "이런 계산기가 있었으면 좋겠다", "이런 변환 프로그램이 필요하다"는 의견을 적극 반영하여 새로운 유틸리티를 개발하겠습니다.
+                비록 작은 무게인 20g일지라도, 여러분의 삶의 무게를 조금이라도 덜어드릴 수 있다면 그것으로 충분합니다.
+            </p>
+
+            <div style="margin-top:2rem; font-size:0.8rem; color:#888; text-align:center;">
+                <p>※ 본 페이지의 모든 도구는 교육적 목적으로 제공됩니다. 악의적인 사용으로 인한 책임은 사용자 본인에게 있습니다.</p>
+            </div>
+        </article>
+
+        <footer>
+            &copy; 20g Lab. Educational Purpose Only.<br>
+            <a href="../policy.html"
+                style="color: #b2bec3; text-decoration: none; font-size: 0.8rem; margin-top: 5px; display: inline-block;">이용약관
+                및 개인정보처리방침</a>
+        </footer>
+    </div>
+</body>
+
+</html>
