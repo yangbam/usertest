@@ -9,157 +9,307 @@
 
 <url>
   <loc>https://yangbam.github.io/</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>1.00</priority>
 </url>
 <url>
+  <loc>https://yangbam.github.io/random/index.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
   <loc>https://yangbam.github.io/test/index.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://yangbam.github.io/calculator/index.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://yangbam.github.io/itconvertor/index.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://yangbam.github.io/businessevent/index.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://yangbam.github.io/dianosis/index.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://yangbam.github.io/20g/index.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://yangbam.github.io/random/picker.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://yangbam.github.io/random/snail.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://yangbam.github.io/businessevent/namecard.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://yangbam.github.io/businessevent/stamp.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://yangbam.github.io/businessevent/receipt.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://yangbam.github.io/businessevent/invitation.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://yangbam.github.io/businessevent/coupon.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://yangbam.github.io/businessevent/certificate.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://yangbam.github.io/businessevent/label.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://yangbam.github.io/businessevent/parody.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://yangbam.github.io/dianosis/monitor_test.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://yangbam.github.io/dianosis/mouse_test.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://yangbam.github.io/dianosis/keyboard_test.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://yangbam.github.io/dianosis/system_info.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://yangbam.github.io/20g/corrupter.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://yangbam.github.io/20g/apology.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://yangbam.github.io/20g/hacker.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://yangbam.github.io/index.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://yangbam.github.io/random/tarot.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://yangbam.github.io/random/lunch.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://yangbam.github.io/random/gift.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://yangbam.github.io/random/mix.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://yangbam.github.io/random/capsule.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://yangbam.github.io/random/travel.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://yangbam.github.io/test/fortune_test.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://yangbam.github.io/test/color_test.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://yangbam.github.io/test/love_cell_test.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://yangbam.github.io/test/parenting_style.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://yangbam.github.io/test/office_survival.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://yangbam.github.io/test/spending_test.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://yangbam.github.io/test/kkondae_test.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://yangbam.github.io/test/english_survival.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://yangbam.github.io/test/dopamine_test.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://yangbam.github.io/test/body_age_test.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://yangbam.github.io/test/talent_test.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://yangbam.github.io/calculator/salary_2026.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://yangbam.github.io/calculator/loan_interest.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://yangbam.github.io/calculator/freelancer_calculator.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://yangbam.github.io/calculator/parental_leave.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://yangbam.github.io/calculator/diet_macro.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://yangbam.github.io/calculator/brokerage_fee.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://yangbam.github.io/calculator/d_day_calc.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://yangbam.github.io/calculator/char_counter.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://yangbam.github.io/itconvertor/json_format.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://yangbam.github.io/itconvertor/base64_encode.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://yangbam.github.io/itconvertor/case_converter.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://yangbam.github.io/itconvertor/webp_converter.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://yangbam.github.io/itconvertor/csv_to_sql.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://yangbam.github.io/itconvertor/markdown_editor.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://yangbam.github.io/itconvertor/qr_generator.html</loc>
-  <lastmod>2026-01-07T02:03:59+00:00</lastmod>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://yangbam.github.io/businessevent/logomaker.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://yangbam.github.io/dianosis/touch_test.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://yangbam.github.io/20g/interview.html</loc>
+  <lastmod>2026-01-26T00:21:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 
